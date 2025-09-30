@@ -100,10 +100,10 @@ export default function AnimatedCodeBlock({ examples, className = '' }: Animated
           <button
             key={example.id}
             onClick={() => handleExampleChange(index)}
-            className={`px-4 py-2 font-mono text-sm rounded-lg transition-colors ${
+            className={`px-5 py-2.5 rounded-lg font-mono text-sm transition-colors shadow-sm ${
               currentExample === index
-                ? 'bg-[#1F1F1F] text-white'
-                : 'bg-[#EDEDED] text-black hover:bg-gray-300'
+                ? 'bg-[#1F1F1F] text-white hover:bg-gray-800 shadow-figma-button-primary'
+                : 'bg-white text-black border border-black/10 hover:bg-gray-100'
             }`}
           >
             {example.title}
