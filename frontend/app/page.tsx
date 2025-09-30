@@ -19,7 +19,7 @@ export default function Home() {
 
             {/* Left Side - Main Hero Card */}
             <div className="w-full lg:w-[392px] h-auto lg:h-[442px] p-4 md:p-6 bg-white rounded-2xl shadow-figma-card flex flex-col justify-between">
-              <h1 className="font-brutal text-2xl md:text-3xl font-medium uppercase leading-[32px] md:leading-[38px] text-black">
+              <h1 className="font-brutal text-2xl md:text-3xl font-medium uppercase leading-[32px] md:leading-[38px] text-black mb-4 md:mb-0">
                 Introducing&nbsp;Data&nbsp;as<br />
                 A&nbsp;First&#8209;Class&nbsp;Citizen<br />
                 On&nbsp;Blockchain
@@ -38,11 +38,11 @@ export default function Home() {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex flex-row gap-3">
-                  <a href="/getting-started" className="px-5 py-2 bg-[#1F1F1F] text-white font-mono text-sm md:text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors whitespace-nowrap">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <a href="/getting-started" className="px-5 py-2 bg-[#1F1F1F] text-white font-mono text-sm md:text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors whitespace-nowrap w-full text-center sm:w-auto">
                     Build now
                   </a>
-                  <a href="/pdf/ARKIV_Litepaper.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-black text-black font-mono text-sm md:text-base rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap">
+                  <a href="/pdf/ARKIV_Litepaper.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-black text-black font-mono text-sm md:text-base rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap w-full text-center sm:w-auto">
                     Read Litepaper
                   </a>
                 </div>
@@ -551,19 +551,19 @@ async function printEntities(label: string, entities: any[]) {
             />
 
             {/* Action Buttons */}
-            <div className="flex w-full justify-center md:justify-start">
-              <div className="bg-gray-200 p-2 rounded-2xl flex gap-3 items-center">
-                <a href="/getting-started" className="bg-[#1f1f1f] px-5 py-2.5 rounded-lg shadow-figma-card relative hover:bg-gray-800 transition-colors">
-                  <div className="absolute inset-0 pointer-events-none shadow-inner" />
-                  <span className="font-mono text-base text-white leading-[22px]">Build now</span>
-                </a>
-                <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-lg hover:bg-gray-300 transition-colors">
-                  <span className="font-mono text-base text-black leading-[22px]">Read Litepaper</span>
-                </a>
-                <a href="/docs" className="px-5 py-2.5 rounded-lg hover:bg-gray-300 transition-colors">
-                  <span className="font-mono text-base text-black leading-[22px]">Read the Docs</span>
-                </a>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <a href="/getting-started" className="bg-[#1f1f1f] px-5 py-3 rounded-lg shadow-figma-button-primary text-center font-mono text-base text-white hover:bg-gray-800 transition-colors w-full sm:flex-1">
+                Build now
+              </a>
+              <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="border border-black px-5 py-3 rounded-lg text-center font-mono text-base text-black hover:bg-gray-100 transition-colors w-full sm:flex-1">
+                Read Litepaper
+              </a>
+            </div>
+            <div className="w-full text-center sm:text-left mt-2">
+              <a href="/docs" className="inline-flex items-center gap-2 font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                <span>Read the Docs</span>
+                <img src="/images/arrow-top-right.svg" alt="Read the Docs" className="w-4 h-4" />
+              </a>
             </div>
           </div>
           </div>

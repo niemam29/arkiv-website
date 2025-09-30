@@ -116,8 +116,8 @@ export default function Header({ navigation }: HeaderProps) {
             />
 
             <div className="lg:hidden fixed inset-0 z-50 overflow-y-auto">
-              <div className="hidden md:flex h-full">
-                <div className="w-[368px] h-full bg-[#FF6B35] text-white p-6 flex flex-col">
+              <div className="hidden md:flex h-full bg-[#FF6B35] text-white">
+                <div className="w-[368px] h-full p-6 flex flex-col">
                   <div className="flex justify-between items-start mb-8">
                     <div className="font-brutal text-2xl font-black uppercase tracking-wider">[ ARKIV ]</div>
                     <button
@@ -159,9 +159,7 @@ export default function Header({ navigation }: HeaderProps) {
                   </div>
                 </div>
 
-                <div className="flex-1 flex items-center justify-center bg-white">
-                  <div className="font-brutal text-6xl font-black uppercase text-black tracking-wider">[ A ]</div>
-                </div>
+                <div className="flex-1" />
               </div>
 
               <div className="md:hidden h-full bg-[#FF6B35] text-white p-6 flex flex-col">
