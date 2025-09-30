@@ -272,9 +272,9 @@ export default function Home() {
           <div className="flex flex-col gap-[32px]">
             <h2 id="use-cases" className="font-brutal text-lg md:text-xl font-medium uppercase text-black">[ Use Cases ]</h2>
 
-            <div className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory">
+            <div className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory xl:overflow-visible xl:pr-[160px]">
               {/* CopyPal */}
-              <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[312px] md:min-w-[336px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
+              <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">CopyPal</h3>
                 <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
@@ -294,7 +294,7 @@ export default function Home() {
               </a>
 
               {/* ImageDB */}
-              <a href="https://imagedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[312px] md:min-w-[336px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
+              <a href="https://imagedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">ImageDB</h3>
                 <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
@@ -314,7 +314,7 @@ export default function Home() {
               </a>
 
               {/* FileDB */}
-              <a href="https://filedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[312px] md:min-w-[336px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
+              <a href="https://filedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">FileDB</h3>
                 <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
@@ -334,7 +334,7 @@ export default function Home() {
               </a>
 
               {/* WebDB Static Hosting */}
-              <a href="https://webdb.site" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[312px] md:min-w-[336px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
+              <a href="https://webdb.site" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">WebDB Static Hosting</h3>
                 <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
@@ -354,7 +354,7 @@ export default function Home() {
               </a>
 
               {/* Arkiv Portfolio */}
-              <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[312px] md:min-w-[336px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
+              <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">Arkiv Portfolio</h3>
                 <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
