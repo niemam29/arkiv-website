@@ -699,34 +699,26 @@ async function printEntities(label: string, entities: any[]) {
             </div>
 
             {/* Golem - Clickable */}
-            <a href="https://golem.network/" target="_blank" rel="noopener noreferrer" className="bg-[#fe7446] w-full lg:w-[254px] h-auto lg:h-[213px] p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-[#e5673f] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+            <div className="flex flex-col sm:flex-row lg:flex-col w-full lg:w-[254px] gap-4">
+              <a href="https://golem.network/" target="_blank" rel="noopener noreferrer" className="bg-[#fe7446] flex-1 p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-row items-center justify-center md:justify-between lg:justify-center gap-3 relative hover:bg-[#e5673f] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
+                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
-              <div className="w-[14px] h-[14px] relative">
-                <div className="absolute inset-[8.49%]">
+                <div className="w-[14px] h-[14px]">
                   <img src="/images/icon.svg" alt="Golem Network star icon" className="w-full h-full group-hover:brightness-110 transition-all duration-200" />
                 </div>
-              </div>
+                <span className="font-mono text-base text-white leading-[22px] group-hover:text-gray-100 transition-colors duration-200">About Golem</span>
+              </a>
 
-              <div className="flex flex-col gap-3 w-full">
-                <span className="font-mono text-base text-white leading-[22px] whitespace-pre-wrap group-hover:text-gray-100 transition-colors duration-200">About Golem</span>
-              </div>
-            </a>
+              {/* Join Discord - Clickable */}
+              <a href="https://discord.gg/arkiv" target="_blank" rel="noopener noreferrer" className="bg-[#181ea9] flex-1 p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-row items-center justify-center md:justify-between lg:justify-center gap-3 relative hover:bg-[#1518a0] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
+                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
-            {/* Join Discord - Clickable */}
-            <a href="https://discord.gg/arkiv" target="_blank" rel="noopener noreferrer" className="bg-[#181ea9] w-full lg:w-[254px] h-auto lg:h-[213px] p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-[#1518a0] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-
-              <div className="w-[14px] h-[14px] relative">
-                <div className="absolute inset-[8.49%]">
+                <div className="w-[14px] h-[14px]">
                   <img src="/images/icon.svg" alt="Golem Network star icon" className="w-full h-full group-hover:brightness-110 transition-all duration-200" />
                 </div>
-              </div>
-
-              <div className="flex flex-col gap-3 w-full">
-                <span className="font-mono text-base text-white leading-[22px] whitespace-pre-wrap group-hover:text-gray-100 transition-colors duration-200">Join discord</span>
-              </div>
-            </a>
+                <span className="font-mono text-base text-white leading-[22px] group-hover:text-gray-100 transition-colors duration-200">Join Discord</span>
+              </a>
+            </div>
           </div>
           </div>
         </div>
