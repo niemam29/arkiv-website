@@ -631,7 +631,7 @@ async function printEntities(label: string, entities: any[]) {
 
           <div className="flex flex-col md:flex-row gap-6 w-full">
             {/* Event 1 - Real World Adoption Day */}
-            <a href="https://luma.com/adoptiondaysingapore" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-5 rounded-2xl shadow-figma-card flex flex-row gap-6 relative min-h-[160px] flex-1 hover:bg-[#FE7445] transition-colors cursor-pointer group">
+            <a href="https://luma.com/adoptiondaysingapore" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-5 rounded-2xl shadow-figma-card flex flex-row items-stretch gap-6 relative min-h-[160px] flex-1 hover:bg-[#FE7445] transition-colors cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
               {/* Left Side - Content */}
@@ -645,9 +645,8 @@ async function printEntities(label: string, entities: any[]) {
               </div>
 
               {/* Right Side - Image */}
-              <div className="w-[200px] h-[120px] relative rounded-2xl overflow-hidden flex-shrink-0">
-                <div className="absolute bg-[#d9d9d9] inset-0"></div>
-                <img alt="Arkiv Real World Adoption Day event" className="absolute inset-0 w-full h-full object-cover" src="/images/Real_World_Adoption_Day.png" />
+              <div className="w-[200px] flex-shrink-0 self-stretch relative rounded-2xl overflow-hidden bg-[#d9d9d9]">
+                <img alt="Arkiv Real World Adoption Day event" className="w-full h-full object-cover" src="/images/Real_World_Adoption_Day.png" />
                 <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
                   Sep 30th, 2025
                 </div>
@@ -655,7 +654,7 @@ async function printEntities(label: string, entities: any[]) {
             </a>
 
             {/* Event 2 - Builder Nights */}
-            <a href="https://luma.com/bnsingapore" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-5 rounded-2xl shadow-figma-card flex flex-row gap-6 relative min-h-[160px] flex-1 hover:bg-[#FE7445] transition-colors cursor-pointer group">
+            <a href="https://luma.com/bnsingapore" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-5 rounded-2xl shadow-figma-card flex flex-row items-stretch gap-6 relative min-h-[160px] flex-1 hover:bg-[#FE7445] transition-colors cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
               {/* Left Side - Content */}
@@ -669,9 +668,8 @@ async function printEntities(label: string, entities: any[]) {
               </div>
 
               {/* Right Side - Image */}
-              <div className="w-[200px] h-[120px] relative rounded-2xl overflow-hidden flex-shrink-0">
-                <div className="absolute bg-[#d9d9d9] inset-0"></div>
-                <img alt="Arkiv Builder Nights event" className="absolute inset-0 w-full h-full object-cover" src="/images/Builder_Nights.png" />
+              <div className="w-[200px] flex-shrink-0 self-stretch relative rounded-2xl overflow-hidden bg-[#d9d9d9]">
+                <img alt="Arkiv Builder Nights event" className="w-full h-full object-cover" src="/images/Builder_Nights.png" />
                 <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
                   Sep 30th, 2025
                 </div>
