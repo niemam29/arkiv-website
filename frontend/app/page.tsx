@@ -636,7 +636,7 @@ async function printEntities(label: string, entities: any[]) {
 
               {/* Left Side - Content */}
               <div className="flex-1 flex flex-col gap-3">
-                <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors">Arkiv @ Real World Adoption Day</h3>
+                <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Real World Adoption Day</h3>
                 <div className="flex gap-2 items-center">
                   <img className="w-4 h-4" src="/images/location-icon.png" alt="Location" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
@@ -659,7 +659,7 @@ async function printEntities(label: string, entities: any[]) {
 
               {/* Left Side - Content */}
               <div className="flex-1 flex flex-col gap-3">
-                <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors">Arkiv @ Builder Nights</h3>
+                <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Builder Nights</h3>
                 <div className="flex gap-2 items-center">
                   <img className="w-4 h-4" src="/images/location-icon.png" alt="Location" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
