@@ -13,6 +13,9 @@ const nextConfig = {
   experimental: {
     optimizeCss: false,
   },
+  env: {
+    EXECUTION_SERVICE_URL: process.env.EXECUTION_SERVICE_URL || 'http://execution-service:8001',
+  },
 }
 
 module.exports = nextConfig
