@@ -579,19 +579,14 @@ export default function PlaygroundPage() {
           </div>
 
           {/* Info Box */}
-          <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200 mb-6">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">💡</span>
-              <div className="flex-1">
-                <h3 className="font-mono font-bold text-black mb-2">Playground Tips</h3>
-                <ul className="text-sm font-mono text-stone-900 space-y-1">
-                  <li>• Edit code and click "Run" to execute in browser</li>
-                  <li>• Runs in sandboxed environment with limited access</li>
-                  <li>• Uses test key for read-only operations</li>
-                  <li>• Both TypeScript and Python supported</li>
-                </ul>
-              </div>
-            </div>
+          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200 shadow-figma-card mb-6">
+            <h3 className="font-brutal text-lg font-medium uppercase text-black mb-3">Playground Tips</h3>
+            <ul className="text-sm font-mono text-stone-900 space-y-1">
+              <li>• Edit code and click "Run" to execute in browser</li>
+              <li>• Runs in sandboxed environment with limited access</li>
+              <li>• Uses test key for read-only operations</li>
+              <li>• Both TypeScript and Python supported</li>
+            </ul>
           </div>
 
           {/* Additional Resources */}
