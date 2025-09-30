@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "how_it_works",
+  "info": {
+    "singularName": "how-it-works",
+    "pluralName": "how-it-works-sections",
+    "displayName": "How It Works Section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "required": true,
+      "default": "[ How it Works ]"
+    },
+    "layers": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.layer-info"
+    }
+  }
+}

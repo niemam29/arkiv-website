@@ -1,0 +1,7 @@
+services:
+  frontend:
+    image: moonplkr/arkiv-website:latest
+    ports:
+      - "8765:3000"
+    environment:
+      - NODE_ENV=production

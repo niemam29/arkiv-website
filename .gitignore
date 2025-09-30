@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+cms/node_modules/
+.config/
+
+# Bun
+bun.lockb
+frontend/bun.lockb
+cms/bun.lockb
+
+# Build artifacts
+.next/
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/.turbo/
+frontend/.vercel/
+frontend/turbo/
+dist/
+build/
+cms/dist/
+cms/build/
+.cms/
+
+# Payload uploads
+cms/public/uploads/
+
+# Logs and diagnostics
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+pnpm-debug.log*
+logs/
+
+# TypeScript
+*.tsbuildinfo
+*.tsbuildinfo.tmp
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Editor directories and files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
+coverage/
+
+# Local-only docs and assets
+AGENTS.md
+Arkiv\ Webpage.png
+Blog.svg
+Components.pdf
+Components.svg
+Desktop.pdf
+Desktop.svg
+components_preview.png
+bun.lock

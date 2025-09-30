@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_sections_layer_infos",
+  "info": {
+    "displayName": "Layer Info",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "layerNumber": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

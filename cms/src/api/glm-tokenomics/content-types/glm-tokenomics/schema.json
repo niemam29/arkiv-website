@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "glm_tokenomics",
+  "info": {
+    "singularName": "glm-tokenomics",
+    "pluralName": "glm-tokenomics-sections",
+    "displayName": "GLM Tokenomics Section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "required": true,
+      "default": "[ GLM — Tokenomics ]"
+    },
+    "feesTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Fees"
+    },
+    "feesDescription": {
+      "type": "text",
+      "required": true,
+      "default": "Data writes and management are designed to be paid via Arkiv with GLM at the core."
+    },
+    "incentivesTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Incentives"
+    },
+    "incentivesDescription": {
+      "type": "text",
+      "required": true,
+      "default": "GLM aligns actors across DB‑chains and coordinator services."
+    },
+    "multiTokenTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Multi‑token gas"
+    },
+    "multiTokenDescription": {
+      "type": "text",
+      "required": true,
+      "default": "Arkiv supports multi‑token gas logic at L2 while keeping GLM central to the system's economics."
+    },
+    "buttonText": {
+      "type": "string",
+      "required": true,
+      "default": "Bridge GLM Now!"
+    }
+  }
+}

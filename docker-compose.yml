@@ -1,0 +1,59 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_STRAPI_URL=http://cms:1337
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - cms
+
+  cms:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile
+    container_name: arkiv-cms
+    restart: unless-stopped
+    environment:
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=strapi
+      - DATABASE_USERNAME=strapi
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
+      - APP_KEYS=${APP_KEYS}
+      - API_TOKEN_SALT=${API_TOKEN_SALT}
+      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
+    volumes:
+      - ./cms:/srv/app
+      - cms_uploads:/srv/app/public/uploads
+    ports:
+      - "1337:1337"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: arkiv-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: strapi
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+volumes:
+  db_data:
+  cms_uploads:
