@@ -7,9 +7,20 @@ interface HoverVideoProps {
   className?: string
   muted?: boolean
   playsInline?: boolean
+  autoPlay?: boolean
+  loop?: boolean
+  poster?: string
 }
 
-export default function HoverVideo({ src, className = '', muted = true, playsInline = true }: HoverVideoProps) {
+export default function HoverVideo({
+  src,
+  className = '',
+  muted = true,
+  playsInline = true,
+  autoPlay = false,
+  loop = false,
+  poster,
+}: HoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const handleMouseEnter = () => {
@@ -31,6 +42,9 @@ export default function HoverVideo({ src, className = '', muted = true, playsInl
       className={className}
       muted={muted}
       playsInline={playsInline}
+      autoPlay={autoPlay}
+      loop={loop}
+      poster={poster}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     />

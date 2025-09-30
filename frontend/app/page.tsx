@@ -157,6 +157,9 @@ export default function Home() {
                 className="w-full h-full object-cover"
                 muted={true}
                 playsInline={true}
+                autoPlay={true}
+                loop={true}
+                poster="/images/how-it-works-3d.png"
               />
               <div className="absolute bottom-8 right-8 flex gap-3">
                 <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-black text-black font-mono text-base rounded-lg hover:bg-gray-50 transition-colors">
