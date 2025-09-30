@@ -551,7 +551,7 @@ async function printEntities(label: string, entities: any[]) {
             />
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-between w-full">
+            <div className="flex w-full justify-center md:justify-start">
               <div className="bg-gray-200 p-2 rounded-2xl flex gap-3 items-center">
                 <a href="/getting-started" className="bg-[#1f1f1f] px-5 py-2.5 rounded-lg shadow-figma-card relative hover:bg-gray-800 transition-colors">
                   <div className="absolute inset-0 pointer-events-none shadow-inner" />
@@ -564,15 +564,6 @@ async function printEntities(label: string, entities: any[]) {
                   <span className="font-mono text-base text-black leading-[22px]">Read the Docs</span>
                 </a>
               </div>
-
-              <a href="/playground" className="flex gap-6 items-center hover:opacity-80 transition-opacity">
-                <span className="font-mono text-base text-black leading-[22px]">Explore Playground</span>
-                <div className="flex items-center justify-center">
-                  <div className="transform rotate-180">
-                    <img src="/images/arrow.svg" alt="Explore playground arrow" className="w-10 h-10" />
-                  </div>
-                </div>
-              </a>
             </div>
           </div>
           </div>
