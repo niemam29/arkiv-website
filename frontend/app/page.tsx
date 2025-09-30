@@ -638,7 +638,7 @@ async function printEntities(label: string, entities: any[]) {
               <div className="flex-1 flex flex-col gap-3">
                 <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Real World Adoption Day</h3>
                 <div className="flex gap-2 items-center">
-                  <img className="w-4 h-4" src="/images/location-icon.png" alt="Location" />
+                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
                 </div>
                 <p className="font-mono text-base text-[#1f1f1f] leading-[22px] group-hover:text-white transition-colors">Meetup booth + Keynote</p>
@@ -661,7 +661,7 @@ async function printEntities(label: string, entities: any[]) {
               <div className="flex-1 flex flex-col gap-3">
                 <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Builder Nights</h3>
                 <div className="flex gap-2 items-center">
-                  <img className="w-4 h-4" src="/images/location-icon.png" alt="Location" />
+                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
                 </div>
                 <p className="font-mono text-base text-[#1f1f1f] leading-[22px] group-hover:text-white transition-colors">Talks, Networking & Nice Vibes</p>
