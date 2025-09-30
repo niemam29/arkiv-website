@@ -95,19 +95,14 @@ export default function Home() {
             <h2 className="font-brutal text-xl font-medium uppercase text-black">[ Why arkiv ]</h2>
 
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Traditional DBs - Pain Point */}
+            {/* Current State of Data - Pain Point */}
             <div className="w-full lg:w-[648px] px-5 pt-5 pb-10 bg-zinc-100 rounded-2xl flex flex-col gap-8">
-              <h3 className="font-brutal text-3xl font-medium uppercase text-stone-900">Traditional DBs</h3>
+              <h3 className="font-brutal text-3xl font-medium uppercase text-stone-900">Current State of Data</h3>
 
               <div className="flex flex-col gap-6">
                 <div className="w-full h-px bg-neutral-400"></div>
                 <div className="font-mono text-base text-stone-900">
-                  Web2 is easy—until lock‑in, outages, or policy changes
-                </div>
-
-                <div className="w-full h-px bg-neutral-400"></div>
-                <div className="font-mono text-base text-stone-900">
-                  Indexer as middle man—value on‑chain, "truth" off someone else's API
+                  Web2 is convenient—until lock‑in, outages, or policy changes
                 </div>
 
                 <div className="w-full h-px bg-neutral-400"></div>
@@ -117,29 +112,19 @@ export default function Home() {
 
                 <div className="w-full h-px bg-neutral-400"></div>
                 <div className="font-mono text-base text-stone-900">
-                  Calldata/blobs are either rigid or too pricey to query
-                </div>
-
-                <div className="w-full h-px bg-neutral-400"></div>
-                <div className="font-mono text-base text-stone-900">
-                  "Forever storage" bloats state when most data is temporary
+                  Having to choose between “Convenience” or “Control”
                 </div>
               </div>
             </div>
 
             {/* Arkiv - Solution */}
             <div className="w-full lg:w-[648px] h-auto lg:h-[478px] px-5 pt-5 pb-6 bg-blue-800 rounded-2xl flex flex-col gap-8">
-              <h3 className="font-brutal text-3xl font-medium uppercase text-white">Arkiv</h3>
+              <h3 className="font-brutal text-3xl font-medium uppercase text-white">With Arkiv</h3>
 
               <div className="flex flex-col gap-6">
                 <div className="w-full h-px bg-white/30"></div>
                 <div className="font-mono text-base text-white">
                   Queryable by design. CRUD + indexes, not ad‑hoc indexers.
-                </div>
-
-                <div className="w-full h-px bg-white/30"></div>
-                <div className="font-mono text-base text-white">
-                  Ethereum‑aligned. L3 DB‑chains coordinated on an L2, anchored to Ethereum Mainnet.
                 </div>
 
                 <div className="w-full h-px bg-white/30"></div>
