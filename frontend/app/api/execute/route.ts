@@ -11,6 +11,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward execution request to execution-service
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
     const response = await fetch(`${EXECUTION_SERVICE_URL}/execute`, {
       method: 'POST',
       headers: {
@@ -20,7 +23,10 @@ export async function POST(request: NextRequest) {
         code,
         language: language === 'typescript' || language === 'javascript' ? 'python' : language,
       }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const contentType = response.headers.get('content-type');
@@ -50,8 +56,16 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Execution service error:', error);
+
+    // Handle abort/timeout errors specifically
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json({
+        output: '❌ Code execution timed out after 30 seconds.\n\n💡 Tip: Try simplifying your code or check for infinite loops.'
+      }, { status: 504 });
+    }
+
     return NextResponse.json({
-      output: `❌ Failed to connect to execution service:\n${error instanceof Error ? error.message : 'Unknown error'}`
+      output: `❌ Failed to connect to execution service:\n${error instanceof Error ? error.message : 'Unknown error'}\n\n💡 Tip: The code execution service might be temporarily unavailable.`
     }, { status: 500 });
   }
 }
