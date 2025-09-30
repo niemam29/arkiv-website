@@ -593,21 +593,36 @@ export default function PlaygroundPage() {
           <div className="grid md:grid-cols-3 gap-6">
             <Link href="/getting-started">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
-                <h3 className="font-brutal font-bold text-lg mb-2 text-black group-hover:text-white">TypeScript Guide</h3>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/ts.svg" alt="TypeScript icon" className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">TypeScript Guide</h3>
+                </div>
                 <p className="text-sm font-mono text-black group-hover:text-white">Full TypeScript SDK documentation</p>
               </div>
             </Link>
 
             <Link href="/getting-started/python">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
-                <h3 className="font-brutal font-bold text-lg mb-2 text-black group-hover:text-white">Python Guide</h3>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/python.svg" alt="Python icon" className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">Python Guide</h3>
+                </div>
                 <p className="text-sm font-mono text-black group-hover:text-white">Complete Python SDK guide</p>
               </div>
             </Link>
 
             <a href="https://github.com/golem-base" target="_blank" rel="noopener noreferrer">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
-                <h3 className="font-brutal font-bold text-lg mb-2 text-black group-hover:text-white">GitHub</h3>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/github.svg" alt="GitHub icon" className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">GitHub</h3>
+                </div>
                 <p className="text-sm font-mono text-black group-hover:text-white">View source code and examples</p>
               </div>
             </a>
