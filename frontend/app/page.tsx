@@ -270,14 +270,7 @@ export default function Home() {
       <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h2 id="use-cases" className="font-brutal text-lg md:text-xl font-medium uppercase text-black">[ Use Cases ]</h2>
-              <div className="flex gap-4 items-center">
-                <a href="https://usecases.arkiv.network/" className="bg-black px-5 py-2.5 rounded-lg">
-                  <span className="font-mono text-sm md:text-base text-white leading-5">See More</span>
-                </a>
-              </div>
-            </div>
+            <h2 id="use-cases" className="font-brutal text-lg md:text-xl font-medium uppercase text-black">[ Use Cases ]</h2>
 
             <div className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory">
               {/* CopyPal */}
@@ -378,6 +371,13 @@ export default function Home() {
                     <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
+              </a>
+            </div>
+
+            <div>
+              <a href="https://usecases.arkiv.network/" className="inline-flex w-full items-center justify-center gap-2 bg-black px-5 py-3 rounded-lg hover:bg-gray-900 transition-colors">
+                <span className="font-mono text-sm md:text-base text-white leading-5">See More</span>
+                <img src="/images/arrow-top-right.svg" alt="See more use cases" className="w-4 h-4" />
               </a>
             </div>
           </div>
