@@ -3,10 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 const EXECUTION_SERVICE_URL = process.env.EXECUTION_SERVICE_URL || 'http://execution-service:8001';
 
 export async function POST(request: NextRequest) {
+  console.log('[EXECUTE API] Request received');
+  console.log('[EXECUTE API] EXECUTION_SERVICE_URL:', EXECUTION_SERVICE_URL);
+
   try {
     const { code, language, walletAddress } = await request.json();
+    console.log('[EXECUTE API] Parsed body:', { code: code?.substring(0, 50), language, walletAddress });
 
     if (!code) {
+      console.log('[EXECUTE API] No code provided');
       return NextResponse.json({ error: 'Code is required' }, { status: 400 });
     }
 
@@ -27,6 +32,8 @@ export async function POST(request: NextRequest) {
     });
 
     clearTimeout(timeoutId);
+
+    console.log('[EXECUTE API] Execution service response status:', response.status);
 
     if (!response.ok) {
       const contentType = response.headers.get('content-type');
@@ -49,6 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await response.json();
+    console.log('[EXECUTE API] Execution result:', { success: result.success, outputLength: result.output?.length });
 
     return NextResponse.json({
       output: result.success ? result.output : `❌ ${result.error}\n\nOutput:\n${result.output}`
