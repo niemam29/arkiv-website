@@ -398,7 +398,7 @@ export default function Home() {
               {/* Top Row Cards */}
               <div className="flex flex-col md:flex-row gap-6 h-auto md:h-[216px]">
                 {/* TypeScript Quickstart Guide Card */}
-                <a href="/getting-started?section=typescript" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[200px]">
+                <a href="/getting-started?section=typescript" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
                     <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
                   <div className="flex items-start justify-between w-full">
@@ -418,7 +418,7 @@ export default function Home() {
                 </a>
 
                 {/* Python Quickstart Guide Card */}
-                <a href="/getting-started?section=python" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[200px]">
+                <a href="/getting-started?section=python" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
                     <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
                   <div className="flex items-start justify-between w-full">
