@@ -508,9 +508,6 @@ export default function PlaygroundPage() {
 
           {/* Page Header */}
           <div className="mb-12">
-            <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary mb-4">
-              Interactive Playground
-            </div>
             <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black leading-tight mb-4">
               Code Playground
             </h1>
