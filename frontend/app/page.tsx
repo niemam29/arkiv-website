@@ -276,123 +276,103 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex gap-6 overflow-x-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
               {/* CopyPal */}
-              <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
+              <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 h-full px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">CopyPal</h3>
-                <div className="flex flex-col gap-6">
-                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                    <img src="/images/copypal/copypal-online-2025-09-22-20_44_16.png" alt="CopyPal screenshot" className="w-full h-[132px] object-cover object-center" />
+                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/images/copypal/copypal-online-2025-09-22-20_44_16.png" alt="CopyPal screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+                </div>
+                <p className="font-mono text-base text-black leading-[22px]">Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.</p>
+                <div className="flex justify-between items-end mt-auto">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">1</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                   </div>
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black leading-[22px]">Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.</p>
-                    <div className="flex justify-between items-end">
-                      <div className="flex items-center justify-between w-[60px]">
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">1</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                      </div>
-                      <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View CopyPal" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img src="/images/arrow-top-right.svg" alt="View CopyPal" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
               </a>
 
               {/* ImageDB */}
-              <a href="https://imagedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
+              <a href="https://imagedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 h-full px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">ImageDB</h3>
-                <div className="flex flex-col gap-6">
-                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                    <img src="/images/imagedb/imagedb-2025-09-22-o-21.07.38.png" alt="ImageDB screenshot" className="w-full h-[132px] object-cover object-center" />
+                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/images/imagedb/imagedb-2025-09-22-o-21.07.38.png" alt="ImageDB screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+                </div>
+                <p className="font-mono text-base text-black leading-[22px]">Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.</p>
+                <div className="flex justify-between items-end mt-auto">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">2</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                   </div>
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black leading-[22px]">Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.</p>
-                    <div className="flex justify-between items-end">
-                      <div className="flex items-center justify-between w-[60px]">
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">2</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                      </div>
-                      <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View ImageDB" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img src="/images/arrow-top-right.svg" alt="View ImageDB" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
               </a>
 
               {/* FileDB */}
-              <a href="https://filedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
+              <a href="https://filedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 h-full px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">FileDB</h3>
-                <div className="flex flex-col gap-6">
-                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                    <img src="/images/filedb/filedb-2025-09-22 o 21.21.59.png" alt="FileDB screenshot" className="w-full h-[132px] object-cover object-center" />
+                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/images/filedb/filedb-2025-09-22 o 21.21.59.png" alt="FileDB screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+                </div>
+                <p className="font-mono text-base text-black leading-[22px]">Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.</p>
+                <div className="flex justify-between items-end mt-auto">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">3</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                   </div>
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black leading-[22px]">Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.</p>
-                    <div className="flex justify-between items-end">
-                      <div className="flex items-center justify-between w-[60px]">
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">3</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                      </div>
-                      <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View FileDB" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img src="/images/arrow-top-right.svg" alt="View FileDB" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
               </a>
 
               {/* WebDB Static Hosting */}
-              <a href="https://webdb.site" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
+              <a href="https://webdb.site" target="_blank" rel="noopener noreferrer" className="bg-gray-200 h-full px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">WebDB Static Hosting</h3>
-                <div className="flex flex-col gap-6">
-                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                    <img src="/images/webdb/webdb-2025-09-22 o 21.19.32.png" alt="WebDB screenshot" className="w-full h-[132px] object-cover object-center" />
+                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/images/webdb/webdb-2025-09-22 o 21.19.32.png" alt="WebDB screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+                </div>
+                <p className="font-mono text-base text-black leading-[22px]">Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.</p>
+                <div className="flex justify-between items-end mt-auto">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">4</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                   </div>
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black leading-[22px]">Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.</p>
-                    <div className="flex justify-between items-end">
-                      <div className="flex items-center justify-between w-[60px]">
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">4</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                      </div>
-                      <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View WebDB details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img src="/images/arrow-top-right.svg" alt="View WebDB details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
               </a>
 
               {/* Arkiv Portfolio */}
-              <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
+              <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 h-full px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
                 <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">Arkiv Portfolio</h3>
-                <div className="flex flex-col gap-6">
-                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                    <img src="/images/portfolio/portfolio-2025-09-26 o 22.59.33.png" alt="Arkiv Portfolio screenshot" className="w-full h-[132px] object-cover object-center" />
+                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/images/portfolio/portfolio-2025-09-26 o 22.59.33.png" alt="Arkiv Portfolio screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+                </div>
+                <p className="font-mono text-base text-black leading-[22px]">Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.</p>
+                <div className="flex justify-between items-end mt-auto">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">5</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                   </div>
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black leading-[22px]">Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.</p>
-                    <div className="flex justify-between items-end">
-                      <div className="flex items-center justify-between w-[60px]">
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">5</span>
-                        <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                      </div>
-                      <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                   </div>
                 </div>
               </a>
