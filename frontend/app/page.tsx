@@ -750,17 +750,10 @@ async function printEntities(label: string, entities: any[]) {
       <section className="px-4 md:px-[60px] py-[64px] bg-[#181EA9]">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
-            {/* Main Footer Content - Single Row */}
-            <div className="flex items-start justify-between">
-              {/* Large ARKIV Logo */}
-              <div className="flex-shrink-0">
-                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
-                  [ ARKIV ]
-                </h2>
-              </div>
-
-              {/* Footer Navigation - Horizontal Layout */}
-              <div className="flex gap-16 items-start">
+            {/* Main Footer Content */}
+            <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-between gap-8">
+              {/* Footer Navigation */}
+              <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center md:items-start text-center md:text-left">
                 {/* Developers */}
                 <div className="flex flex-col gap-2">
                   <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
@@ -794,10 +787,16 @@ async function printEntities(label: string, entities: any[]) {
                   </div>
                 </div>
               </div>
+              {/* Large ARKIV Logo */}
+              <div className="flex-shrink-0 text-center">
+                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
+                  [ ARKIV ]
+                </h2>
+              </div>
             </div>
 
             {/* Copyright - Single Row */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-2 pt-4 border-t border-white/10 text-center md:text-left">
               <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
               <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
             </div>
