@@ -54,8 +54,8 @@ export default function Home() {
 
 
               {/* Features + Event Card */}
-              <div className="h-auto lg:h-[442px] p-5 bg-white rounded-2xl shadow-figma-card flex flex-col justify-between">
-                <div className="font-mono text-base uppercase leading-8 text-black">
+              <div className="flex flex-col gap-3 lg:gap-5 lg:h-[442px] p-0 lg:p-5 bg-transparent lg:bg-white rounded-2xl lg:shadow-figma-card">
+                <div className="hidden lg:block font-mono text-base uppercase leading-8 text-black">
                   Queryable<br/>
                   Time‑scoped<br/>
                   Verifiable<br/>
