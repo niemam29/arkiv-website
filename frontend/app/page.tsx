@@ -648,7 +648,7 @@ async function printEntities(label: string, entities: any[]) {
               <div className="w-[200px] flex-shrink-0 self-stretch relative rounded-2xl overflow-hidden bg-[#d9d9d9]">
                 <img alt="Arkiv Real World Adoption Day event" className="w-full h-full object-cover" src="/images/Real_World_Adoption_Day.png" />
                 <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
-                  Sep 30th, 2025
+                  Oct 1st, 2025
                 </div>
               </div>
             </a>
