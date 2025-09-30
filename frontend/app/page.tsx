@@ -272,7 +272,10 @@ export default function Home() {
           <div className="flex flex-col gap-[32px]">
             <h2 id="use-cases" className="font-brutal text-lg md:text-xl font-medium uppercase text-black">[ Use Cases ]</h2>
 
-            <div className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory xl:overflow-visible xl:pr-[160px]">
+            <div className="relative group">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:block" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:block" />
+              <div className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory xl:overflow-visible xl:pr-[160px]">
               {/* CopyPal */}
               <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
                 <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
@@ -355,23 +358,24 @@ export default function Home() {
 
               {/* Arkiv Portfolio */}
               <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 min-w-[296px] lg:min-w-[296px] xl:min-w-[312px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start">
-                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">Arkiv Portfolio</h3>
-                <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
-                  <img src="/images/portfolio/portfolio-2025-09-26 o 22.59.33.png" alt="Arkiv Portfolio screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+              <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">Arkiv Portfolio</h3>
+              <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
+                <img src="/images/portfolio/portfolio-2025-09-26 o 22.59.33.png" alt="Arkiv Portfolio screenshot" className="absolute inset-0 w-full h-full object-cover object-center" />
+              </div>
+              <p className="font-mono text-base text-black leading-[22px]">Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.</p>
+              <div className="flex justify-between items-end mt-auto">
+                <div className="flex items-center justify-between w-[60px]">
+                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">5</span>
+                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
                 </div>
-                <p className="font-mono text-base text-black leading-[22px]">Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.</p>
-                <div className="flex justify-between items-end mt-auto">
-                  <div className="flex items-center justify-between w-[60px]">
-                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">5</span>
-                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                  </div>
-                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                    <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                  </div>
+                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                  <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200" />
                 </div>
+              </div>
               </a>
+              </div>
             </div>
 
             <div>
