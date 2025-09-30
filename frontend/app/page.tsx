@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import AnimatedCodeBlock from '@/components/ui/AnimatedCodeBlock'
 import StructuredData from '@/components/seo/StructuredData'
 import HoverVideo from '@/components/ui/HoverVideo'
+import UseCasesCarousel from '@/components/sections/UseCasesCarousel'
 
 export default function Home() {
   return (
