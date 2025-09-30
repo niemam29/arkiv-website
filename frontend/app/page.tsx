@@ -396,44 +396,62 @@ export default function Home() {
           <div className="flex flex-col gap-6 w-full">
             <div className="flex flex-col gap-6">
               {/* Top Row Cards */}
-              <div className="flex flex-col md:flex-row gap-6 h-auto md:h-[216px]">
+              <div className="flex flex-col md:flex-row gap-6 h-auto">
                 {/* TypeScript Quickstart Guide Card */}
-                <a href="/getting-started?section=typescript" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-                    <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+                <a href="/getting-started?section=typescript" className="relative bg-gray-200 flex-1 h-[160px] md:h-[216px] p-4 md:p-6 rounded-2xl shadow-figma-card hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
+                  <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
-                  <div className="flex items-start justify-between w-full">
-                    <div className="flex items-center justify-center">
-                      <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
-                    <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
+                  <div className="flex h-full items-center justify-center gap-4 md:hidden">
+                    <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center">
                       <img src="/images/code.svg" alt="TypeScript guide icon" className="w-6 h-6" />
                     </div>
+                    <p className="font-mono text-base text-black leading-[22px]">TypeScript Quickstart Guide</p>
                   </div>
 
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black group-hover:text-black leading-[22px] overflow-hidden overflow-ellipsis transition-colors duration-200">TypeScript Quickstart Guide</p>
+                  <div className="hidden md:flex flex-col justify-between h-full">
+                    <div className="flex items-start justify-between w-full">
+                      <div className="flex items-center justify-center">
+                        <div className="transform scale-y-[-100%]">
+                          <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        </div>
+                      </div>
+                      <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
+                        <img src="/images/code.svg" alt="TypeScript guide icon" className="w-6 h-6" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                      <p className="font-mono text-base text-black group-hover:text-black leading-[22px] overflow-hidden overflow-ellipsis transition-colors duration-200">TypeScript Quickstart Guide</p>
+                    </div>
                   </div>
                 </a>
 
                 {/* Python Quickstart Guide Card */}
-                <a href="/getting-started?section=python" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-                    <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+                <a href="/getting-started?section=python" className="relative bg-gray-200 flex-1 h-[160px] md:h-[216px] p-4 md:p-6 rounded-2xl shadow-figma-card hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
+                  <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
-                  <div className="flex items-start justify-between w-full">
-                    <div className="flex items-center justify-center">
-                      <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
-                      </div>
-                    </div>
-                    <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
+                  <div className="flex h-full items-center justify-center gap-4 md:hidden">
+                    <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center">
                       <img src="/images/sdk.svg" alt="Python guide icon" className="w-6 h-6" />
                     </div>
+                    <p className="font-mono text-base text-black leading-[22px]">Python Quickstart Guide</p>
                   </div>
 
-                  <div className="flex flex-col gap-6">
-                    <p className="font-mono text-base text-black group-hover:text-black leading-[22px] overflow-hidden overflow-ellipsis transition-colors duration-200">Python Quickstart Guide</p>
+                  <div className="hidden md:flex flex-col justify-between h-full">
+                    <div className="flex items-start justify-between w-full">
+                      <div className="flex items-center justify-center">
+                        <div className="transform scale-y-[-100%]">
+                          <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        </div>
+                      </div>
+                      <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
+                        <img src="/images/sdk.svg" alt="Python guide icon" className="w-6 h-6" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                      <p className="font-mono text-base text-black group-hover:text-black leading-[22px] overflow-hidden overflow-ellipsis transition-colors duration-200">Python Quickstart Guide</p>
+                    </div>
                   </div>
                 </a>
               </div>
