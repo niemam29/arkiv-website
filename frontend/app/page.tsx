@@ -388,7 +388,10 @@ export default function Home() {
       <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
-          <h2 id="getting-started" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ Start building in Arkiv in 10 minutes ]</h2>
+          <h2 id="getting-started" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">
+            <span className="md:hidden">[ Start Now ]</span>
+            <span className="hidden md:inline">[ Start building in Arkiv in 10 minutes ]</span>
+          </h2>
 
           <div className="flex flex-col gap-6 w-full">
             <div className="flex flex-col gap-6">
