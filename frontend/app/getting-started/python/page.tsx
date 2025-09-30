@@ -58,31 +58,7 @@ export default function GettingStartedPythonPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="px-4 md:px-[60px] mt-6 sticky top-6 z-[100]">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-figma-card">
-            <nav className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <a href="/" className="flex items-center">
-                  <div className="font-brutal text-3xl font-black uppercase text-black tracking-wider">
-                    [ ARKIV ]
-                  </div>
-                </a>
-                <div className="hidden lg:flex items-center space-x-6 ml-auto">
-                  <a href="/#why-arkiv" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Why Arkiv</a>
-                  <a href="/#how-it-works" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">How it Works</a>
-                  <a href="/#use-cases" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Use Cases</a>
-                  <a href="/#faq" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">FAQ</a>
-                  <a href="/#about" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">About</a>
-                </div>
-              </div>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-white pt-28">
       {/* Main Content */}
       <main className="relative z-10">
         <div className="max-w-[1280px] mx-auto px-4 md:px-[60px] py-12">
