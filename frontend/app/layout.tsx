@@ -150,6 +150,14 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
 
+        {/* Umami Analytics */}
+        <Script
+          async
+          defer
+          data-website-id="c1696d86-bccc-4ccb-9087-aef7367d250b"
+          src="https://umami.golemdb.io/script.js"
+        />
+
         <div className="min-h-screen bg-white flex flex-col relative">
           {/* Background Video - conditional based on route */}
           <ConditionalVideo />
@@ -160,6 +168,7 @@ export default function RootLayout({
             {children}
           </main>
 
+          <Footer />
         </div>
       </body>
     </html>
