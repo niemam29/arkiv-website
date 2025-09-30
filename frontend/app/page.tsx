@@ -50,7 +50,7 @@ export default function Home() {
             </div>
 
             {/* Right Side - Info Cards */}
-            <div className="w-full lg:w-[320px] flex flex-col gap-3">
+            <div className="w-full lg:w-[480px] flex flex-col gap-3">
 
 
               {/* Features + Event Card */}
@@ -67,7 +67,7 @@ export default function Home() {
                   <div className="font-mono text-sm text-[#1F1F1F]">Meet us at:</div>
 
                   {/* Event Card */}
-                  <a href="https://lu.ma/adoptiondaysingapore" target="_blank" rel="noopener noreferrer" className="w-[280px] p-5 bg-[#EDEDED] rounded-2xl shadow-figma-card flex flex-col gap-5 hover:bg-orange-400 transition-colors duration-200 cursor-pointer">
+                  <a href="https://lu.ma/adoptiondaysingapore" target="_blank" rel="noopener noreferrer" className="w-full lg:w-[420px] p-5 bg-[#EDEDED] rounded-2xl shadow-figma-card flex flex-col gap-5 hover:bg-orange-400 transition-colors duration-200 cursor-pointer">
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-4 text-lg">🇸🇬</div>
