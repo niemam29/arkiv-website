@@ -312,7 +312,7 @@ export function CodePlayground({
             <Button
               onClick={handleRun}
               disabled={isRunning}
-              className="w-full"
+              className="w-full bg-[#1F1F1F] text-white hover:bg-[#333333]"
             >
               {isRunning ? (
                 <>
