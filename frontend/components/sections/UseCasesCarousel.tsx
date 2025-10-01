@@ -102,14 +102,14 @@ export default function UseCasesCarousel() {
             className="bg-gray-200 min-w-[280px] md:min-w-[300px] xl:min-w-[266px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start"
           >
             <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-            <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6 group-hover:text-white">
+            <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6 mb-6 group-hover:text-white">
               {item.title}
             </h3>
             <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
               <img
                 src={item.image}
                 alt={`${item.title} screenshot`}
-                className="absolute inset-0 w-full h-full object-cover object-center"
+                className="absolute inset-0 w-full h-full object-cover object-top"
               />
             </div>
             <p className="font-mono text-base text-black leading-[22px] group-hover:text-white">{item.description}</p>
@@ -125,7 +125,7 @@ export default function UseCasesCarousel() {
                 <img
                   src="/images/arrow-top-right.svg"
                   alt={`View ${item.title}`}
-                  className="w-10 h-10 group-hover:invert transition-all duration-200"
+                  className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block"
                 />
               </div>
             </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
 interface HoverVideoProps {
   src: string
@@ -22,9 +22,29 @@ export default function HoverVideo({
   poster,
 }: HoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting)
+      },
+      { threshold: 0.1 }
+    )
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current)
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current)
+      }
+    }
+  }, [])
 
   const handleMouseEnter = () => {
-    if (videoRef.current) {
+    if (videoRef.current && isInView) {
       videoRef.current.play()
     }
   }
@@ -38,13 +58,14 @@ export default function HoverVideo({
   return (
     <video
       ref={videoRef}
-      src={src}
+      src={isInView ? src : undefined}
       className={className}
       muted={muted}
       playsInline={playsInline}
       autoPlay={autoPlay}
       loop={loop}
       poster={poster}
+      preload="none"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     />

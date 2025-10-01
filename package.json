@@ -1,4 +1,18 @@
 {
+  "name": "arkiv-website",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy:staging": "./scripts/deploy-staging.sh",
+    "deploy:production": "./scripts/promote-to-production.sh",
+    "rollback:production": "./scripts/rollback-production.sh",
+    "dev": "cd frontend && bun run dev",
+    "build": "cd frontend && bun run build",
+    "build:docker": "docker buildx build --platform linux/amd64 --push -t moonplkr/arkiv-frontend:latest -f frontend/Dockerfile .",
+    "status": "ssh moon@arkiv.dev.golem.network 'docker ps --filter name=arkiv-frontend'",
+    "logs:staging": "ssh moon@arkiv.dev.golem.network 'docker logs -f arkiv-frontend-staging'",
+    "logs:production": "ssh moon@arkiv.dev.golem.network 'docker logs -f arkiv-frontend-production'"
+  },
   "dependencies": {
     "react-day-picker": "^9.11.0"
   }

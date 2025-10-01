@@ -95,15 +95,15 @@ export default function AnimatedCodeBlock({ examples, className = '' }: Animated
   return (
     <div ref={containerRef} className={`flex flex-col gap-6 ${className}`}>
       {/* Example Switcher */}
-      <div className="flex gap-3">
+      <div className="bg-[#ededed] box-border flex gap-3 items-center p-2 rounded-2xl w-fit">
         {examples.map((example, index) => (
           <button
             key={example.id}
             onClick={() => handleExampleChange(index)}
-            className={`px-5 py-2.5 rounded-lg font-mono text-sm transition-colors shadow-sm ${
+            className={`px-5 py-2.5 rounded-lg font-mono text-base transition-colors ${
               currentExample === index
-                ? 'bg-[#1F1F1F] text-white hover:bg-gray-800 shadow-figma-button-primary'
-                : 'bg-white text-black border border-black/10 hover:bg-gray-100'
+                ? 'bg-[#1f1f1f] text-white shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] relative after:absolute after:inset-0 after:pointer-events-none after:shadow-[inset_0px_2px_2px_0px_rgba(255,255,255,0.25),inset_0px_-4px_2px_0px_rgba(0,0,0,0.25)] after:rounded-lg'
+                : 'text-black hover:bg-gray-200'
             }`}
           >
             {example.title}

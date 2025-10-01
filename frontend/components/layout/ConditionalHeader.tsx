@@ -10,8 +10,8 @@ interface ConditionalHeaderProps {
 export default function ConditionalHeader({ navigation }: ConditionalHeaderProps) {
   const pathname = usePathname()
 
-  // Don't render Header on playground or getting-started pages
-  if (pathname === '/playground' || pathname === '/getting-started') {
+  // Don't render Header on playground page
+  if (pathname === '/playground') {
     return null
   }
 

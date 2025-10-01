@@ -1,9 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { CodePlayground } from '@/components/ui/CodePlayground';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { pythonExamples } from '@/data/python-examples';
+import Footer from '@/components/layout/Footer';
+
+const CodePlayground = dynamic(() => import('@/components/ui/CodePlayground').then(mod => ({ default: mod.CodePlayground })), {
+  loading: () => (
+    <div className="w-full h-[600px] bg-gray-50 animate-pulse rounded-lg flex items-center justify-center">
+      <div className="text-gray-400 font-mono">Loading playground...</div>
+    </div>
+  ),
+  ssr: false
+});
 
 const examples = {
   connect: {
@@ -17,9 +27,8 @@ const provider = new ethers.JsonRpcProvider(
   "https://kaolin.hoodi.arkiv.network/rpc"
 );
 
-// Create wallet from private key
-const privateKey = mockPrivateKey; // Using mock key for playground
-const wallet = new ethers.Wallet(privateKey, provider);
+// Create wallet from private key (ethers needs 0x prefix)
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Get wallet information
 const address = await wallet.getAddress();
@@ -45,7 +54,7 @@ console.log("Network name:", network.name === "unknown" ? "Arkiv testnet" : (net
 const provider = new ethers.JsonRpcProvider(
   "https://kaolin.hoodi.arkiv.network/rpc"
 );
-const wallet = new ethers.Wallet(mockPrivateKey, provider);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Arkiv contract ABI (simplified example)
 const abi = [
@@ -139,7 +148,7 @@ try {
 const provider = new ethers.JsonRpcProvider(
   "https://kaolin.hoodi.arkiv.network/rpc"
 );
-const wallet = new ethers.Wallet(mockPrivateKey, provider);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Get current gas price
 const feeData = await provider.getFeeData();
@@ -245,57 +254,45 @@ console.log('provider.on("pending", (tx) => { ... })');`
     title: 'MetaMask Integration',
     description: 'Use MetaMask wallet with Arkiv',
     code: `// MetaMask integration example
-// First, click "Connect MetaMask" button above
-// Then run this code to use your wallet
+// Note: ethers is already imported in the playground environment
 
-// Check if MetaMask is connected
-if (isMetaMaskConnected) {
-  console.log("✅ MetaMask is connected!");
-  console.log("Your wallet address:", userWalletAddress);
+// In a real app, you'd check if MetaMask is connected
+// For playground, we'll use a mock wallet
+console.log("Using mock wallet for demonstration");
+console.log("");
 
-  // When MetaMask is connected, you can use ethers with the provider
-  const provider = new ethers.JsonRpcProvider(
-    "https://kaolin.hoodi.arkiv.network/rpc"
-  );
+const provider = new ethers.JsonRpcProvider(
+  "https://kaolin.hoodi.arkiv.network/rpc"
+);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
+const address = await wallet.getAddress();
 
-  // Get wallet info
-  const balance = await provider.getBalance(userWalletAddress);
-  console.log("Balance:", ethers.formatEther(balance), "ETH");
+console.log("Wallet address:", address);
 
-  // Get transaction count
-  const txCount = await provider.getTransactionCount(userWalletAddress);
-  console.log("Transaction count:", txCount);
+// Get wallet info
+const balance = await provider.getBalance(address);
+console.log("Balance:", ethers.formatEther(balance), "ETH");
 
-  // Get current block
-  const blockNumber = await provider.getBlockNumber();
-  console.log("Current block:", blockNumber);
+// Get transaction count
+const txCount = await provider.getTransactionCount(address);
+console.log("Transaction count:", txCount);
 
-  console.log("");
-  console.log("🔗 Arkiv Connection");
-  console.log("To use Arkiv with your wallet:");
-  console.log("1. Sign transactions in MetaMask when prompted");
-  console.log("2. Your wallet will pay for gas fees");
-  console.log("3. All operations will be from your address");
+// Get current block
+const blockNumber = await provider.getBlockNumber();
+console.log("Current block:", blockNumber);
 
-} else {
-  console.log("❌ MetaMask not connected");
-  console.log("Please click 'Connect MetaMask' button above first");
-  console.log("");
-  console.log("Using mock wallet for demonstration:");
-
-  const provider = new ethers.JsonRpcProvider(
-    "https://kaolin.hoodi.arkiv.network/rpc"
-  );
-  const wallet = new ethers.Wallet(mockPrivateKey, provider);
-  const address = await wallet.getAddress();
-  console.log("Mock wallet address:", address);
-}`
+console.log("");
+console.log("💡 In a real app:");
+console.log("1. Click 'Connect MetaMask' to use your wallet");
+console.log("2. Sign transactions when prompted");
+console.log("3. Your wallet pays for gas fees");`
   },
 
   batch: {
     title: 'Batch Operations',
     description: 'Perform multiple operations efficiently',
     code: `// Initialize client first
+// Note: mockPrivateKey is already defined in the playground environment
 const privateKeyHex = mockPrivateKey;
 const privateKey = new Uint8Array(
   privateKeyHex.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
@@ -341,6 +338,7 @@ results.forEach((entity, idx) => {
     title: 'Full Example',
     description: 'Complete Arkiv workflow demonstration',
     code: `// === COMPLETE ARKIV EXAMPLE ===
+// Note: mockPrivateKey is already defined in the playground environment
 console.log("=== ARKIV COMPLETE EXAMPLE ===");
 console.log("");
 
@@ -629,58 +627,7 @@ export default function PlaygroundPage() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <section className="px-4 md:px-[60px] py-[64px] bg-[#181EA9]">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-8">
-            <div className="flex items-start justify-between">
-              <div className="flex-shrink-0">
-                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
-                  [ ARKIV ]
-                </h2>
-              </div>
-
-              <div className="flex gap-16 items-start">
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Docs</a>
-                    <a href="/getting-started" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Getting Started</a>
-                    <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
-                    <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
-                    <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
-                    <a href="/aips" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">AIPs [Soon]</a>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://twitter.com/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">X</a>
-                    <a href="https://discord.gg/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Discord</a>
-                    <a href="/#upcoming-events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Events</a>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Privacy Policy</a>
-                    <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Cookie Policy</a>
-                    <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Terms of Use</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
-              <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Footer />
     </div>
   );
 }

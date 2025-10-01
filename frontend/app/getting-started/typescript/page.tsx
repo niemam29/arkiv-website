@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { CodeBlock } from "@/components/ui/CodeBlock"
-import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPage() {
   const [activeSection, setActiveSection] = useState('setup')
@@ -666,7 +665,6 @@ main().catch(console.error)`}
           </section>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

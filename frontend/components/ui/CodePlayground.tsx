@@ -78,7 +78,7 @@ export function CodePlayground({
                 symbol: 'ETH',
                 decimals: 18
               },
-              rpcUrls: ['https://ethwarsaw.holesky.golemdb.io/rpc'],
+              rpcUrls: ['https://kaolin.hoodi.arkiv.network/rpc'],
               blockExplorerUrls: []
             }]
           });

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         code,
-        language: language === 'typescript' || language === 'javascript' ? 'python' : language,
+        language: language || 'python',
       }),
       signal: controller.signal,
     });

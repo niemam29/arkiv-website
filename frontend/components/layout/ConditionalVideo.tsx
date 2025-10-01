@@ -19,6 +19,7 @@ export default function ConditionalVideo() {
         loop
         muted
         playsInline
+        preload="metadata"
       />
     </div>
   )

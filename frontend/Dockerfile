@@ -1,30 +1,38 @@
-FROM node:22-alpine
+# Build stage
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Install Python and bun
-RUN apk add --no-cache python3 py3-pip
-RUN pip3 install --break-system-packages golem-base-sdk web3
+# Install bun
 RUN npm install -g bun
 
 # Copy package files
-COPY package.json bun.lockb* ./
+COPY frontend/package.json frontend/bun.lockb* ./
 
 # Install dependencies
 RUN bun install
 
 # Copy source code
-COPY . .
+COPY frontend/ .
 
 # Build the application
 RUN bun run build
 
-# Copy static files and public directory to standalone directory
-RUN cp -r .next/static .next/standalone/.next/static
-RUN cp -r public .next/standalone/public
+# Production stage
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+# Set to production
+ENV NODE_ENV=production
+
+# Copy only necessary files from builder
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 # Expose port
 EXPOSE 3000
 
-# Start production server using standalone build
-CMD ["node", ".next/standalone/server.js"]
+# Start production server
+CMD ["node", "server.js"]

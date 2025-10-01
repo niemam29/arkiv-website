@@ -1,95 +1,108 @@
 export const pythonExamples = {
   connect: {
-    title: 'Connect to Golem DB',
-    description: 'Initialize a client and connect to the Golem DB network',
-    code: `# Initialize the Golem DB client
+    title: 'Connect to Arkiv',
+    description: 'Initialize a client and connect to the Arkiv network',
+    code: `# Initialize the Arkiv client
+# Note: Real WebSocket connections are not supported in playground
+# This example demonstrates the connection pattern
+
 from golem_base_sdk import GolemBaseClient
 import json
-import asyncio
 
 private_key_hex = mock_private_key  # Using mock key for playground
 
 # Convert hex to bytes
 private_key = bytes.fromhex(private_key_hex)
 
-# Create client connection
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== Arkiv Connection Example ===")
+print("")
+print("Connection configuration:")
+print(f"  RPC URL: https://kaolin.hoodi.arkiv.network/rpc")
+print(f"  Private key: {private_key_hex[:16]}...")
+print("")
 
-# Get owner address
-owner_address = client.get_account_address()
-print(f"Connected with address: {owner_address}")
-print("Ready to interact with Golem DB!")`
+# Simulated connection (actual WebSocket connection not supported in sandbox)
+owner_address = "0x4393CE3C46f74CC5c30809b122acd69EE74aC532"
+print(f"✅ Connected with address: {owner_address}")
+print("")
+print("In production, use:")
+print("client = await GolemBaseClient.create_rw_client(")
+print("    rpc_url='https://kaolin.hoodi.arkiv.network/rpc',")
+print("    ws_url='wss://kaolin.hoodi.arkiv.network/ws',")
+print("    private_key=private_key")
+print(")")
+print("")
+print("Ready to interact with Arkiv!")`
   },
   
   create: {
     title: 'Create Entity',
     description: 'Create a new entity with annotations',
-    code: `# Initialize client first
-from golem_base_sdk import GolemBaseClient, GolemBaseCreate, Annotation
+    code: `# Create Entity Example
+# Note: Actual client connections are not supported in playground
+from golem_base_sdk import GolemBaseCreate, Annotation
 import json
 import time
-import asyncio
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
 
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== Create Entity Example ===")
+print("")
 
 # Create a new entity with metadata
 data = json.dumps({
-    "message": "Hello from Golem DB Playground!",
+    "message": "Hello from Arkiv Playground!",
     "timestamp": int(time.time() * 1000),
     "author": "Developer"
-}).encode('utf-8')
+})
 
-# Create entity with annotations
-entity = GolemBaseCreate(
-    data=data,
-    btl=300,  # Block-To-Live: ~10 minutes
-    string_annotations=[
-        Annotation(key="type", value="message"),
-        Annotation(key="environment", value="playground"),
-        Annotation(key="author", value="Developer")
-    ],
-    numeric_annotations=[
-        Annotation(key="version", value=1),
-        Annotation(key="priority", value=5)
-    ]
-)
+print("Entity data:")
+print(f"  {data}")
+print("")
 
-receipts = await client.create_entities([entity])
-print("Entity created!")
-print(f"Entity Key: {receipts[0].entity_key}")
-print(f"Expires at block: {receipts[0].expiration_block}")`
+# Define entity with annotations
+print("Creating entity with annotations:")
+print("  String annotations:")
+print("    - type: message")
+print("    - environment: playground")
+print("    - author: Developer")
+print("")
+print("  Numeric annotations:")
+print("    - version: 1")
+print("    - priority: 5")
+print("")
+print("  BTL (Block-To-Live): 300 blocks (~10 minutes)")
+print("")
+
+# Simulated entity creation
+entity_key = "0x" + "a" * 64
+expiration_block = 123456
+
+print("✅ Entity created!")
+print(f"Entity Key: {entity_key}")
+print(f"Expires at block: {expiration_block}")
+print("")
+print("In production, create entities with:")
+print("receipts = await client.create_entities([entity])")`
   },
   
   query: {
     title: 'Query Entities',
     description: 'Search for entities using annotations',
-    code: `# Initialize client first
-from golem_base_sdk import GolemBaseClient
+    code: `# Query Entities Example
+# Note: Actual client connections are not supported in playground
 import json
+import time
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
 
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== Query Entities Example ===")
+print("")
 
 # Query entities by annotations
 query = 'type = "message" && version = 1'
 print(f"Executing query: {query}")
+print("")
 
 # Simulated query results for playground
 results = [
@@ -103,19 +116,19 @@ results = [
     {
         "entity_key": "0x" + "c" * 64,
         "storage_value": json.dumps({
-            "message": "Sample message 2", 
+            "message": "Sample message 2",
             "timestamp": int(time.time() * 1000)
         })
     }
 ]
 
-print(f"Found {len(results)} entities")
+print(f"✅ Found {len(results)} entities")
 
 # Process results
 for entity in results:
     print("")
     print(f"Entity: {entity['entity_key'][:10]}...")
-    
+
     try:
         parsed = json.loads(entity['storage_value'])
         print(f"  Content: {parsed}")
@@ -128,56 +141,57 @@ print("--- Query Examples ---")
 print('Equality: type = "message"')
 print('Numeric: priority > 3')
 print('Combined: type = "task" && status = "active"')
-print('OR logic: status = "pending" || status = "active"')`
+print('OR logic: status = "pending" || status = "active"')
+print("")
+print("In production, use:")
+print("results = await client.query_entities(query)")`
   },
   
   update: {
     title: 'Update Entity',
     description: 'Modify an existing entity',
-    code: `# Initialize client first
-from golem_base_sdk import GolemBaseClient
+    code: `# Update Entity Example
+# Note: Actual client connections are not supported in playground
 import json
+import time
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
 
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== Update Entity Example ===")
+print("")
 
 # First create an entity to update (simulated)
 entity_key = "0x" + "d" * 64
-print(f"Created entity: {entity_key[:10]}...")
+print(f"Existing entity: {entity_key[:10]}...")
+print("")
 
 # Now update it
 update_data = json.dumps({
     "message": "Updated content",
     "updatedAt": int(time.time() * 1000)
-}).encode('utf-8')
+})
+
+print("Update data:")
+print(f"  {update_data}")
+print("")
 
 # Simulated update
-print("Entity updated successfully!")
+print("✅ Entity updated successfully!")
 print(f"Entity key: {entity_key[:10]}...")
-print(f"New expiration block: 234567")`
+print(f"New expiration block: 234567")
+print("")
+print("In production, use:")
+print("receipt = await client.update_entity(entity_key, new_data, btl=300)")`
   },
   
   events: {
     title: 'Event Simulation',
     description: 'Demonstrate event-driven operations',
-    code: `# Initialize client first
-from golem_base_sdk import GolemBaseClient
+    code: `# Event Simulation Example
+# Note: Real-time event monitoring is NOT supported in playground
 import json
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
-
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
 
 print("=== Event Simulation Example ===")
 print("")
@@ -222,18 +236,15 @@ print("in a Python environment outside the sandbox.")`
   batch: {
     title: 'Batch Operations',
     description: 'Perform multiple operations efficiently',
-    code: `# Initialize client first
-from golem_base_sdk import GolemBaseClient
+    code: `# Batch Operations Example
+# Note: Actual client connections are not supported in playground
 import json
+import time
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
 
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== Batch Operations Example ===")
+print("")
 
 # Create multiple entities in a single transaction
 batch_id = str(int(time.time() * 1000))
@@ -248,6 +259,7 @@ for i in range(5):
     batch_entities.append(entity_data)
 
 print(f"Creating batch of {len(batch_entities)} entities...")
+print("")
 
 # Simulated batch creation
 receipts = []
@@ -255,7 +267,7 @@ for i in range(5):
     entity_key = "0x" + str(i) * 64
     receipts.append({"entity_key": entity_key})
 
-print("Batch created successfully!")
+print("✅ Batch created successfully!")
 for i, receipt in enumerate(receipts):
     print(f"  Item {i + 1}: {receipt['entity_key'][:10]}...")
 
@@ -263,7 +275,10 @@ for i, receipt in enumerate(receipts):
 batch_query = f'batchId = "{batch_id}"'
 batch_results_count = 5
 print("")
-print(f"Queried batch: found {batch_results_count} entities")`
+print(f"Queried batch: found {batch_results_count} entities")
+print("")
+print("In production, use:")
+print("receipts = await client.create_entities(batch_entities)")`
   },
   
   metamask: {
@@ -312,25 +327,18 @@ print("- Browser-based frontends that handle MetaMask")`
   fullExample: {
     title: 'Full Example',
     description: 'Complete workflow: connect, create, query, update, and delete',
-    code: `# Complete Golem DB workflow example
-print("=== GOLEM DB FULL EXAMPLE ===")
-print("")
-
-# Step 1: Initialize and connect
-print("1. Connecting to Golem DB...")
-from golem_base_sdk import GolemBaseClient
+    code: `# Complete Arkiv workflow example
+# Note: Actual client connections are not supported in playground
 import json
 import time
 
 private_key_hex = mock_private_key
-private_key = bytes.fromhex(private_key_hex)
 
-client = await GolemBaseClient.create_rw_client(
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc",
-    ws_url="wss://https://kaolin.hoodi.arkiv.network/rpc/rpc/ws",
-    private_key=private_key
-)
+print("=== ARKIV FULL EXAMPLE ===")
+print("")
 
+# Step 1: Initialize and connect
+print("1. Connecting to Arkiv...")
 owner_address = "0x4393CE3C46f74CC5c30809b122acd69EE74aC532"
 print(f"✅ Connected! Address: {owner_address}")
 print("")

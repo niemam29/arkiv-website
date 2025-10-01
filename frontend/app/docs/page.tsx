@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -20,7 +20,7 @@ const docsNavigation = [
   {
     id: 'sdk',
     name: 'SDKs',
-    description: 'TypeScript, Python, and Rust SDKs'
+    description: 'TypeScript and Python SDKs'
   },
   {
     id: 'api',
@@ -39,114 +39,72 @@ const overviewContent = {
   content: `
 # What is Arkiv?
 
-**Arkiv** is a revolutionary decentralized data layer that brings queryable, time-scoped storage to Ethereum. Built on Arkiv Holesky testnet, Arkiv enables developers to store, query, and manage data with built-in expiration and powerful annotation systems.
+Arkiv is a decentralized data layer that brings queryable, time-scoped storage to Ethereum. It enables developers to store, query, and manage data with built-in expiration and annotation systems.
 
-## 🚀 Why Arkiv?
+## Why Arkiv?
 
-Unlike traditional blockchain storage solutions, Arkiv is designed from the ground up for **data as a first-class citizen**:
+Arkiv treats data as a first-class citizen on Ethereum:
 
-### ⚡ **Instant Queries**
-- SQL-like queries with annotations
-- Real-time data retrieval
-- No need for external indexing services
+**Instant Queries** — SQL-like queries with annotations, real-time data retrieval, no external indexing required.
 
-### 💰 **Cost-Efficient**
-- Pay only for storage duration (BTL - Blocks To Live)
-- Automatic data pruning saves costs
-- No permanent storage fees
+**Cost-Efficient** — Pay only for storage duration (BTL - Blocks To Live), automatic data pruning, no permanent storage fees.
 
-### 🔗 **Ethereum-Native**
-- Built on proven Ethereum infrastructure
-- Full transparency and verifiability
-- Compatible with existing Web3 tools
+**Ethereum-Native** — Built on Ethereum infrastructure, fully transparent and verifiable, compatible with existing Web3 tools.
 
-### 🎯 **Developer-Friendly**
-- Simple CRUD operations
-- TypeScript SDK with full type safety
-- Real-time event streaming
+**Developer-Friendly** — Simple CRUD operations, TypeScript SDK with full type safety, real-time event streaming.
 
-## 🏗️ How It Works
+## Architecture
 
-Arkiv uses a unique **three-layer architecture**:
+Arkiv uses a three-layer architecture:
 
-### 🔷 Layer 1: Ethereum Mainnet
-**Final Settlement & Security**
-- Proof verification and commitments
-- Ultimate source of truth
-- Ethereum's proven security model
+**Layer 1: Ethereum Mainnet**
+Final settlement and security. Proof verification, commitments, and ultimate source of truth.
 
-### 🔷 Layer 2: Arkiv Coordination Layer
-**Data Management & Registry**
-- DB-chain coordination and registry
-- Cross-chain data synchronization
-- Deterministic query resolution
+**Layer 2: Arkiv Coordination Layer**
+Data management and registry. DB-chain coordination, cross-chain synchronization, deterministic query resolution.
 
-### 🔷 Layer 3: Specialized DB-Chains
-**High-Performance Data Operations**
-- CRUD operations via JSON-RPC
-- Indexed queries with annotations
-- Programmable data expiration (BTL)
+**Layer 3: Specialized DB-Chains**
+High-performance data operations. CRUD via JSON-RPC, indexed queries with annotations, programmable expiration (BTL).
 
-## 🎯 Perfect For
+## Use Cases
 
-### 🗂️ **Temporary Data Storage**
-- Session data that expires automatically
-- Cross-device clipboards and notes
-- Cached API responses with TTL
+**Temporary Data Storage** — Session data with automatic expiration, cross-device clipboards, cached API responses.
 
-### 📊 **Event & Analytics Data**
-- Application logs with automatic cleanup
-- User activity tracking
-- Temporary metrics collection
+**Event & Analytics** — Application logs with cleanup, user activity tracking, temporary metrics.
 
-### 🖼️ **File & Media Management**
-- Image metadata with expiration
-- Document versioning systems
-- Chunked file storage
+**File & Media** — Image metadata with expiration, document versioning, chunked file storage.
 
-### 🔄 **Real-Time Applications**
-- Live chat applications
-- Collaborative tools
-- IoT data streams
+**Real-Time Apps** — Live chat, collaborative tools, IoT data streams.
 
-## 💡 Key Concepts
+## Core Concepts
 
-### **Entities**
-Data records with content, annotations, and expiration time.
+**Entities** — Data records containing content, annotations, and expiration time.
 
-### **Annotations**
-Key-value pairs for efficient querying:
-- **String annotations**: \`type = "note"\`, \`category = "work"\`
-- **Numeric annotations**: \`priority = 5\`, \`created = 1672531200\`
+**Annotations** — Key-value pairs for querying. String annotations like \`type = "note"\` or numeric like \`priority = 5\`.
 
-### **BTL (Blocks To Live)**
-Automatic expiration system:
-- \`900\` blocks = ~30 minutes
-- \`43200\` blocks = ~24 hours
-- \`302400\` blocks = ~7 days
+**BTL (Blocks To Live)** — Automatic expiration:
+- \`900\` blocks ≈ 30 minutes
+- \`43200\` blocks ≈ 24 hours
+- \`302400\` blocks ≈ 7 days
 
-### **Query Language**
-SQL-like syntax for data retrieval:
+**Query Language** — SQL-like syntax:
 \`\`\`sql
 type = "note" && priority > 3 && created > 1672531200
 \`\`\`
 
-## 🌟 Live Demo
+## Testnet Access
 
-Try Arkiv right now on **Arkiv Testnet**:
+**Chain ID:** \`60138453033\`
+**RPC URL:** \`https://kaolin.hoodi.arkiv.network/rpc\`
+**WebSocket:** \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
+**Faucet:** [Get Test ETH](https://kaolin.hoodi.arkiv.network/faucet/)
+**Explorer:** [View Transactions](https://explorer.kaolin.hoodi.arkiv.network)
 
-### **Network Details**
-- **Chain ID**: \`60138453033\`
-- **RPC URL**: \`https://kaolin.hoodi.arkiv.network/rpc\`
-- **WebSocket**: \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
-- **Faucet**: [Get Test ETH](https://kaolin.hoodi.arkiv.network/faucet/)
-- **Explorer**: [View Transactions](https://explorer.kaolin.hoodi.arkiv.network)
+Quick example:
 
-### **Quick Test**
 \`\`\`typescript
 import { createClient, Annotation } from 'golem-base-sdk'
 
-// Connect to Arkiv
 const client = await createClient(
   60138453033,
   "YOUR_PRIVATE_KEY",
@@ -154,10 +112,9 @@ const client = await createClient(
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
 )
 
-// Store data with 1-hour expiration
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode("Hello Arkiv!"),
-  btl: 1800, // 1 hour
+  btl: 1800,
   stringAnnotations: [new Annotation("type", "greeting")],
   numericAnnotations: []
 }])
@@ -165,91 +122,57 @@ const receipt = await client.createEntities([{
 console.log("Stored:", receipt[0].entityKey)
 \`\`\`
 
-## 🎓 Next Steps
+## Next Steps
 
-Ready to build with Arkiv? Here's your learning path:
+1. [Getting Started](/getting-started) — Set up your dev environment
+2. [SDK Reference](#sdk) — TypeScript and Python SDKs
+3. [API Docs](#api) — JSON-RPC interface
+4. [Guides](#guides) — Build real applications
 
-1. **[Getting Started →](/getting-started)** - Set up your development environment
-2. **[SDK Reference →](#sdk)** - Explore TypeScript, Python, and Rust SDKs
-3. **[API Docs →](#api)** - Learn the JSON-RPC interface
-4. **[Guides →](#guides)** - Build real applications step-by-step
-
-### **Need Help?**
-- 📋 [Playground](/playground) - Interactive code examples
-- 💬 [Discord Community](https://discord.gg/arkiv) - Get support
-- 📖 [Full Documentation](https://arkiv.network/docs) - Deep dive guides
+**Resources:**
+[Playground](/playground) — Interactive examples
+[Discord](https://discord.gg/arkiv) — Community support
 `
 }
 
 const gettingStartedContent = {
   title: 'Getting Started',
   content: `
-# Quick Start Guides
-
-Choose your preferred development environment to get started with Arkiv:
+# Quickstart
 
 ## TypeScript SDK
-If you're using TypeScript, the TypeScript SDK will walk you through the setup and help you run your first Arkiv app in less than 10 minutes.
-
-[**→ TypeScript Quickstart**](/getting-started?section=typescript)
+[TypeScript Quickstart](/getting-started/typescript) — Full setup in under 10 minutes.
 
 ## Python SDK
-To run Python code with Arkiv, the Python SDK is a great starting point — it guides you through the full setup and gets you up and running in under 10 minutes.
-
-[**→ Python Quickstart**](/getting-started?section=python)
-
-## Rust SDK
-If you're working with Rust and want to use Arkiv, check out the Rust SDK. It shows you how to set things up and run your first task in just a few minutes.
-
-[**→ Rust Quickstart**](/getting-started?section=rust)
-
-## CLI Guide
-If you're working with the command line, the CLI guide explains how to set up the CLI and run commands from your terminal.
-
-[**→ CLI Guide**](/getting-started?section=cli)
+[Python Quickstart](/getting-started/python) — Get up and running with Python.
 
 ## Prerequisites
 
-Before you begin, ensure you have:
+- Node.js 18+ or Bun runtime
+- Basic TypeScript/JavaScript knowledge
+- Ethereum wallet for testnet
+- Git
 
-1. **Node.js 18+** or **Bun runtime** installed
-2. **Basic understanding** of TypeScript/JavaScript
-3. **Ethereum wallet** for testnet interactions
-4. **Git** for cloning repositories
+## Installation
 
-## First Steps
-
-1. **Install the SDK** of your choice
-2. **Set up your environment** with API keys
-3. **Connect to a testnet** for development
-4. **Run your first query** to store and retrieve data
-5. **Explore advanced features** like time-scoped storage
-
-Pick the approach that suits your needs and start building with Arkiv today!
+Install the SDK, set up your environment, connect to testnet.
 `
 }
 
 const sdkContent = {
   title: 'SDKs & Libraries',
   content: `
-# Software Development Kits
+# TypeScript SDK
 
-Build powerful applications with Arkiv using our official SDKs and libraries.
+## Installation
 
-## 🚀 TypeScript SDK (golem-base-sdk)
-
-The **golem-base-sdk** is our flagship TypeScript SDK with full type safety and comprehensive features.
-
-### Installation
 \`\`\`bash
-# Using Bun (recommended)
 bun add golem-base-sdk crypto dotenv
-
-# Using npm
+# or
 npm install golem-base-sdk crypto dotenv
 \`\`\`
 
-### Quick Start
+## Quickstart
 \`\`\`typescript
 import { createClient, Annotation, Tagged } from 'golem-base-sdk'
 import { randomUUID } from 'crypto'
@@ -279,9 +202,7 @@ const receipt = await client.createEntities([{
 console.log('Entity created:', receipt[0].entityKey)
 \`\`\`
 
-### Core Operations
-
-#### 🔍 **Query Data**
+## Query Data
 \`\`\`typescript
 // Query by annotations
 const notes = await client.queryEntities('type = "note" && created > 1672531200')
@@ -293,7 +214,7 @@ for (const entity of notes) {
 }
 \`\`\`
 
-#### 📝 **Update Data**
+## Update Data
 \`\`\`typescript
 // Update existing entity
 const updateReceipt = await client.updateEntities([{
@@ -308,14 +229,14 @@ const updateReceipt = await client.updateEntities([{
 }])
 \`\`\`
 
-#### 🗑️ **Delete Data**
+## Delete Data
 \`\`\`typescript
 // Delete entity
 const deleteReceipt = await client.deleteEntities([receipt[0].entityKey])
 console.log('Entity deleted:', deleteReceipt[0].entityKey)
 \`\`\`
 
-#### ⚡ **Real-time Events**
+## Real-time Events
 \`\`\`typescript
 // Watch for data changes
 const unwatch = client.watchLogs({
@@ -331,9 +252,7 @@ const unwatch = client.watchLogs({
 // unwatch()
 \`\`\`
 
-### Advanced Features
-
-#### 🔄 **Batch Operations**
+## Batch Operations
 \`\`\`typescript
 // Create multiple entities at once
 const entities = Array.from({ length: 5 }, (_, i) => ({
@@ -347,7 +266,7 @@ const batchReceipts = await client.createEntities(entities)
 console.log(\`Created \${batchReceipts.length} entities\`)
 \`\`\`
 
-#### ⏰ **BTL Management**
+## BTL Management
 \`\`\`typescript
 // Extend entity lifetime
 const extendReceipts = await client.extendEntities([{
@@ -358,9 +277,7 @@ const extendReceipts = await client.extendEntities([{
 console.log(\`Extended to block: \${extendReceipts[0].newExpirationBlock}\`)
 \`\`\`
 
-## 🐍 Python SDK (Coming Soon)
-
-Perfect for data science, AI/ML applications, and backend services.
+## Python SDK (In Development)
 
 \`\`\`python
 # Preview of upcoming Python SDK
@@ -386,81 +303,40 @@ entity = client.create_entity(
 print(f"Created entity: {entity.key}")
 \`\`\`
 
-## ⚙️ Rust SDK (Planned)
+## SDK Comparison
 
-High-performance SDK for systems programming and performance-critical applications.
+| Feature | TypeScript | Python |
+|---------|-----------|--------|
+| Status | Production | In Development |
+| CRUD Operations | Full Support | Coming Soon |
+| Real-time Events | WebSocket | Coming Soon |
+| Batch Operations | Supported | Coming Soon |
+| Type Safety | TypeScript | Type Hints |
+| Use Cases | Web, APIs, Node.js | Data Science, Backend |
 
-\`\`\`rust
-// Preview of upcoming Rust SDK
-use arkiv_rust::{ArkivClient, Entity, Annotation};
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = ArkivClient::new(
-        60138453033,
-        &std::env::var("PRIVATE_KEY")?,
-        "https://kaolin.hoodi.arkiv.network/rpc"
-    ).await?;
-
-    let entity = client.create_entity(Entity {
-        data: serde_json::json!({"message": "Hello from Rust!"}),
-        btl: 43200,
-        annotations: vec![
-            Annotation::string("type", "greeting"),
-            Annotation::string("language", "rust")
-        ]
-    }).await?;
-
-    println!("Created entity: {}", entity.key);
-    Ok(())
-}
-\`\`\`
-
-## 📊 SDK Comparison
-
-| Feature | TypeScript (golem-base-sdk) | Python | Rust |
-|---------|----------------------------|--------|------|
-| **Status** | ✅ Production Ready | 🚧 In Development | 📋 Planned |
-| **CRUD Operations** | ✅ Full Support | 🚧 Coming Soon | 📋 Planned |
-| **Real-time Events** | ✅ WebSocket Support | 🚧 Coming Soon | 📋 Planned |
-| **Batch Operations** | ✅ Full Support | 🚧 Coming Soon | 📋 Planned |
-| **Type Safety** | ✅ Full TypeScript | 🚧 Type Hints | ✅ Rust Types |
-| **Performance** | ⚡ Fast | ⚡ Fast | 🚀 Blazing Fast |
-| **Use Cases** | Web Apps, APIs, Node.js | Data Science, ML, Backend | Systems, High Performance |
-
-### **Getting Started Recommendations**
-
-- **🚀 Start Now**: Use TypeScript SDK (golem-base-sdk) for immediate development
-- **🐍 Python Developers**: Join our waitlist for Python SDK beta access
-- **⚙️ Rust Developers**: Follow our roadmap for Rust SDK updates
-
-### **Resources**
-
-- **TypeScript**: [Getting Started Guide](/getting-started) | [NPM Package](https://www.npmjs.com/package/golem-base-sdk)
-- **GitHub**: [SDK Repository](https://github.com/golem-base/typescript-sdk)
-- **Support**: [Discord Community](https://discord.gg/arkiv) | [GitHub Issues](https://github.com/golem-base/typescript-sdk/issues)
+**Resources:**
+[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/golem-base-sdk) — [GitHub](https://github.com/golem-base/typescript-sdk) — [Discord](https://discord.gg/arkiv)
 `
 }
 
 const apiContent = {
   title: 'API Reference',
   content: `
-# JSON-RPC API Reference
+# JSON-RPC API
 
-Arkiv is built on Ethereum JSON-RPC standard. Use these endpoints to interact directly with the network.
+Arkiv uses standard Ethereum JSON-RPC.
 
-## 🌐 Network Information
+## Network
 
-### **Arkiv Holesky Testnet**
-- **Chain ID**: \`60138453033\`
-- **RPC URL**: \`https://kaolin.hoodi.arkiv.network/rpc\`
-- **WebSocket**: \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
-- **Explorer**: [https://explorer.kaolin.hoodi.arkiv.network](https://explorer.kaolin.hoodi.arkiv.network)
-- **Faucet**: [https://kaolin.hoodi.arkiv.network/faucet/](https://kaolin.hoodi.arkiv.network/faucet/)
+**Chain ID:** \`60138453033\`
+**RPC:** \`https://kaolin.hoodi.arkiv.network/rpc\`
+**WebSocket:** \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
+**Explorer:** [explorer.kaolin.hoodi.arkiv.network](https://explorer.kaolin.hoodi.arkiv.network)
+**Faucet:** [kaolin.hoodi.arkiv.network/faucet](https://kaolin.hoodi.arkiv.network/faucet/)
 
-## 🔐 Authentication
+## Authentication
 
-Arkiv uses Ethereum private key signing for authentication. Include your private key in the SDK client initialization:
+Uses Ethereum private key signing:
 
 \`\`\`typescript
 // SDK handles authentication automatically
@@ -472,13 +348,7 @@ const client = await createClient(
 )
 \`\`\`
 
-## 📋 Core Operations
-
-All operations are performed through the **golem-base-sdk** which abstracts the underlying Ethereum transactions.
-
-### 🆕 **Create Entities**
-
-Store data with annotations and automatic expiration.
+## Create Entities
 
 \`\`\`typescript
 // Create single entity
@@ -499,9 +369,7 @@ console.log("Entity Key:", receipt[0].entityKey)
 console.log("Expires at block:", receipt[0].expirationBlock)
 \`\`\`
 
-### 🔍 **Query Entities**
-
-Find entities using SQL-like annotation queries.
+## Query Entities
 
 \`\`\`typescript
 // Query by annotations
@@ -651,7 +519,7 @@ Understanding entity expiration times:
 | \`302400\` | 7 days | Weekly data, file metadata |
 | \`1296000\` | 30 days | Monthly archives, backups |
 
-**Note**: Each block is approximately 2 seconds on Arkiv Holesky testnet.
+**Note**: Each block is approximately 2 seconds on Arkiv Hoodi testnet.
 
 ## 🚨 **Error Handling**
 
@@ -748,7 +616,7 @@ const data = await client.getStorageValue(entityKey)
 ## 🌐 **Network Resources**
 
 ### **Quick Links**
-- **🔗 Add Network to MetaMask**: [Arkiv Holesky](https://chainlist.org/chain/17000)
+- **🔗 Add Network to MetaMask**: [Arkiv Hoodi](https://chainlist.org/chain/17000)
 - **💰 Get Test ETH**: [Faucet](https://kaolin.hoodi.arkiv.network/faucet/)
 - **🔍 Block Explorer**: [View Transactions](https://explorer.kaolin.hoodi.arkiv.network)
 - **📊 Network Dashboard**: [Status & Metrics](https://kaolin.hoodi.arkiv.network/)
@@ -797,7 +665,7 @@ const guidesContent = {
 
 Step-by-step guides to help you build with Arkiv using real examples.
 
-## Quick Start Projects
+## Quickstart Projects
 
 ### 1. Build a Decentralized Note-Taking App
 
@@ -978,6 +846,29 @@ const contentMap = {
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('overview')
 
+  // Sync activeSection with URL hash on mount and hash change
+  useEffect(() => {
+    const updateFromHash = () => {
+      const hash = window.location.hash.slice(1) // Remove #
+      if (hash && contentMap[hash as keyof typeof contentMap]) {
+        setActiveSection(hash)
+      }
+    }
+
+    // Set initial section from hash
+    updateFromHash()
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', updateFromHash)
+    return () => window.removeEventListener('hashchange', updateFromHash)
+  }, [])
+
+  // Update URL hash when activeSection changes
+  const handleSectionChange = (sectionId: string) => {
+    setActiveSection(sectionId)
+    window.history.pushState(null, '', `#${sectionId}`)
+  }
+
   const currentContent = contentMap[activeSection as keyof typeof contentMap]
 
   return (
@@ -1057,7 +948,7 @@ export default function DocsPage() {
                   {docsNavigation.map((section) => (
                     <button
                       key={section.id}
-                      onClick={() => setActiveSection(section.id)}
+                      onClick={() => handleSectionChange(section.id)}
                       className={`w-full text-left p-4 rounded-lg transition-all ${
                         activeSection === section.id
                           ? 'bg-blue-600 text-white'
@@ -1127,7 +1018,7 @@ export default function DocsPage() {
       </section>
 
       {/* Footer */}
-      <section className="px-4 md:px-[60px] py-[64px] bg-[#181EA9]">
+      <section className="px-4 md:px-[60px] py-[32px] bg-[#181EA9]">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
             {/* Main Footer Content - Single Row */}
@@ -1151,7 +1042,6 @@ export default function DocsPage() {
                     <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
                     <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
                     <a href="/whitepaper" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Whitepaper [Soon]</a>
-                    <a href="/aips" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">AIPs [Soon]</a>
                   </div>
                 </div>
 

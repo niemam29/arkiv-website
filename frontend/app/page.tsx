@@ -1,9 +1,19 @@
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 // import { Carousel } from '@/components/ui/Carousel'
-import AnimatedCodeBlock from '@/components/ui/AnimatedCodeBlock'
 import StructuredData from '@/components/seo/StructuredData'
 import HoverVideo from '@/components/ui/HoverVideo'
-import UseCasesCarousel from '@/components/sections/UseCasesCarousel'
+import Footer from '@/components/layout/Footer'
+
+const AnimatedCodeBlock = dynamic(() => import('@/components/ui/AnimatedCodeBlock'), {
+  loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-lg" />,
+  ssr: false
+})
+
+const UseCasesSection = dynamic(() => import('@/components/sections/UseCasesSection'), {
+  loading: () => <div className="h-[600px] bg-gray-50 animate-pulse" />,
+  ssr: true
+})
 
 export default function Home() {
   return (
@@ -11,7 +21,7 @@ export default function Home() {
       <StructuredData />
       <div className="min-h-screen bg-transparent overflow-hidden relative">
       {/* Hero Section - Zgodny z Figma Frame 2147238531 */}
-      <section className="relative bg-transparent min-h-screen px-4 md:px-[60px] py-[64px]">
+      <section className="relative bg-transparent min-h-screen px-4 md:px-[60px] py-[32px]">
         {/* Remove the local background div since it's now on the parent */}
 
         {/* Hero Content - max-w-[1280px] container */}
@@ -33,7 +43,7 @@ export default function Home() {
                   </div>
 
                   {/* Arkiv Icon */}
-                  <div className="w-[62px] h-8">
+                  <div className="w-[62px] h-8 hidden md:block">
                     <img src="/images/arkiv-logo.svg" alt="Arkiv logo - Universal data layer for Ethereum" className="w-full h-full object-contain" />
                   </div>
                 </div>
@@ -90,7 +100,7 @@ export default function Home() {
 
 
       {/* Why Arkiv Section */}
-      <section id="why-arkiv" className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section id="why-arkiv" className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
             <h2 className="font-brutal text-xl font-medium uppercase text-black">[ Why arkiv ]</h2>
@@ -145,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* How it Works Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
             <h2 id="how-it-works" className="font-brutal text-xl font-medium uppercase text-black">[ How it Works ]</h2>
@@ -162,12 +172,12 @@ export default function Home() {
                 loop={true}
                 poster="/images/how-it-works-3d.png"
               />
-              <div className="absolute bottom-8 right-8 flex gap-3">
-                <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-black text-black font-mono text-base rounded-lg hover:bg-gray-50 transition-colors">
-                  Litepaper
-                </a>
-                <a href="#getting-started" className="px-5 py-2 bg-stone-900 text-white font-mono text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors">
+              <div className="absolute bottom-8 right-8 left-8 md:left-auto flex flex-col md:flex-row gap-3">
+                <a href="#getting-started" className="px-5 py-2 bg-stone-900 text-white font-mono text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors text-center w-full md:w-auto">
                   Quickstart
+                </a>
+                <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-black text-black font-mono text-base rounded-lg hover:bg-gray-50 transition-colors text-center w-full md:w-auto">
+                  Litepaper
                 </a>
               </div>
             </div>
@@ -217,7 +227,7 @@ export default function Home() {
       </section>
 
       {/* GLM Tokenomics Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
             <h2 className="font-brutal text-xl font-medium uppercase text-black">[ GLM — Tokenomics ]</h2>
@@ -260,6 +270,7 @@ export default function Home() {
                 loop
                 muted
                 playsInline
+                preload="none"
               />
             </div>
           </div>
@@ -268,25 +279,10 @@ export default function Home() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-[32px]">
-            <h2 id="use-cases" className="font-brutal text-lg md:text-xl font-medium uppercase text-black">[ Use Cases ]</h2>
-
-            <UseCasesCarousel />
-
-            <div>
-              <a href="https://usecases.arkiv.network/" className="inline-flex w-full items-center justify-center gap-2 bg-black px-5 py-3 rounded-lg hover:bg-gray-900 transition-colors">
-                <span className="font-mono text-sm md:text-base text-white leading-5">See More</span>
-                <img src="/images/arrow-top-right.svg" alt="See more use cases" className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <UseCasesSection />
 
       {/* Start Building Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
           <h2 id="getting-started" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">
@@ -299,17 +295,17 @@ export default function Home() {
               {/* Top Row Cards */}
               <div className="flex flex-col md:flex-row gap-6 h-auto md:h-[216px]">
                 {/* TypeScript Quickstart Guide Card */}
-                <a href="/getting-started?section=typescript" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
+                <a href="/getting-started/typescript" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
                     <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
                   <div className="flex items-start justify-between w-full">
                     <div className="flex items-center justify-center">
                       <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" loading="lazy" />
                       </div>
                     </div>
                     <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
-                      <img src="/images/code.svg" alt="TypeScript guide icon" className="w-6 h-6" />
+                      <img src="/images/code.svg" alt="TypeScript guide icon" className="w-6 h-6" loading="lazy" />
                     </div>
                   </div>
 
@@ -319,17 +315,17 @@ export default function Home() {
                 </a>
 
                 {/* Python Quickstart Guide Card */}
-                <a href="/getting-started?section=python" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
+                <a href="/getting-started/python" className="bg-gray-200 flex-1 p-4 md:p-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative hover:bg-orange-400 hover:shadow-figma-button-primary hover:scale-[1.02] transition-all duration-200 cursor-pointer group min-h-[216px]">
                     <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
 
                   <div className="flex items-start justify-between w-full">
                     <div className="flex items-center justify-center">
                       <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" loading="lazy" />
                       </div>
                     </div>
                     <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-16 h-16 flex items-center justify-center transition-colors duration-200">
-                      <img src="/images/sdk.svg" alt="Python guide icon" className="w-6 h-6" />
+                      <img src="/images/sdk.svg" alt="Python guide icon" className="w-6 h-6" loading="lazy" />
                     </div>
                   </div>
 
@@ -348,11 +344,11 @@ export default function Home() {
                   <div className="flex items-start justify-between w-full">
                     <div className="flex items-center justify-center">
                       <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" loading="lazy" />
                       </div>
                     </div>
                     <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200">
-                      <img src="/images/description.svg" alt="Litepaper documentation icon" className="w-6 h-6" />
+                      <img src="/images/description.svg" alt="Litepaper documentation icon" className="w-6 h-6" loading="lazy" />
                     </div>
                   </div>
 
@@ -368,11 +364,11 @@ export default function Home() {
                   <div className="flex items-start justify-between w-full">
                     <div className="flex items-center justify-center">
                       <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" loading="lazy" />
                       </div>
                     </div>
                     <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200">
-                      <img src="/images/menu-book.svg" alt="Documentation icon" className="w-6 h-6" />
+                      <img src="/images/menu-book.svg" alt="Documentation icon" className="w-6 h-6" loading="lazy" />
                     </div>
                   </div>
 
@@ -388,11 +384,11 @@ export default function Home() {
                   <div className="flex items-start justify-between w-full">
                     <div className="flex items-center justify-center">
                       <div className="transform scale-y-[-100%]">
-                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200" />
+                        <img src="/images/arrow-top-right.svg" alt="View use case details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" loading="lazy" />
                       </div>
                     </div>
                     <div className="bg-white group-hover:bg-[#FF6B35] overflow-hidden rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200">
-                      <img src="/images/mitre.svg" alt="GitHub repository icon" className="w-6 h-6" />
+                      <img src="/images/mitre.svg" alt="GitHub repository icon" className="w-6 h-6" loading="lazy" />
                     </div>
                   </div>
 
@@ -457,19 +453,16 @@ async function printEntities(label: string, entities: any[]) {
               ]}
             />
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              <a href="/getting-started" className="bg-[#1f1f1f] px-5 py-3 rounded-lg shadow-figma-button-primary text-center font-mono text-base text-white hover:bg-gray-800 transition-colors w-full sm:flex-1">
+            {/* Action Switcher */}
+            <div className="bg-[#ededed] box-border flex flex-col sm:flex-row gap-3 items-center p-2 rounded-2xl w-full">
+              <a href="/getting-started" className="bg-[#1f1f1f] px-5 py-2.5 rounded-lg shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] text-center font-mono text-base text-white hover:bg-gray-800 transition-colors w-full sm:flex-1 relative after:absolute after:inset-0 after:pointer-events-none after:shadow-[inset_0px_2px_2px_0px_rgba(255,255,255,0.25),inset_0px_-4px_2px_0px_rgba(0,0,0,0.25)] after:rounded-lg">
                 Build now
               </a>
-              <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="border border-black px-5 py-3 rounded-lg text-center font-mono text-base text-black hover:bg-gray-100 transition-colors w-full sm:flex-1">
+              <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-lg text-center font-mono text-base text-black hover:bg-gray-200 transition-colors w-full sm:flex-1">
                 Read Litepaper
               </a>
-            </div>
-            <div className="w-full text-center sm:text-left mt-2">
-              <a href="/docs" className="inline-flex items-center gap-2 font-mono text-sm text-black hover:text-gray-600 transition-colors">
-                <span>Read the Docs</span>
-                <img src="/images/arrow-top-right.svg" alt="Read the Docs" className="w-4 h-4" />
+              <a href="/docs" className="px-5 py-2.5 rounded-lg text-center font-mono text-base text-black hover:bg-gray-200 transition-colors w-full sm:flex-1">
+                Read the Docs
               </a>
             </div>
           </div>
@@ -478,7 +471,7 @@ async function printEntities(label: string, entities: any[]) {
       </section>
 
       {/* FAQ Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-8">
           <h2 id="faq" className="font-brutal text-xl font-medium uppercase text-black">[ FAQ ]</h2>
@@ -520,7 +513,7 @@ async function printEntities(label: string, entities: any[]) {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section id="upcoming-events" className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
           <h2 className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">
@@ -536,7 +529,7 @@ async function printEntities(label: string, entities: any[]) {
               <div className="flex-1 flex flex-col gap-3">
                 <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Real World Adoption Day</h3>
                 <div className="flex gap-2 items-center">
-                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" />
+                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" loading="lazy" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
                 </div>
                 <p className="font-mono text-base text-[#1f1f1f] leading-[22px] group-hover:text-white transition-colors">Meetup booth + Keynote</p>
@@ -544,7 +537,7 @@ async function printEntities(label: string, entities: any[]) {
 
               {/* Right Side - Image */}
               <div className="w-[200px] flex-shrink-0 self-stretch relative rounded-2xl overflow-hidden bg-[#d9d9d9]">
-                <img alt="Arkiv Real World Adoption Day event" className="w-full h-full object-cover" src="/images/Real_World_Adoption_Day.png" />
+                <img alt="Arkiv Real World Adoption Day event" className="w-full h-full object-cover" src="/images/Real_World_Adoption_Day.png" loading="lazy" />
                 <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
                   Sep 30th, 2025
                 </div>
@@ -559,7 +552,7 @@ async function printEntities(label: string, entities: any[]) {
               <div className="flex-1 flex flex-col gap-3">
                 <h3 className="font-mono text-xl text-[#1f1f1f] leading-7 group-hover:text-white transition-colors min-h-[3.5rem] flex items-center">Arkiv @ Builder Nights</h3>
                 <div className="flex gap-2 items-center">
-                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" />
+                  <img className="w-6 h-6" src="/images/flags/sg-rounded.svg" alt="Singapore flag" loading="lazy" />
                   <span className="font-mono text-sm text-[#1f1f1f] leading-5 group-hover:text-white transition-colors">Singapore</span>
                 </div>
                 <p className="font-mono text-base text-[#1f1f1f] leading-[22px] group-hover:text-white transition-colors">Talks, Networking & Nice Vibes</p>
@@ -567,7 +560,7 @@ async function printEntities(label: string, entities: any[]) {
 
               {/* Right Side - Image */}
               <div className="w-[200px] flex-shrink-0 self-stretch relative rounded-2xl overflow-hidden bg-[#d9d9d9]">
-                <img alt="Arkiv Builder Nights event" className="w-full h-full object-cover" src="/images/Builder_Nights.png" />
+                <img alt="Arkiv Builder Nights event" className="w-full h-full object-cover" src="/images/Builder_Nights.png" loading="lazy" />
                 <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-mono">
                   Oct 1st, 2025
                 </div>
@@ -579,105 +572,57 @@ async function printEntities(label: string, entities: any[]) {
       </section>
 
       {/* Built By Section */}
-      <section className="relative z-10 px-4 md:px-[60px] py-[64px] bg-white">
+      <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
           <h2 id="about" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ built by ]</h2>
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main Description */}
-            <div className="bg-[#f1f1f1] w-full lg:w-[764px] h-auto lg:h-[213px] px-4 md:px-6 py-6 pb-5 rounded-2xl flex flex-col justify-between">
+            <div className="bg-[#f1f1f1] w-full lg:w-[764px] h-auto lg:h-[213px] px-6 py-6 pb-5 rounded-2xl flex flex-col justify-between">
               <div className="w-[155px] h-[73px]">
-                <img src="/images/golem-logo-large.svg" alt="Golem Network logo - creators of Arkiv blockchain database" className="w-full h-full object-contain" />
+                <img src="/images/golem-logo-large.svg" alt="Golem Network logo - creators of Arkiv blockchain database" className="w-full h-full object-contain" loading="lazy" />
               </div>
-              <p className="font-mono text-sm md:text-base text-[#1f1f1f] leading-[22px] w-full max-w-[601px]">
+              <p className="font-mono text-base text-[#1f1f1f] leading-[22px] w-full max-w-[601px]">
                 Built within the Golem Ecosystem, Arkiv is a data availability & management layer (L2+L3) combining the usability of Web2 with the trustlessness of Web3. Built on Ethereum.
               </p>
             </div>
 
-            {/* Golem - Clickable */}
-            <div className="flex flex-col sm:flex-row lg:flex-col w-full lg:w-[254px] gap-4">
-              <a href="https://golem.network/" target="_blank" rel="noopener noreferrer" className="bg-[#fe7446] flex-1 p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-row items-center justify-center md:justify-between lg:justify-center gap-3 relative hover:bg-[#e5673f] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+            {/* About Golem - Clickable */}
+            <a href="https://golem.network/" target="_blank" rel="noopener noreferrer" className="bg-[#fe7446] w-full lg:w-[254px] h-[213px] p-5 rounded-2xl shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] flex flex-col justify-between relative hover:bg-[#e5673f] transition-colors duration-200 cursor-pointer group">
+              <div className="absolute inset-0 pointer-events-none shadow-[inset_0px_2px_2px_0px_rgba(255,255,255,0.25),inset_0px_-4px_2px_0px_rgba(0,0,0,0.15)] rounded-2xl" />
 
-                <div className="w-[14px] h-[14px]">
-                  <img src="/images/icon.svg" alt="Golem Network star icon" className="w-full h-full group-hover:brightness-110 transition-all duration-200" />
+              <div className="w-[14px] h-[14px] relative shrink-0">
+                <img src="/images/icon.svg" alt="" className="w-full h-full" loading="lazy" />
+              </div>
+
+              <div className="flex flex-col gap-3 w-full">
+                <div className="border border-white box-border flex items-center justify-center px-5 py-2.5 rounded-lg w-full">
+                  <span className="font-mono text-base text-white leading-[22px]">About golem</span>
                 </div>
-                <span className="font-mono text-base text-white leading-[22px] group-hover:text-gray-100 transition-colors duration-200">About Golem</span>
-              </a>
+              </div>
+            </a>
 
-              {/* Join Discord - Clickable */}
-              <a href="https://discord.gg/arkiv" target="_blank" rel="noopener noreferrer" className="bg-[#181ea9] flex-1 p-4 md:p-5 rounded-2xl shadow-figma-card flex flex-row items-center justify-center md:justify-between lg:justify-center gap-3 relative hover:bg-[#1518a0] hover:shadow-figma-button-secondary hover:scale-[1.02] transition-all duration-200 cursor-pointer group">
-                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+            {/* Join Discord - Clickable */}
+            <a href="https://discord.gg/arkiv" target="_blank" rel="noopener noreferrer" className="bg-[#181ea9] w-full lg:w-[254px] h-[213px] p-5 rounded-2xl shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] flex flex-col justify-between relative hover:bg-[#1518a0] transition-colors duration-200 cursor-pointer group">
+              <div className="absolute inset-0 pointer-events-none shadow-[inset_0px_2px_2px_0px_rgba(255,255,255,0.25),inset_0px_-4px_2px_0px_rgba(0,0,0,0.25)] rounded-2xl" />
 
-                <div className="w-[14px] h-[14px]">
-                  <img src="/images/icon.svg" alt="Golem Network star icon" className="w-full h-full group-hover:brightness-110 transition-all duration-200" />
+              <div className="w-[14px] h-[14px] relative shrink-0">
+                <img src="/images/icon.svg" alt="" className="w-full h-full" loading="lazy" />
+              </div>
+
+              <div className="flex flex-col gap-3 w-full">
+                <div className="border border-white box-border flex items-center justify-center px-5 py-2.5 rounded-lg w-full">
+                  <span className="font-mono text-base text-white leading-[22px]">Join discord</span>
                 </div>
-                <span className="font-mono text-base text-white leading-[22px] group-hover:text-gray-100 transition-colors duration-200">Join Discord</span>
-              </a>
-            </div>
+              </div>
+            </a>
           </div>
           </div>
         </div>
       </section>
 
-      {/* Footer Section - Figma Design */}
-      <section className="px-4 md:px-[60px] py-[64px] bg-[#181EA9]">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-8">
-            {/* Main Footer Content */}
-            <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-between gap-8">
-              {/* Footer Navigation */}
-              <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center md:items-start text-center md:text-left">
-                {/* Developers */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Docs</a>
-                    <a href="/getting-started" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Getting Started</a>
-                    <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
-                    <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
-                    <a href="/pdf/ARKIV_Litepaper.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
-                    <a href="/aips" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">AIPs [Soon]</a>
-                  </div>
-                </div>
-
-                {/* Connect */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://twitter.com/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">X</a>
-                    <a href="https://discord.gg/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Discord</a>
-                    <a href="#upcoming-events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Events</a>
-                  </div>
-                </div>
-
-                {/* Legal */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Privacy Policy</a>
-                    <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Cookie Policy</a>
-                    <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Terms of Use</a>
-                  </div>
-                </div>
-              </div>
-              {/* Large ARKIV Logo */}
-              <div className="flex-shrink-0 text-center">
-                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
-                  [ ARKIV ]
-                </h2>
-              </div>
-            </div>
-
-            {/* Copyright - Single Row */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-2 pt-4 border-t border-white/10 text-center md:text-left">
-              <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
-              <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Footer />
 
       {/* Floating CTA - Hidden per feedback */}
       <div className="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 px-3 pt-2 pb-3 bg-orange-400 rounded-2xl shadow-figma-button-secondary flex flex-col items-center gap-3 z-50">

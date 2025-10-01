@@ -1,59 +1,92 @@
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: moonplkr/arkiv-frontend:latest
     ports:
-      - "3000:3000"
+      - "3005:3000"
     environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_STRAPI_URL=http://cms:1337
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - EXECUTION_SERVICE_URL=http://execution-service:8001
     depends_on:
-      - cms
+      - execution-service
+    networks:
+      - internal
+      - arkiv_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=arkiv_network"
+      # API router WITHOUT Umami middleware
+      - "traefik.http.routers.arkiv-website-api.rule=Host(`arkiv.network`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.arkiv-website-api.entrypoints=websecure"
+      - "traefik.http.routers.arkiv-website-api.tls=true"
+      - "traefik.http.routers.arkiv-website-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arkiv-website-api.priority=10"
+      - "traefik.http.routers.arkiv-website-api.service=arkiv-website"
+      # Main router WITH Umami middleware
+      - "traefik.http.routers.arkiv-website.rule=Host(`arkiv.network`)"
+      - "traefik.http.routers.arkiv-website.entrypoints=websecure"
+      - "traefik.http.routers.arkiv-website.tls=true"
+      - "traefik.http.routers.arkiv-website.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arkiv-website.middlewares=umami-analytics"
+      - "traefik.http.routers.arkiv-website.priority=5"
+      # Service definition
+      - "traefik.http.services.arkiv-website.loadbalancer.server.port=3000"
 
-  cms:
-    build:
-      context: ./cms
-      dockerfile: Dockerfile
-    container_name: arkiv-cms
-    restart: unless-stopped
+  execution-service:
+    image: moonplkr/arkiv-execution:latest
+    ports:
+      - "8001:8001"
     environment:
-      - DATABASE_CLIENT=postgres
-      - DATABASE_HOST=db
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=strapi
-      - DATABASE_USERNAME=strapi
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
-      - APP_KEYS=${APP_KEYS}
-      - API_TOKEN_SALT=${API_TOKEN_SALT}
-      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
+      - PYTHONUNBUFFERED=1
+    networks:
+      - internal
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=payload
+      - POSTGRES_PASSWORD=payload_secret
+      - POSTGRES_DB=arkiv_cms
     volumes:
-      - ./cms:/srv/app
-      - cms_uploads:/srv/app/public/uploads
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payload"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  arkiv-cms:
+    image: moonplkr/arkiv-cms:latest
     ports:
       - "1337:1337"
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15
-    container_name: arkiv-db
-    restart: unless-stopped
     environment:
-      POSTGRES_USER: strapi
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: strapi
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5434:5432"
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://payload:payload_secret@postgres:5432/arkiv_cms
+      - PAYLOAD_SECRET=${PAYLOAD_SECRET:-your-secret-key-change-in-production}
+      - PORT=1337
+      - FRONTEND_URL=http://frontend:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internal
+      - arkiv_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=arkiv_network"
+      - "traefik.http.routers.arkiv-cms.rule=Host(`cms.arkiv.network`)"
+      - "traefik.http.routers.arkiv-cms.entrypoints=websecure"
+      - "traefik.http.routers.arkiv-cms.tls=true"
+      - "traefik.http.routers.arkiv-cms.tls.certresolver=letsencrypt"
+      - "traefik.http.services.arkiv-cms.loadbalancer.server.port=1337"
+
+networks:
+  internal:
+    driver: bridge
+  arkiv_network:
+    external: true
 
 volumes:
-  db_data:
-  cms_uploads:
+  postgres_data:
