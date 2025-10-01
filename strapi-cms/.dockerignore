@@ -1,0 +1,12 @@
+node_modules/
+.cache/
+build/
+.env
+.env.*
+!.env.example
+.tmp/
+.git/
+.gitignore
+README.md
+.editorconfig
+.strapi-updater.json
