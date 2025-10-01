@@ -1041,7 +1041,6 @@ export default function DocsPage() {
                     <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
                     <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
                     <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
-                    <a href="/whitepaper" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Whitepaper [Soon]</a>
                   </div>
                 </div>
 
