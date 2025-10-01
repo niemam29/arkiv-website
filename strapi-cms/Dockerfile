@@ -3,6 +3,16 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Install build dependencies for sharp
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    vips-dev \
+    fftw-dev \
+    build-base \
+    --virtual .build-deps
+
 # Copy package files
 COPY package*.json ./
 
@@ -19,6 +29,9 @@ RUN npm run build
 FROM node:20-alpine AS production
 
 WORKDIR /app
+
+# Install runtime dependencies for sharp
+RUN apk add --no-cache vips fftw
 
 ENV NODE_ENV=production
 
