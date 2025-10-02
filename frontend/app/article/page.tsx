@@ -48,12 +48,12 @@ export default function BlogPage() {
   const categories = Array.from(new Set(posts.map(post => post.category?.name).filter(Boolean)))
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white text-black">
       {/* Header Section */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-black/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="font-mono text-4xl md:text-5xl font-bold mb-4">Articles</h1>
-          <p className="font-mono text-lg text-gray-400">
+          <p className="font-mono text-lg text-gray-600">
             Latest updates, tutorials, and insights from the Arkiv team
           </p>
         </div>
@@ -61,15 +61,15 @@ export default function BlogPage() {
 
       {/* Category Filter */}
       {categories.length > 0 && (
-        <div className="border-b border-white/10">
+        <div className="border-b border-black/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setSelectedCategory(null)}
                 className={`font-mono px-4 py-2 rounded-lg transition-colors ${
                   selectedCategory === null
-                    ? 'bg-white text-black'
-                    : 'bg-white/10 hover:bg-white/20'
+                    ? 'bg-black text-white'
+                    : 'bg-black/10 hover:bg-black/20'
                 }`}
               >
                 All Posts
@@ -80,8 +80,8 @@ export default function BlogPage() {
                   onClick={() => setSelectedCategory(category!)}
                   className={`font-mono px-4 py-2 rounded-lg transition-colors ${
                     selectedCategory === category
-                      ? 'bg-white text-black'
-                      : 'bg-white/10 hover:bg-white/20'
+                      ? 'bg-black text-white'
+                      : 'bg-black/10 hover:bg-black/20'
                   }`}
                 >
                   {category}
@@ -96,11 +96,11 @@ export default function BlogPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading ? (
           <div className="flex justify-center items-center min-h-[400px]">
-            <div className="font-mono text-gray-400">Loading posts...</div>
+            <div className="font-mono text-gray-600">Loading posts...</div>
           </div>
         ) : filteredPosts.length === 0 ? (
           <div className="flex justify-center items-center min-h-[400px]">
-            <div className="font-mono text-gray-400">
+            <div className="font-mono text-gray-600">
               {selectedCategory ? `No posts in "${selectedCategory}"` : 'No blog posts yet'}
             </div>
           </div>
@@ -110,25 +110,25 @@ export default function BlogPage() {
               <Link
                 key={post.id}
                 href={`/article/${post.slug || post.documentId}`}
-                className="group border border-white/10 rounded-lg p-6 hover:border-white/30 transition-colors"
+                className="group border border-black/10 rounded-lg p-6 hover:border-black/30 transition-colors"
               >
                 {/* Category Badge */}
                 {post.category && (
                   <div className="mb-4">
-                    <span className="font-mono text-xs px-2 py-1 bg-white/10 rounded">
+                    <span className="font-mono text-xs px-2 py-1 bg-black/10 rounded">
                       {post.category.name}
                     </span>
                   </div>
                 )}
 
                 {/* Title */}
-                <h2 className="font-mono text-xl font-bold mb-3 group-hover:text-gray-300 transition-colors">
+                <h2 className="font-mono text-xl font-bold mb-3 group-hover:text-orange-500 transition-colors">
                   {post.title}
                 </h2>
 
                 {/* Excerpt */}
                 {post.excerpt && (
-                  <p className="font-mono text-sm text-gray-400 mb-4 line-clamp-3">
+                  <p className="font-mono text-sm text-gray-700 mb-4 line-clamp-3">
                     {post.excerpt}
                   </p>
                 )}
