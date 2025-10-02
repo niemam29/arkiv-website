@@ -31,7 +31,7 @@ FROM node:20-alpine AS production
 WORKDIR /app
 
 # Install runtime dependencies for sharp
-RUN apk add --no-cache vips fftw
+RUN apk add --no-cache vips vips-cpp fftw
 
 ENV NODE_ENV=production
 
