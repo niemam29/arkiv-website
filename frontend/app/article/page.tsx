@@ -51,7 +51,7 @@ export default function BlogPage() {
     <div className="min-h-screen bg-white text-black">
       {/* Header Section */}
       <div className="border-b border-black/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="font-mono text-4xl md:text-5xl font-bold mb-4">Articles</h1>
           <p className="font-mono text-lg text-gray-600">
             Latest updates, tutorials, and insights from the Arkiv team
@@ -62,7 +62,7 @@ export default function BlogPage() {
       {/* Category Filter */}
       {categories.length > 0 && (
         <div className="border-b border-black/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setSelectedCategory(null)}
@@ -93,7 +93,7 @@ export default function BlogPage() {
       )}
 
       {/* Blog Posts Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading ? (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="font-mono text-gray-600">Loading posts...</div>

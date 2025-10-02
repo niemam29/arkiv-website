@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { CodeBlock } from "@/components/ui/CodeBlock"
+import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPythonPage() {
   const [activeSection, setActiveSection] = useState('setup')
@@ -678,6 +679,7 @@ if __name__ == "__main__":
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

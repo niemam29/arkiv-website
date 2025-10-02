@@ -95,13 +95,13 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white text-black">
       {/* Back Link */}
-      <div className="border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="border-b border-black/10">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
             href="/article"
-            className="font-mono text-sm text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2"
+            className="font-mono text-sm text-gray-600 hover:text-black transition-colors inline-flex items-center gap-2"
           >
             ← Back to Articles
           </Link>
@@ -109,11 +109,11 @@ export default function BlogPostPage() {
       </div>
 
       {/* Article Header */}
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Category */}
         {post.category && (
           <div className="mb-6">
-            <span className="font-mono text-sm px-3 py-1 bg-white/10 rounded">
+            <span className="font-mono text-sm px-3 py-1 bg-black/10 rounded">
               {post.category.name}
             </span>
           </div>
@@ -126,13 +126,13 @@ export default function BlogPostPage() {
 
         {/* Excerpt */}
         {post.excerpt && (
-          <p className="font-mono text-xl text-gray-400 mb-8">
+          <p className="font-mono text-xl text-gray-600 mb-8">
             {post.excerpt}
           </p>
         )}
 
         {/* Meta Info */}
-        <div className="flex items-center gap-4 mb-12 pb-8 border-b border-white/10">
+        <div className="flex items-center gap-4 mb-12 pb-8 border-b border-black/10">
           {post.author && (
             <div className="flex items-center gap-3">
               {post.author.avatar?.url && (
@@ -155,7 +155,7 @@ export default function BlogPostPage() {
         </div>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none bg-white text-black p-8 rounded-lg">
+        <div className="prose prose-lg max-w-none bg-gray-50 text-black p-8 rounded-lg">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
