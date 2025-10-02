@@ -100,10 +100,10 @@ export default function BlogPostPage() {
       <div className="border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
-            href="/blog"
+            href="/article"
             className="font-mono text-sm text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2"
           >
-            ← Back to Blog
+            ← Back to Articles
           </Link>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default function BlogPostPage() {
         </div>
 
         {/* Content */}
-        <div className="prose prose-invert prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none bg-white text-black p-8 rounded-lg">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
@@ -175,29 +175,29 @@ export default function BlogPostPage() {
                 )
               },
               h1: ({ children }) => (
-                <h1 className="font-mono text-3xl font-bold mt-12 mb-6 first:mt-0">
+                <h1 className="font-mono text-3xl font-bold mt-12 mb-6 first:mt-0 text-black">
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="font-mono text-2xl font-bold mt-10 mb-4">
+                <h2 className="font-mono text-2xl font-bold mt-10 mb-4 text-black">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="font-mono text-xl font-bold mt-8 mb-3">
+                <h3 className="font-mono text-xl font-bold mt-8 mb-3 text-black">
                   {children}
                 </h3>
               ),
               p: ({ children }) => (
-                <p className="font-mono text-base mb-6 leading-relaxed text-gray-300">
+                <p className="font-mono text-base mb-6 leading-relaxed text-gray-800">
                   {children}
                 </p>
               ),
               a: ({ href, children }) => (
                 <a
                   href={href}
-                  className="text-white hover:text-gray-300 underline transition-colors"
+                  className="text-blue-600 hover:text-blue-800 underline transition-colors"
                   target={href?.startsWith('http') ? '_blank' : undefined}
                   rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                 >
@@ -205,17 +205,17 @@ export default function BlogPostPage() {
                 </a>
               ),
               ul: ({ children }) => (
-                <ul className="font-mono list-disc pl-6 mb-6 space-y-2">
+                <ul className="font-mono list-disc pl-6 mb-6 space-y-2 text-gray-800">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="font-mono list-decimal pl-6 mb-6 space-y-2">
+                <ol className="font-mono list-decimal pl-6 mb-6 space-y-2 text-gray-800">
                   {children}
                 </ol>
               ),
               blockquote: ({ children }) => (
-                <blockquote className="font-mono border-l-4 border-white/20 pl-6 my-6 italic text-gray-400">
+                <blockquote className="font-mono border-l-4 border-gray-300 pl-6 my-6 italic text-gray-600">
                   {children}
                 </blockquote>
               ),

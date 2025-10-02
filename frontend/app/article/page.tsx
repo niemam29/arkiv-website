@@ -52,7 +52,7 @@ export default function BlogPage() {
       {/* Header Section */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="font-mono text-4xl md:text-5xl font-bold mb-4">Blog</h1>
+          <h1 className="font-mono text-4xl md:text-5xl font-bold mb-4">Articles</h1>
           <p className="font-mono text-lg text-gray-400">
             Latest updates, tutorials, and insights from the Arkiv team
           </p>
@@ -109,7 +109,7 @@ export default function BlogPage() {
             {filteredPosts.map((post) => (
               <Link
                 key={post.id}
-                href={`/blog/${post.slug || post.documentId}`}
+                href={`/article/${post.slug || post.documentId}`}
                 className="group border border-white/10 rounded-lg p-6 hover:border-white/30 transition-colors"
               >
                 {/* Category Badge */}
