@@ -41,11 +41,9 @@ export default function BlogPage() {
     fetchPosts()
   }, [])
 
-  const filteredPosts = selectedCategory
-    ? posts.filter(post => post.category?.name === selectedCategory)
-    : posts
+  const filteredPosts = selectedCategory ? posts.filter((post) => post.category?.name === selectedCategory) : posts
 
-  const categories = Array.from(new Set(posts.map(post => post.category?.name).filter(Boolean)))
+  const categories = Array.from(new Set(posts.map((post) => post.category?.name).filter(Boolean)))
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -53,9 +51,7 @@ export default function BlogPage() {
       <div className="border-b border-black/10">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="font-mono text-4xl md:text-5xl font-bold mb-4">Articles</h1>
-          <p className="font-mono text-lg text-gray-600">
-            Latest updates, tutorials, and insights from the Arkiv team
-          </p>
+          <p className="font-mono text-lg text-gray-600">Latest updates, tutorials, and insights from the Arkiv team</p>
         </div>
       </div>
 
@@ -67,9 +63,7 @@ export default function BlogPage() {
               <button
                 onClick={() => setSelectedCategory(null)}
                 className={`font-mono px-4 py-2 rounded-lg transition-colors ${
-                  selectedCategory === null
-                    ? 'bg-black text-white'
-                    : 'bg-black/10 hover:bg-black/20'
+                  selectedCategory === null ? 'bg-black text-white' : 'bg-black/10 hover:bg-black/20'
                 }`}
               >
                 All Posts
@@ -79,9 +73,7 @@ export default function BlogPage() {
                   key={category}
                   onClick={() => setSelectedCategory(category!)}
                   className={`font-mono px-4 py-2 rounded-lg transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-black text-white'
-                      : 'bg-black/10 hover:bg-black/20'
+                    selectedCategory === category ? 'bg-black text-white' : 'bg-black/10 hover:bg-black/20'
                   }`}
                 >
                   {category}
@@ -100,9 +92,7 @@ export default function BlogPage() {
           </div>
         ) : filteredPosts.length === 0 ? (
           <div className="flex justify-center items-center min-h-[400px]">
-            <div className="font-mono text-gray-600">
-              {selectedCategory ? `No posts in "${selectedCategory}"` : 'No blog posts yet'}
-            </div>
+            <div className="font-mono text-gray-600">{selectedCategory ? `No posts in "${selectedCategory}"` : 'No blog posts yet'}</div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -115,23 +105,15 @@ export default function BlogPage() {
                 {/* Category Badge */}
                 {post.category && (
                   <div className="mb-4">
-                    <span className="font-mono text-xs px-2 py-1 bg-black/10 rounded">
-                      {post.category.name}
-                    </span>
+                    <span className="font-mono text-xs px-2 py-1 bg-black/10 rounded">{post.category.name}</span>
                   </div>
                 )}
 
                 {/* Title */}
-                <h2 className="font-mono text-xl font-bold mb-3 group-hover:text-orange-500 transition-colors">
-                  {post.title}
-                </h2>
+                <h2 className="font-mono text-xl font-bold mb-3 group-hover:text-orange-500 transition-colors">{post.title}</h2>
 
                 {/* Excerpt */}
-                {post.excerpt && (
-                  <p className="font-mono text-sm text-gray-700 mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                )}
+                {post.excerpt && <p className="font-mono text-sm text-gray-700 mb-4 line-clamp-3">{post.excerpt}</p>}
 
                 {/* Meta Info */}
                 <div className="flex items-center justify-between text-xs text-gray-500 font-mono">

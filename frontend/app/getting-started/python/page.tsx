@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
 import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPythonPage() {
@@ -68,12 +68,8 @@ export default function GettingStartedPythonPage() {
             <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
               Python SDK
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">
-              Getting Started with Arkiv (Python)
-            </h1>
-            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Build decentralized applications with Python and Arkiv
-            </p>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Getting Started with Arkiv (Python)</h1>
+            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">Build decentralized applications with Python and Arkiv</p>
           </div>
 
           {/* Sticky Navigation */}
@@ -84,9 +80,7 @@ export default function GettingStartedPythonPage() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
-                    activeSection === item.id
-                      ? 'bg-[#FE7445] text-white'
-                      : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
+                    activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -663,15 +657,24 @@ if __name__ == "__main__":
           {/* Footer Links */}
           <div className="mt-16 pt-8 border-t border-stone-300">
             <div className="grid md:grid-cols-3 gap-6">
-              <a href="/getting-started" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/getting-started"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">TypeScript SDK</h3>
                 <p className="text-sm font-mono">Build with TypeScript and Arkiv</p>
               </a>
-              <a href="/docs" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/docs"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">Documentation</h3>
                 <p className="text-sm font-mono">Comprehensive guides and references</p>
               </a>
-              <a href="/playground" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/playground"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">Playground</h3>
                 <p className="text-sm font-mono">Try Arkiv in your browser</p>
               </a>

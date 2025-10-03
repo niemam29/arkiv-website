@@ -11,9 +11,20 @@
     "build:docker": "docker buildx build --platform linux/amd64 --push -t moonplkr/arkiv-frontend:latest -f frontend/Dockerfile .",
     "status": "ssh moon@arkiv.dev.golem.network 'docker ps --filter name=arkiv-frontend'",
     "logs:staging": "ssh moon@arkiv.dev.golem.network 'docker logs -f arkiv-frontend-staging'",
-    "logs:production": "ssh moon@arkiv.dev.golem.network 'docker logs -f arkiv-frontend-production'"
+    "logs:production": "ssh moon@arkiv.dev.golem.network 'docker logs -f arkiv-frontend-production'",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "react-day-picker": "^9.11.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html}": "prettier --write"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
+    "prettier": "^3.6.2"
   }
 }

@@ -4,9 +4,9 @@ export default ({ env }) => ({
   url: env('PUBLIC_URL', 'https://cms.arkiv.network'),
   proxy: true, // Trust proxy headers from Traefik
   app: {
-    keys: env.array('APP_KEYS', ['toBeModified1', 'toBeModified2']),
+    keys: env.array('APP_KEYS', ['toBeModified1', 'toBeModified2'])
   },
   webhooks: {
-    populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
-  },
-});
+    populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false)
+  }
+})

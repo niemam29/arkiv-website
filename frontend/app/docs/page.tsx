@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
 
 const docsNavigation = [
   {
@@ -923,168 +923,249 @@ export default function DocsPage() {
           text-transform: none;
         }
       `}</style>
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="px-4 md:px-[60px] pt-32 pb-16 bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-[1280px] mx-auto text-center">
-          <h1 className="font-brutal text-4xl md:text-6xl font-black uppercase text-black leading-tight tracking-wider mb-6">
-            [ ARKIV DOCS ]
-          </h1>
-          <p className="font-mono text-lg text-gray-600 max-w-3xl mx-auto">
-            Everything you need to build with Arkiv. From quick start guides to comprehensive API documentation.
-          </p>
-        </div>
-      </section>
+      <div className="min-h-screen bg-white">
+        {/* Hero Section */}
+        <section className="px-4 md:px-[60px] pt-32 pb-16 bg-gradient-to-b from-blue-50 to-white">
+          <div className="max-w-[1280px] mx-auto text-center">
+            <h1 className="font-brutal text-4xl md:text-6xl font-black uppercase text-black leading-tight tracking-wider mb-6">
+              [ ARKIV DOCS ]
+            </h1>
+            <p className="font-mono text-lg text-gray-600 max-w-3xl mx-auto">
+              Everything you need to build with Arkiv. From quick start guides to comprehensive API documentation.
+            </p>
+          </div>
+        </section>
 
-      {/* Navigation & Content */}
-      <section className="px-4 md:px-[60px] py-16">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col lg:flex-row gap-12">
-            {/* Sidebar Navigation */}
-            <div className="w-full lg:w-80">
-              <div className="sticky top-8">
-                <h2 className="font-brutal text-lg font-medium uppercase text-black mb-6">Documentation</h2>
-                <nav className="space-y-2">
-                  {docsNavigation.map((section) => (
-                    <button
-                      key={section.id}
-                      onClick={() => handleSectionChange(section.id)}
-                      className={`w-full text-left p-4 rounded-lg transition-all ${
-                        activeSection === section.id
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-50 text-black hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className="font-mono text-sm font-medium">{section.name}</div>
-                      <div className={`font-mono text-xs mt-1 ${
-                        activeSection === section.id ? 'text-blue-100' : 'text-gray-500'
-                      }`}>
-                        {section.description}
-                      </div>
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1">
-              <div className="prose prose-lg max-w-none">
-                <h1 className="font-brutal text-3xl font-medium text-black mb-8" style={{ textTransform: 'none' }}>
-                  {currentContent.title}
-                </h1>
-                <div className="docs-content space-y-4 prose prose-slate max-w-none" style={{ textTransform: 'none' }}>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeRaw]}
-                    components={{
-                      h1: ({node, ...props}) => <h1 className="font-brutal text-2xl font-medium text-black mt-8 mb-4 border-b border-gray-200 pb-2" style={{ textTransform: 'none' }} {...props} />,
-                      h2: ({node, ...props}) => <h2 className="font-brutal text-xl font-medium text-black mt-6 mb-3" style={{ textTransform: 'none' }} {...props} />,
-                      h3: ({node, ...props}) => <h3 className="font-semibold text-lg text-black mt-4 mb-2" style={{ textTransform: 'none' }} {...props} />,
-                      p: ({node, ...props}) => <p className="mb-4 text-gray-700 leading-relaxed" style={{ textTransform: 'none' }} {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc list-inside my-4 space-y-2" style={{ textTransform: 'none' }} {...props} />,
-                      li: ({node, ...props}) => <li className="text-gray-700" style={{ textTransform: 'none' }} {...props} />,
-                      a: ({node, ...props}) => <a className="text-blue-600 hover:text-blue-800 underline font-medium" style={{ textTransform: 'none' }} {...props} />,
-                      code: ({node, inline, className, children, ...props}: any) => {
-                        const match = /language-(\w+)/.exec(className || '')
-                        const language = match ? match[1] : 'typescript'
-                        return !inline ? (
-                          <div className="my-6">
-                            <CodeBlock code={String(children).replace(/\n$/, '')} language={language} />
-                          </div>
-                        ) : (
-                          <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono" style={{ textTransform: 'none' }} {...props}>
-                            {children}
-                          </code>
-                        )
-                      },
-                      table: ({node, ...props}) => (
-                        <div className="overflow-x-auto my-6">
-                          <table className="w-full border-collapse border border-gray-300" {...props} />
+        {/* Navigation & Content */}
+        <section className="px-4 md:px-[60px] py-16">
+          <div className="max-w-[1280px] mx-auto">
+            <div className="flex flex-col lg:flex-row gap-12">
+              {/* Sidebar Navigation */}
+              <div className="w-full lg:w-80">
+                <div className="sticky top-8">
+                  <h2 className="font-brutal text-lg font-medium uppercase text-black mb-6">Documentation</h2>
+                  <nav className="space-y-2">
+                    {docsNavigation.map((section) => (
+                      <button
+                        key={section.id}
+                        onClick={() => handleSectionChange(section.id)}
+                        className={`w-full text-left p-4 rounded-lg transition-all ${
+                          activeSection === section.id ? 'bg-blue-600 text-white' : 'bg-gray-50 text-black hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className="font-mono text-sm font-medium">{section.name}</div>
+                        <div className={`font-mono text-xs mt-1 ${activeSection === section.id ? 'text-blue-100' : 'text-gray-500'}`}>
+                          {section.description}
                         </div>
-                      ),
-                      thead: ({node, ...props}) => <thead className="bg-gray-50" {...props} />,
-                      th: ({node, ...props}) => <th className="border border-gray-300 px-3 py-2 text-left font-semibold" {...props} />,
-                      td: ({node, ...props}) => <td className="border border-gray-300 px-3 py-2 text-sm" {...props} />
-                    }}
-                  >
-                    {currentContent.content}
-                  </ReactMarkdown>
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+
+              {/* Main Content */}
+              <div className="flex-1">
+                <div className="prose prose-lg max-w-none">
+                  <h1 className="font-brutal text-3xl font-medium text-black mb-8" style={{ textTransform: 'none' }}>
+                    {currentContent.title}
+                  </h1>
+                  <div className="docs-content space-y-4 prose prose-slate max-w-none" style={{ textTransform: 'none' }}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                      components={{
+                        h1: ({ node, ...props }) => (
+                          <h1
+                            className="font-brutal text-2xl font-medium text-black mt-8 mb-4 border-b border-gray-200 pb-2"
+                            style={{ textTransform: 'none' }}
+                            {...props}
+                          />
+                        ),
+                        h2: ({ node, ...props }) => (
+                          <h2
+                            className="font-brutal text-xl font-medium text-black mt-6 mb-3"
+                            style={{ textTransform: 'none' }}
+                            {...props}
+                          />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <h3 className="font-semibold text-lg text-black mt-4 mb-2" style={{ textTransform: 'none' }} {...props} />
+                        ),
+                        p: ({ node, ...props }) => (
+                          <p className="mb-4 text-gray-700 leading-relaxed" style={{ textTransform: 'none' }} {...props} />
+                        ),
+                        ul: ({ node, ...props }) => (
+                          <ul className="list-disc list-inside my-4 space-y-2" style={{ textTransform: 'none' }} {...props} />
+                        ),
+                        li: ({ node, ...props }) => <li className="text-gray-700" style={{ textTransform: 'none' }} {...props} />,
+                        a: ({ node, ...props }) => (
+                          <a
+                            className="text-blue-600 hover:text-blue-800 underline font-medium"
+                            style={{ textTransform: 'none' }}
+                            {...props}
+                          />
+                        ),
+                        code: ({ node, inline, className, children, ...props }: any) => {
+                          const match = /language-(\w+)/.exec(className || '')
+                          const language = match ? match[1] : 'typescript'
+                          return !inline ? (
+                            <div className="my-6">
+                              <CodeBlock code={String(children).replace(/\n$/, '')} language={language} />
+                            </div>
+                          ) : (
+                            <code
+                              className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono"
+                              style={{ textTransform: 'none' }}
+                              {...props}
+                            >
+                              {children}
+                            </code>
+                          )
+                        },
+                        table: ({ node, ...props }) => (
+                          <div className="overflow-x-auto my-6">
+                            <table className="w-full border-collapse border border-gray-300" {...props} />
+                          </div>
+                        ),
+                        thead: ({ node, ...props }) => <thead className="bg-gray-50" {...props} />,
+                        th: ({ node, ...props }) => <th className="border border-gray-300 px-3 py-2 text-left font-semibold" {...props} />,
+                        td: ({ node, ...props }) => <td className="border border-gray-300 px-3 py-2 text-sm" {...props} />
+                      }}
+                    >
+                      {currentContent.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <section className="px-4 md:px-[60px] py-[32px] bg-[#181EA9]">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-8">
-            {/* Main Footer Content - Single Row */}
-            <div className="flex items-start justify-between">
-              {/* Large ARKIV Logo */}
-              <div className="flex-shrink-0">
-                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
-                  [ ARKIV ]
-                </h2>
+        {/* Footer */}
+        <section className="px-4 md:px-[60px] py-[32px] bg-[#181EA9]">
+          <div className="max-w-[1280px] mx-auto">
+            <div className="flex flex-col gap-8">
+              {/* Main Footer Content - Single Row */}
+              <div className="flex items-start justify-between">
+                {/* Large ARKIV Logo */}
+                <div className="flex-shrink-0">
+                  <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
+                    [ ARKIV ]
+                  </h2>
+                </div>
+
+                {/* Footer Navigation - Horizontal Layout */}
+                <div className="flex gap-16 items-start">
+                  {/* Developers */}
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
+                    <div className="flex flex-col gap-1">
+                      <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                        Docs
+                      </a>
+                      <a
+                        href="/getting-started"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Getting Started
+                      </a>
+                      <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                        Playground
+                      </a>
+                      <a
+                        href="https://github.com/arkiv-network"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        GitHub
+                      </a>
+                      <a
+                        href="/pdf/ARKIV_Litepaper_blue.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Litepaper
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Company */}
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-mono text-sm text-white leading-tight mb-2">Company</h3>
+                    <div className="flex flex-col gap-1">
+                      <a
+                        href="https://www.golem.network/"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Golem
+                      </a>
+                      <a
+                        href="https://glm.golem.network/"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        GLM Token
+                      </a>
+                      <a
+                        href="https://www.golem.network/careers"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Careers
+                      </a>
+                      <a
+                        href="/#upcoming-events"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Events
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Connect */}
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
+                    <div className="flex flex-col gap-1">
+                      <a
+                        href="https://twitter.com/arkiv"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        X
+                      </a>
+                      <a
+                        href="https://discord.gg/arkiv"
+                        className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                      >
+                        Discord
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Legal */}
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
+                    <div className="flex flex-col gap-1">
+                      <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                        Privacy Policy
+                      </a>
+                      <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                        Cookie Policy
+                      </a>
+                      <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                        Terms of Use
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Footer Navigation - Horizontal Layout */}
-              <div className="flex gap-16 items-start">
-                {/* Developers */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Docs</a>
-                    <a href="/getting-started" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Getting Started</a>
-                    <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
-                    <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
-                    <a href="/pdf/ARKIV_Litepaper_blue.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
-                  </div>
-                </div>
-
-                {/* Company */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Company</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://www.golem.network/" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Golem</a>
-                    <a href="https://glm.golem.network/" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GLM Token</a>
-                    <a href="https://www.golem.network/careers" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Careers</a>
-                    <a href="/#upcoming-events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Events</a>
-                  </div>
-                </div>
-
-                {/* Connect */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://twitter.com/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">X</a>
-                    <a href="https://discord.gg/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Discord</a>
-                  </div>
-                </div>
-
-                {/* Legal */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Privacy Policy</a>
-                    <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Cookie Policy</a>
-                    <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Terms of Use</a>
-                  </div>
-                </div>
+              {/* Copyright - Single Row */}
+              <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
+                <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
               </div>
-            </div>
-
-            {/* Copyright - Single Row */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
-              <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </>
   )
 }
