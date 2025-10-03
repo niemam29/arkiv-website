@@ -65,7 +65,7 @@ function normalise(rawUrl: string, source: string, depth: number): QueueEntry | 
     url: fetchUrl,
     key: keyUrl.toString(),
     depth,
-    source,
+    source
   }
 }
 
@@ -155,7 +155,7 @@ async function main() {
       errors.push({
         url: current.url,
         message: `Network error: ${(error as Error).message}`,
-        source: current.source,
+        source: current.source
       })
       console.error(`✖ ${current.url} — ${(error as Error).message}`)
       continue
@@ -167,7 +167,7 @@ async function main() {
     routeRecords.push({
       url: current.url,
       status,
-      redirectedTo: finalUrl !== current.url ? finalUrl : undefined,
+      redirectedTo: finalUrl !== current.url ? finalUrl : undefined
     })
 
     if (status >= 400) {
@@ -175,7 +175,7 @@ async function main() {
         url: current.url,
         status,
         message: `HTTP ${status}`,
-        source: current.source,
+        source: current.source
       })
       console.error(`✖ ${status} ${current.url}`)
       continue

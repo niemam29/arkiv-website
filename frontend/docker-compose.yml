@@ -2,6 +2,6 @@ services:
   arkiv-website:
     build: .
     ports:
-      - "8765:3000"
+      - '8765:3000'
     restart: unless-stopped
     container_name: arkiv-website

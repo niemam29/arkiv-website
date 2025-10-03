@@ -25,11 +25,7 @@
     "topic": "",
     "x": 160,
     "y": 220,
-    "wires": [
-      [
-        "reset_counter"
-      ]
-    ]
+    "wires": [["reset_counter"]]
   },
   {
     "id": "reset_midday",
@@ -50,11 +46,7 @@
     "topic": "",
     "x": 160,
     "y": 260,
-    "wires": [
-      [
-        "reset_counter"
-      ]
-    ]
+    "wires": [["reset_counter"]]
   },
   {
     "id": "reset_evening",
@@ -75,11 +67,7 @@
     "topic": "",
     "x": 160,
     "y": 300,
-    "wires": [
-      [
-        "reset_counter"
-      ]
-    ]
+    "wires": [["reset_counter"]]
   },
   {
     "id": "reset_counter",
@@ -115,11 +103,7 @@
     "payloadType": "num",
     "x": 150,
     "y": 120,
-    "wires": [
-      [
-        "set_portion_func"
-      ]
-    ]
+    "wires": [["set_portion_func"]]
   },
   {
     "id": "set_portion_func",
@@ -183,11 +167,7 @@
     ],
     "x": 190,
     "y": 180,
-    "wires": [
-      [
-        "decide_feed_func"
-      ]
-    ]
+    "wires": [["decide_feed_func"]]
   },
   {
     "id": "decide_feed_func",
@@ -202,12 +182,7 @@
     "libs": [],
     "x": 430,
     "y": 180,
-    "wires": [
-      [
-        "call_feed_button",
-        "feed_debug"
-      ]
-    ]
+    "wires": [["call_feed_button", "feed_debug"]]
   },
   {
     "id": "call_feed_button",
@@ -228,9 +203,7 @@
     "queue": "none",
     "x": 710,
     "y": 160,
-    "wires": [
-      []
-    ]
+    "wires": [[]]
   },
   {
     "id": "feed_debug",

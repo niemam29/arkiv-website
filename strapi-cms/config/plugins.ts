@@ -12,14 +12,14 @@ export default ({ env }) => ({
           // Restrict to @golem.network domain only
           authorize_url: 'https://accounts.google.com/o/oauth2/v2/auth',
           custom_params: {
-            hd: 'golem.network', // Google Workspace domain restriction
-          },
-        },
+            hd: 'golem.network' // Google Workspace domain restriction
+          }
+        }
       },
       // Email domain validation
       register: {
-        allowedFields: ['username', 'email'],
-      },
-    },
-  },
-});
+        allowedFields: ['username', 'email']
+      }
+    }
+  }
+})

@@ -8,11 +8,13 @@
 ## Workflow
 
 ### 1. Deploy to Staging
+
 ```bash
 ./scripts/deploy-staging.sh
 ```
 
 **What it does:**
+
 - Builds latest frontend code
 - Pushes to `moonplkr/arkiv-frontend:latest`
 - Deploys to staging.arkiv.network
@@ -21,11 +23,13 @@
 **Test on:** https://staging.arkiv.network
 
 ### 2. Promote to Production
+
 ```bash
 ./scripts/promote-to-production.sh
 ```
 
 **What it does:**
+
 - Tags staging image as production
 - Deploys to arkiv.network
 - Both environments running simultaneously
@@ -34,17 +38,20 @@
 **Live on:** https://arkiv.network
 
 ### 3. Rollback (if needed)
+
 ```bash
 ./scripts/rollback-production.sh
 ```
 
 **What it does:**
+
 - Reverts production to previous version
 - Instant rollback
 
 ## Manual Deployment
 
 ### Deploy Staging Only
+
 ```bash
 docker buildx build --platform linux/amd64 --push \
   -t moonplkr/arkiv-frontend:latest \
@@ -57,6 +64,7 @@ ssh moon@arkiv.dev.golem.network \
 ```
 
 ### Promote to Production
+
 ```bash
 docker pull moonplkr/arkiv-frontend:latest
 docker tag moonplkr/arkiv-frontend:latest moonplkr/arkiv-frontend:production
@@ -70,13 +78,13 @@ ssh moon@arkiv.dev.golem.network \
 
 ## Environment Differences
 
-| Feature | Staging | Production |
-|---------|---------|------------|
-| Domain | staging.arkiv.network | arkiv.network |
-| Image | :latest | :production |
-| Analytics | ❌ No Umami | ✅ Umami enabled |
-| Purpose | Testing | Live users |
-| Updates | Automatic on push | Manual promotion |
+| Feature   | Staging               | Production       |
+| --------- | --------------------- | ---------------- |
+| Domain    | staging.arkiv.network | arkiv.network    |
+| Image     | :latest               | :production      |
+| Analytics | ❌ No Umami           | ✅ Umami enabled |
+| Purpose   | Testing               | Live users       |
+| Updates   | Automatic on push     | Manual promotion |
 
 ## Best Practices
 
@@ -100,11 +108,13 @@ ssh moon@arkiv.dev.golem.network "docker ps --filter name=arkiv-frontend"
 ## Logs
 
 ### Production
+
 ```bash
 ssh moon@arkiv.dev.golem.network "docker logs -f arkiv-frontend-production"
 ```
 
 ### Staging
+
 ```bash
 ssh moon@arkiv.dev.golem.network "docker logs -f arkiv-frontend-staging"
 ```

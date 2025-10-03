@@ -34,7 +34,7 @@ print(")")
 print("")
 print("Ready to interact with Arkiv!")`
   },
-  
+
   create: {
     title: 'Create Entity',
     description: 'Create a new entity with annotations',
@@ -85,7 +85,7 @@ print("")
 print("In production, create entities with:")
 print("receipts = await client.create_entities([entity])")`
   },
-  
+
   query: {
     title: 'Query Entities',
     description: 'Search for entities using annotations',
@@ -146,7 +146,7 @@ print("")
 print("In production, use:")
 print("results = await client.query_entities(query)")`
   },
-  
+
   update: {
     title: 'Update Entity',
     description: 'Modify an existing entity',
@@ -183,7 +183,7 @@ print("")
 print("In production, use:")
 print("receipt = await client.update_entity(entity_key, new_data, btl=300)")`
   },
-  
+
   events: {
     title: 'Event Simulation',
     description: 'Demonstrate event-driven operations',
@@ -232,7 +232,7 @@ print("")
 print("Note: For real-time event monitoring, use watch_logs()")
 print("in a Python environment outside the sandbox.")`
   },
-  
+
   batch: {
     title: 'Batch Operations',
     description: 'Perform multiple operations efficiently',
@@ -280,7 +280,7 @@ print("")
 print("In production, use:")
 print("receipts = await client.create_entities(batch_entities)")`
   },
-  
+
   metamask: {
     title: 'MetaMask Integration',
     description: 'Check MetaMask connection status in Python',
@@ -323,7 +323,7 @@ print("- Private keys (for server-side operations)")
 print("- Web3 wallets that provide API access")
 print("- Browser-based frontends that handle MetaMask")`
   },
-  
+
   fullExample: {
     title: 'Full Example',
     description: 'Complete workflow: connect, create, query, update, and delete',
@@ -417,4 +417,4 @@ print(f"  - Owner address: {owner_address}")
 print("")
 print("=== EXAMPLE COMPLETED ===")`
   }
-};
+}

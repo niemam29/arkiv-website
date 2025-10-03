@@ -1,52 +1,52 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
 interface AuthState {
-  isAuthenticated: boolean;
-  isLoading: boolean;
+  isAuthenticated: boolean
+  isLoading: boolean
 }
 
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
-    isLoading: true,
-  });
+    isLoading: true
+  })
 
   useEffect(() => {
     // Check if user is already authenticated
-    const isAuth = localStorage.getItem("isAuthenticated") === "true";
+    const isAuth = localStorage.getItem('isAuthenticated') === 'true'
     setAuthState({
       isAuthenticated: isAuth,
-      isLoading: false,
-    });
-  }, []);
+      isLoading: false
+    })
+  }, [])
 
   const login = (username: string, password: string): boolean => {
     // Check credentials (in production, this should be an API call)
-    const correctUsername = "ETHWarsawDB";
-    const correctPassword = "GOLEM_DB2025%";
+    const correctUsername = 'ETHWarsawDB'
+    const correctPassword = 'GOLEM_DB2025%'
 
     if (username === correctUsername && password === correctPassword) {
-      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem('isAuthenticated', 'true')
       setAuthState({
         isAuthenticated: true,
-        isLoading: false,
-      });
-      return true;
+        isLoading: false
+      })
+      return true
     }
-    return false;
-  };
+    return false
+  }
 
   const logout = () => {
-    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem('isAuthenticated')
     setAuthState({
       isAuthenticated: false,
-      isLoading: false,
-    });
-  };
+      isLoading: false
+    })
+  }
 
   return {
     ...authState,
     login,
-    logout,
-  };
-};
+    logout
+  }
+}

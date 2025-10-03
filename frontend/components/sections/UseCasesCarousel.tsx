@@ -17,36 +17,36 @@ const USE_CASES: UseCaseItem[] = [
     title: 'CopyPal',
     description: 'Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.',
     href: 'https://copypal.online/',
-    image: '/images/copypal/copypal-online-2025-09-22-20_44_16.png',
+    image: '/images/copypal/copypal-online-2025-09-22-20_44_16.png'
   },
   {
     id: 2,
     title: 'ImageDB',
     description: 'Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.',
     href: 'https://imagedb.online/',
-    image: '/images/imagedb/imagedb-2025-09-22-o-21.07.38.png',
+    image: '/images/imagedb/imagedb-2025-09-22-o-21.07.38.png'
   },
   {
     id: 3,
     title: 'FileDB',
     description: 'Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.',
     href: 'https://filedb.online/',
-    image: '/images/filedb/filedb-2025-09-22 o 21.21.59.png',
+    image: '/images/filedb/filedb-2025-09-22 o 21.21.59.png'
   },
   {
     id: 4,
     title: 'WebDB Static Hosting',
     description: 'Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.',
     href: 'https://webdb.site',
-    image: '/images/webdb/webdb-2025-09-22 o 21.19.32.png',
+    image: '/images/webdb/webdb-2025-09-22 o 21.19.32.png'
   },
   {
     id: 5,
     title: 'Arkiv Portfolio',
     description: 'Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.',
     href: 'https://usecases.arkiv.network',
-    image: '/images/portfolio/portfolio-2025-09-26 o 22.59.33.png',
-  },
+    image: '/images/portfolio/portfolio-2025-09-26 o 22.59.33.png'
+  }
 ]
 
 const scrollOffset = 320
@@ -89,10 +89,7 @@ export default function UseCasesCarousel() {
 
   return (
     <div className="relative">
-      <div
-        ref={containerRef}
-        className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory xl:overflow-visible xl:pr-[200px]"
-      >
+      <div ref={containerRef} className="flex gap-6 overflow-x-auto pb-2 pr-6 snap-x snap-mandatory xl:overflow-visible xl:pr-[200px]">
         {USE_CASES.map((item) => (
           <Link
             key={item.id}
@@ -102,15 +99,9 @@ export default function UseCasesCarousel() {
             className="bg-gray-200 min-w-[280px] md:min-w-[300px] xl:min-w-[266px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col gap-6 relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group snap-start"
           >
             <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-            <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6 mb-6 group-hover:text-white">
-              {item.title}
-            </h3>
+            <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6 mb-6 group-hover:text-white">{item.title}</h3>
             <div className="relative bg-gray-300 rounded-2xl overflow-hidden aspect-[4/3]">
-              <img
-                src={item.image}
-                alt={`${item.title} screenshot`}
-                className="absolute inset-0 w-full h-full object-cover object-top"
-              />
+              <img src={item.image} alt={`${item.title} screenshot`} className="absolute inset-0 w-full h-full object-cover object-top" />
             </div>
             <p className="font-mono text-base text-black leading-[22px] group-hover:text-white">{item.description}</p>
             <div className="flex justify-between items-end mt-auto">

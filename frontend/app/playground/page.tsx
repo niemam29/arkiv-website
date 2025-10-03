@@ -1,19 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { pythonExamples } from '@/data/python-examples';
-import Footer from '@/components/layout/Footer';
+import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { pythonExamples } from '@/data/python-examples'
+import Footer from '@/components/layout/Footer'
 
-const CodePlayground = dynamic(() => import('@/components/ui/CodePlayground').then(mod => ({ default: mod.CodePlayground })), {
+const CodePlayground = dynamic(() => import('@/components/ui/CodePlayground').then((mod) => ({ default: mod.CodePlayground })), {
   loading: () => (
     <div className="w-full h-[600px] bg-gray-50 animate-pulse rounded-lg flex items-center justify-center">
       <div className="text-gray-400 font-mono">Loading playground...</div>
     </div>
   ),
   ssr: false
-});
+})
 
 const examples = {
   connect: {
@@ -431,48 +431,47 @@ console.log("  - Owner address: " + ownerAddress);
 console.log("");
 console.log("=== EXAMPLE COMPLETED ===");`
   }
-};
+}
 
 export default function PlaygroundPage() {
-  const [selectedExample, setSelectedExample] = useState<keyof typeof examples>('connect');
-  const [customCode, setCustomCode] = useState<string | null>(null);
-  const [customTitle, setCustomTitle] = useState<string | null>(null);
-  const [customLanguage, setCustomLanguage] = useState<'typescript' | 'python'>('typescript');
-
+  const [selectedExample, setSelectedExample] = useState<keyof typeof examples>('connect')
+  const [customCode, setCustomCode] = useState<string | null>(null)
+  const [customTitle, setCustomTitle] = useState<string | null>(null)
+  const [customLanguage, setCustomLanguage] = useState<'typescript' | 'python'>('typescript')
 
   useEffect(() => {
     // Check if there's an example from Getting Started
-    const storedExample = sessionStorage.getItem('playgroundExample');
-    const storedLanguage = sessionStorage.getItem('playgroundLanguage');
+    const storedExample = sessionStorage.getItem('playgroundExample')
+    const storedLanguage = sessionStorage.getItem('playgroundLanguage')
 
     if (storedExample) {
       // Set the selected example
       if (storedExample in examples) {
-        setSelectedExample(storedExample as keyof typeof examples);
-        setCustomCode(null);
-        setCustomTitle(null);
+        setSelectedExample(storedExample as keyof typeof examples)
+        setCustomCode(null)
+        setCustomTitle(null)
       }
 
       // Clear the stored data after using it
-      sessionStorage.removeItem('playgroundExample');
-      sessionStorage.removeItem('playgroundLanguage');
+      sessionStorage.removeItem('playgroundExample')
+      sessionStorage.removeItem('playgroundLanguage')
     } else {
       // Check if there's custom code
-      const storedCode = sessionStorage.getItem('playgroundCode');
-      const storedTitle = sessionStorage.getItem('playgroundTitle');
+      const storedCode = sessionStorage.getItem('playgroundCode')
+      const storedTitle = sessionStorage.getItem('playgroundTitle')
 
       if (storedCode) {
-        setCustomCode(storedCode);
-        setCustomTitle(storedTitle || 'Custom Code');
-        setCustomLanguage(storedLanguage === 'python' ? 'python' : 'typescript');
+        setCustomCode(storedCode)
+        setCustomTitle(storedTitle || 'Custom Code')
+        setCustomLanguage(storedLanguage === 'python' ? 'python' : 'typescript')
 
         // Clear the stored data after using it
-        sessionStorage.removeItem('playgroundCode');
-        sessionStorage.removeItem('playgroundLanguage');
-        sessionStorage.removeItem('playgroundTitle');
+        sessionStorage.removeItem('playgroundCode')
+        sessionStorage.removeItem('playgroundLanguage')
+        sessionStorage.removeItem('playgroundTitle')
       }
     }
-  }, []);
+  }, [])
 
   return (
     <div className="min-h-screen bg-white">
@@ -483,16 +482,24 @@ export default function PlaygroundPage() {
             <nav className="px-6 py-4">
               <div className="flex items-center justify-between">
                 <a href="/" className="flex items-center">
-                  <div className="font-brutal text-3xl font-black uppercase text-black tracking-wider">
-                    [ ARKIV ]
-                  </div>
+                  <div className="font-brutal text-3xl font-black uppercase text-black tracking-wider">[ ARKIV ]</div>
                 </a>
                 <div className="hidden lg:flex items-center space-x-6 ml-auto">
-                  <a href="/#why-arkiv" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Why Arkiv</a>
-                  <a href="/#how-it-works" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">How it Works</a>
-                  <a href="/#use-cases" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Use Cases</a>
-                  <a href="/#faq" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">FAQ</a>
-                  <a href="/#about" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">About</a>
+                  <a href="/#why-arkiv" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                    Why Arkiv
+                  </a>
+                  <a href="/#how-it-works" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                    How it Works
+                  </a>
+                  <a href="/#use-cases" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                    Use Cases
+                  </a>
+                  <a href="/#faq" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                    FAQ
+                  </a>
+                  <a href="/#about" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">
+                    About
+                  </a>
                 </div>
               </div>
             </nav>
@@ -503,12 +510,9 @@ export default function PlaygroundPage() {
       {/* Main Content */}
       <main className="relative z-10">
         <div className="max-w-[1280px] mx-auto px-4 md:px-[60px] py-12">
-
           {/* Page Header */}
           <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black leading-tight mb-4">
-              Code Playground
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black leading-tight mb-4">Code Playground</h1>
             <p className="text-xl font-mono text-[#1F1F1F]">
               Interactive examples for learning Arkiv SDK. Edit the code and see results instantly!
             </p>
@@ -522,8 +526,8 @@ export default function PlaygroundPage() {
                   <span className="text-sm text-black font-mono font-medium whitespace-nowrap">Custom Code:</span>
                   <button
                     onClick={() => {
-                      setCustomCode(null);
-                      setCustomTitle(null);
+                      setCustomCode(null)
+                      setCustomTitle(null)
                     }}
                     className="px-4 py-2 rounded-lg bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white transition-all font-mono text-sm border border-stone-300"
                   >
@@ -629,5 +633,5 @@ export default function PlaygroundPage() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
