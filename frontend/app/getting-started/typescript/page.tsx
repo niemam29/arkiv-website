@@ -35,7 +35,7 @@ export default function GettingStartedPage() {
       ]
     },
     batch: {
-      p: `Optionally, add many votes at once—great for voting across multiple proposals, fixtures or demos.`,
+      p: `Optionally, add many votes at once-great for voting across multiple proposals, fixtures or demos.`,
       bullets: [
         { t: 'Goal', v: 'Create multiple vote entities in a single call.' },
         { t: 'Success check', v: 'Receipt count matches the number you pushed.' }
@@ -49,7 +49,7 @@ export default function GettingStartedPage() {
       ]
     },
     listen: {
-      p: `Keep your ear to the door. Watch vote and proposal creations and extensions in real time—no polling.`,
+      p: `Keep your ear to the door. Watch vote and proposal creations and extensions in real time-no polling.`,
       bullets: [
         { t: 'Goal', v: 'Subscribe to creation and extension events for votes.' },
         { t: 'Success check', v: 'Console logs “[Vote created] …” or “[Vote extended] …”.' }
@@ -104,9 +104,9 @@ export default function GettingStartedPage() {
             <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
               TypeScript SDK v0.1.16
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Voting Board — Getting Started</h1>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Arkiv TS SDK - Getting Started</h1>
             <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Open a proposal, collect votes in real time, tally them, batch more votes, then extend the voting window.
+              Voting Board: Open a proposal, collect votes in real time, tally them, batch more votes, then extend the voting window.
             </p>
             <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 font-mono text-xs text-stone-700">
               <span>Story</span>
@@ -245,8 +245,8 @@ bun add golem-base-sdk dotenv tslib`}
                 language="bash"
                 code={`# .env
 PRIVATE_KEY=0x...
-RPC_URL=https://your.rpc.endpoint/rpc
-WS_URL=wss://your.rpc.endpoint/rpc/ws`}
+RPC_URL=https://your.rpc.endpoint/rpc # https://kaolin.hoodi.arkiv.network/rpc
+WS_URL=wss://your.rpc.endpoint/rpc/ws # wss://kaolin.hoodi.arkiv.network/rpc`}
               />
             </div>
           </section>
@@ -432,7 +432,7 @@ console.log(\`Batch created: \${receipts.length} votes\`);`}
 const noVotes = await client.queryEntities(
   \`type = "vote" && proposalKey = "\${proposalKey}" && choice = "no"\`
 );
-console.log(\`Tallies — YES: \${yesVotes.length}, NO: \${noVotes.length}\`);`}
+console.log(\`Tallies - YES: \${yesVotes.length}, NO: \${noVotes.length}\`);`}
               />
             </div>
           </section>
