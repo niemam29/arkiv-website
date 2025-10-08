@@ -289,7 +289,7 @@ WS_URL=wss://your.rpc.endpoint/rpc/ws    # e.g. wss://kaolin.hoodi.arkiv.network
                     generated?.address ? 'bg-[#0f766e] text-white hover:opacity-90' : 'bg-gray-300 text-gray-700'
                   }`}
                 >
-                  Open Faucet (prefilled)
+                  Open Faucet
                 </a>
               </div>
 
