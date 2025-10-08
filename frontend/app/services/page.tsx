@@ -7,92 +7,62 @@ export default function Services() {
     {
       title: 'Web Development',
       description: 'Custom web applications built with modern frameworks and best practices.',
-      features: [
-        'React/Next.js Applications',
-        'Progressive Web Apps (PWA)',
-        'E-commerce Solutions',
-        'API Development',
-      ],
-      pricing: 'Starting at $5,000',
+      features: ['React/Next.js Applications', 'Progressive Web Apps (PWA)', 'E-commerce Solutions', 'API Development'],
+      pricing: 'Starting at $5,000'
     },
     {
       title: 'Mobile Development',
       description: 'Native and cross-platform mobile apps for iOS and Android.',
-      features: [
-        'React Native Apps',
-        'iOS & Android Native',
-        'App Store Optimization',
-        'Push Notifications',
-      ],
-      pricing: 'Starting at $8,000',
+      features: ['React Native Apps', 'iOS & Android Native', 'App Store Optimization', 'Push Notifications'],
+      pricing: 'Starting at $8,000'
     },
     {
       title: 'Cloud Solutions',
       description: 'Scalable cloud infrastructure and DevOps implementations.',
-      features: [
-        'AWS/Azure/GCP Setup',
-        'CI/CD Pipelines',
-        'Container Orchestration',
-        'Monitoring & Logging',
-      ],
-      pricing: 'Starting at $3,000',
+      features: ['AWS/Azure/GCP Setup', 'CI/CD Pipelines', 'Container Orchestration', 'Monitoring & Logging'],
+      pricing: 'Starting at $3,000'
     },
     {
       title: 'Digital Transformation',
       description: 'Complete business digitalization and process automation.',
-      features: [
-        'Process Analysis',
-        'Custom Software Solutions',
-        'Integration Services',
-        'Training & Support',
-      ],
-      pricing: 'Custom Quote',
+      features: ['Process Analysis', 'Custom Software Solutions', 'Integration Services', 'Training & Support'],
+      pricing: 'Custom Quote'
     },
     {
       title: 'UI/UX Design',
       description: 'User-centered design for web and mobile applications.',
-      features: [
-        'User Research',
-        'Wireframing & Prototyping',
-        'Visual Design',
-        'Usability Testing',
-      ],
-      pricing: 'Starting at $2,500',
+      features: ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'Usability Testing'],
+      pricing: 'Starting at $2,500'
     },
     {
       title: 'Consulting',
       description: 'Strategic technology consulting and architecture review.',
-      features: [
-        'Technology Assessment',
-        'Architecture Planning',
-        'Performance Optimization',
-        'Security Audit',
-      ],
-      pricing: 'Starting at $200/hour',
-    },
+      features: ['Technology Assessment', 'Architecture Planning', 'Performance Optimization', 'Security Audit'],
+      pricing: 'Starting at $200/hour'
+    }
   ]
 
   const process = [
     {
       step: '01',
       title: 'Discovery',
-      description: 'We analyze your requirements and define project scope.',
+      description: 'We analyze your requirements and define project scope.'
     },
     {
       step: '02',
       title: 'Planning',
-      description: 'Create detailed project roadmap and technical specifications.',
+      description: 'Create detailed project roadmap and technical specifications.'
     },
     {
       step: '03',
       title: 'Development',
-      description: 'Build your solution using agile methodology with regular updates.',
+      description: 'Build your solution using agile methodology with regular updates.'
     },
     {
       step: '04',
       title: 'Delivery',
-      description: 'Deploy, test, and hand over your completed project.',
-    },
+      description: 'Deploy, test, and hand over your completed project.'
+    }
   ]
 
   return (
@@ -104,8 +74,7 @@ export default function Services() {
             Our Services
           </Heading>
           <Text size="xl" color="secondary" className="max-w-3xl mx-auto">
-            Comprehensive digital solutions tailored to your business needs.
-            From concept to deployment, we've got you covered.
+            Comprehensive digital solutions tailored to your business needs. From concept to deployment, we've got you covered.
           </Text>
         </div>
       </section>
@@ -127,11 +96,7 @@ export default function Services() {
                   <ul className="space-y-2 mb-6">
                     {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start">
-                        <svg
-                          className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
+                        <svg className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             fillRule="evenodd"
                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -181,9 +146,7 @@ export default function Services() {
                 <Heading level={3} size="lg" className="mb-4">
                   {phase.title}
                 </Heading>
-                <Text color="secondary">
-                  {phase.description}
-                </Text>
+                <Text color="secondary">{phase.description}</Text>
                 {index < process.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-full w-8 h-0.5 bg-neutral-300 transform -translate-y-1/2" />
                 )}

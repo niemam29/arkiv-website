@@ -2,7 +2,7 @@ services:
   frontend:
     image: moonplkr/arkiv-website:latest
     ports:
-      - "8765:3000"
+      - '8765:3000'
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL}
@@ -30,7 +30,7 @@ services:
     volumes:
       - cms_uploads:/srv/app/public/uploads
     ports:
-      - "1337:1337"
+      - '1337:1337'
     depends_on:
       - db
 
@@ -45,7 +45,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - '5434:5432'
 
 volumes:
   db_data:

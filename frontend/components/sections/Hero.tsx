@@ -16,14 +16,7 @@ interface HeroProps {
   backgroundImage?: string
 }
 
-export default function Hero({
-  title,
-  subtitle,
-  description,
-  primaryCTA,
-  secondaryCTA,
-  backgroundImage
-}: HeroProps) {
+export default function Hero({ title, subtitle, description, primaryCTA, secondaryCTA, backgroundImage }: HeroProps) {
   return (
     <section className="relative hero-gradient min-h-screen flex items-center">
       {backgroundImage && (
@@ -52,20 +45,12 @@ export default function Hero({
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              variant="default"
-              size="lg"
-              className="text-lg px-8 py-4"
-            >
+            <Button variant="default" size="lg" className="text-lg px-8 py-4">
               {primaryCTA.text}
             </Button>
 
             {secondaryCTA && (
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-4"
-              >
+              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
                 {secondaryCTA.text}
               </Button>
             )}

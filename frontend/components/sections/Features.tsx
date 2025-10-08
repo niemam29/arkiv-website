@@ -17,13 +17,7 @@ interface FeaturesProps {
   columns?: 2 | 3 | 4
 }
 
-export default function Features({
-  title,
-  subtitle,
-  features,
-  layout = 'grid',
-  columns = 3
-}: FeaturesProps) {
+export default function Features({ title, subtitle, features, layout = 'grid', columns = 3 }: FeaturesProps) {
   const gridCols = {
     2: 'md:grid-cols-2',
     3: 'md:grid-cols-3',
@@ -53,10 +47,7 @@ export default function Features({
         {layout === 'grid' ? (
           <div className={`grid gap-8 ${gridCols[columns]}`}>
             {features.map((feature) => (
-              <Card
-                key={feature.id}
-                className="text-center hover:shadow-medium transition-all duration-300 group"
-              >
+              <Card key={feature.id} className="text-center hover:shadow-medium transition-all duration-300 group">
                 <CardContent className="p-8">
                   {/* Icon */}
                   {feature.icon && (
@@ -82,11 +73,7 @@ export default function Features({
                     <ul className="text-left space-y-2">
                       {feature.benefits.map((benefit, index) => (
                         <li key={index} className="flex items-start">
-                          <svg
-                            className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
+                          <svg className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path
                               fillRule="evenodd"
                               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -123,11 +110,7 @@ export default function Features({
                     <ul className="space-y-3">
                       {feature.benefits.map((benefit, benefitIndex) => (
                         <li key={benefitIndex} className="flex items-start">
-                          <svg
-                            className="w-6 h-6 text-primary mr-3 mt-0.5 flex-shrink-0"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
+                          <svg className="w-6 h-6 text-primary mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path
                               fillRule="evenodd"
                               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -143,10 +126,8 @@ export default function Features({
 
                 {/* Icon/Image */}
                 <div className="flex-1 flex justify-center">
-                  <Card  className="p-12">
-                    <div className="w-32 h-32 bg-primary-50 rounded-full flex items-center justify-center">
-                      {feature.icon}
-                    </div>
+                  <Card className="p-12">
+                    <div className="w-32 h-32 bg-primary-50 rounded-full flex items-center justify-center">{feature.icon}</div>
                   </Card>
                 </div>
               </div>

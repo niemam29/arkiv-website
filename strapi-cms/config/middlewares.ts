@@ -14,9 +14,9 @@ export default [
       secure: false, // Set to false since we're behind a proxy
       signed: true,
       rolling: false,
-      renew: false,
-    },
+      renew: false
+    }
   },
   'strapi::favicon',
-  'strapi::public',
-];
+  'strapi::public'
+]

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
 import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPage() {
@@ -68,12 +68,8 @@ export default function GettingStartedPage() {
             <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
               TypeScript SDK v0.1.16
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">
-              Getting Started with Arkiv
-            </h1>
-            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Build decentralized applications with TypeScript and Arkiv
-            </p>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Getting Started with Arkiv</h1>
+            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">Build decentralized applications with TypeScript and Arkiv</p>
           </div>
 
           {/* Sticky Navigation */}
@@ -84,9 +80,7 @@ export default function GettingStartedPage() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
-                    activeSection === item.id
-                      ? 'bg-[#FE7445] text-white'
-                      : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
+                    activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -104,7 +98,9 @@ export default function GettingStartedPage() {
               {/* Prerequisites */}
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">What you need before starting (Tested with golem-base-sdk@0.1.16 and Node.js 24.7.0)</p>
+                <p className="text-stone-900 font-mono text-sm mb-4">
+                  What you need before starting (Tested with golem-base-sdk@0.1.16 and Node.js 24.7.0)
+                </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
                     <div className="text-[#FE7445] text-xl">✓</div>
@@ -466,7 +462,9 @@ console.log(\`Created \${results.length} entities\`)`}
             <div className="space-y-6">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Understanding BTL</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">BTL determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.</p>
+                <p className="text-stone-900 font-mono text-sm mb-4">
+                  BTL determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.
+                </p>
 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 bg-white rounded-lg">

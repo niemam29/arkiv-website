@@ -2,7 +2,7 @@ services:
   frontend:
     image: moonplkr/arkiv-frontend:latest
     ports:
-      - "3005:3000"
+      - '3005:3000'
     environment:
       - NODE_ENV=production
       - HOSTNAME=0.0.0.0
@@ -13,29 +13,29 @@ services:
       - internal
       - arkiv_network
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=arkiv_network"
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=arkiv_network'
       # API router WITHOUT Umami middleware
-      - "traefik.http.routers.arkiv-website-api.rule=Host(`arkiv.network`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.arkiv-website-api.entrypoints=websecure"
-      - "traefik.http.routers.arkiv-website-api.tls=true"
-      - "traefik.http.routers.arkiv-website-api.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.arkiv-website-api.priority=10"
-      - "traefik.http.routers.arkiv-website-api.service=arkiv-website"
+      - 'traefik.http.routers.arkiv-website-api.rule=Host(`arkiv.network`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.arkiv-website-api.entrypoints=websecure'
+      - 'traefik.http.routers.arkiv-website-api.tls=true'
+      - 'traefik.http.routers.arkiv-website-api.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.arkiv-website-api.priority=10'
+      - 'traefik.http.routers.arkiv-website-api.service=arkiv-website'
       # Main router WITH Umami middleware
-      - "traefik.http.routers.arkiv-website.rule=Host(`arkiv.network`)"
-      - "traefik.http.routers.arkiv-website.entrypoints=websecure"
-      - "traefik.http.routers.arkiv-website.tls=true"
-      - "traefik.http.routers.arkiv-website.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.arkiv-website.middlewares=umami-analytics"
-      - "traefik.http.routers.arkiv-website.priority=5"
+      - 'traefik.http.routers.arkiv-website.rule=Host(`arkiv.network`)'
+      - 'traefik.http.routers.arkiv-website.entrypoints=websecure'
+      - 'traefik.http.routers.arkiv-website.tls=true'
+      - 'traefik.http.routers.arkiv-website.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.arkiv-website.middlewares=umami-analytics'
+      - 'traefik.http.routers.arkiv-website.priority=5'
       # Service definition
-      - "traefik.http.services.arkiv-website.loadbalancer.server.port=3000"
+      - 'traefik.http.services.arkiv-website.loadbalancer.server.port=3000'
 
   execution-service:
     image: moonplkr/arkiv-execution:latest
     ports:
-      - "8001:8001"
+      - '8001:8001'
     environment:
       - PYTHONUNBUFFERED=1
     networks:
@@ -52,7 +52,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U payload"]
+      test: ['CMD-SHELL', 'pg_isready -U payload']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,7 +60,7 @@ services:
   arkiv-cms:
     image: moonplkr/arkiv-cms:latest
     ports:
-      - "1337:1337"
+      - '1337:1337'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgres://payload:payload_secret@postgres:5432/arkiv_cms
@@ -74,13 +74,13 @@ services:
       - internal
       - arkiv_network
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=arkiv_network"
-      - "traefik.http.routers.arkiv-cms.rule=Host(`cms.arkiv.network`)"
-      - "traefik.http.routers.arkiv-cms.entrypoints=websecure"
-      - "traefik.http.routers.arkiv-cms.tls=true"
-      - "traefik.http.routers.arkiv-cms.tls.certresolver=letsencrypt"
-      - "traefik.http.services.arkiv-cms.loadbalancer.server.port=1337"
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=arkiv_network'
+      - 'traefik.http.routers.arkiv-cms.rule=Host(`cms.arkiv.network`)'
+      - 'traefik.http.routers.arkiv-cms.entrypoints=websecure'
+      - 'traefik.http.routers.arkiv-cms.tls=true'
+      - 'traefik.http.routers.arkiv-cms.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.arkiv-cms.loadbalancer.server.port=1337'
 
 networks:
   internal:
