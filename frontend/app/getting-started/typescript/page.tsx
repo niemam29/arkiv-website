@@ -1,79 +1,156 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { CodeBlock } from '@/components/ui/CodeBlock'
 import { Wallet } from 'ethers'
+import { CodePlayground } from '@/components/ui/CodePlayground'
 
 type Bullet = { t: string; v: string }
 
 export default function GettingStartedPage() {
-  const [activeSection, setActiveSection] = useState('setup-install')
+  // start on the first step (Generate, Fund & Hello)
+  const [activeSection, setActiveSection] = useState('fund-hello')
   const [generated, setGenerated] = useState<{ address: string; privateKey: string } | null>(null)
   const [copied, setCopied] = useState<'address' | 'privateKey' | null>(null)
 
+  const helloPlaygroundTs = (generatedPk?: string) => `// Create one "Hello, Arkiv!" entity
+// This runs in the server-side playground executor (no local setup needed).
+
+import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'golem-base-sdk'
+
+// ---- Prefilled from the page (edit if you want) ----
+const PRIVATE_KEY = '${generatedPk ?? '0xYOUR_PRIVATE_KEY'}'
+const RPC_URL = 'https://kaolin.hoodi.arkiv.network/rpc'
+const WS_URL  = 'wss://kaolin.hoodi.arkiv.network/rpc/ws'
+// ----------------------------------------------------
+
+async function getChainId(rpcUrl: string): Promise<number> {
+  const res = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_chainId', params: [] }),
+  })
+  const json = await res.json()
+  if (!json?.result) throw new Error('RPC eth_chainId failed')
+  return Number(json.result)
+}
+
+async function main() {
+  if (!PRIVATE_KEY || PRIVATE_KEY === '0xYOUR_PRIVATE_KEY') {
+    throw new Error('Please set PRIVATE_KEY at the top of the script.')
+  }
+
+  const hex = PRIVATE_KEY.startsWith('0x') ? PRIVATE_KEY.slice(2) : PRIVATE_KEY
+  const key: AccountData = new Tagged('privatekey', Buffer.from(hex, 'hex'))
+
+  const chainId = await getChainId(RPC_URL)
+  const client = await createClient(chainId, key, RPC_URL, WS_URL)
+
+  const enc = new TextEncoder()
+  const [hello] = await client.createEntities([
+    {
+      data: enc.encode('Hello, Arkiv!'),
+      btl: 120,
+      stringAnnotations: [ new Annotation('type', 'hello') ],
+      numericAnnotations: [ new Annotation('version', 1) ],
+    } as GolemBaseCreate
+  ])
+
+  const owner = await (client as any).getOwnerAddress?.()
+  console.log('Account:', owner)
+  console.log('Hello entity key:', hello.entityKey)
+}
+
+main().catch((e) => { console.error(e); process.exit(1) })
+`
+
   const story = useMemo(
     () => ({
+      // Chapter 1 — Identity → Hello (in one flow)
+      fundHello: {
+        fundP: `Every action on Arkiv comes from an account. First, create (or use) an account and give it a small faucet top-up so it can write. This is your identity for the rest of the guide.`,
+        fundBullets: [
+          { t: 'Goal', v: 'Have an address with enough funds to write once.' },
+          { t: 'Why it matters', v: 'Writing data costs gas; the faucet covers your first steps.' },
+          { t: 'Success check', v: 'Your address shows a non-zero balance.' }
+        ] as Bullet[],
+
+        helloP: `Now prove everything works end-to-end by writing one tiny entity: “Hello, Arkiv!”. You’ll reuse this same account later when we turn it into a Voting Board.`,
+        helloBullets: [
+          { t: 'Goal', v: 'Use your account + RPC to create a single entity.' },
+          { t: 'Why it matters', v: 'Confirms your identity and connection before we build more.' },
+          { t: 'Success check', v: 'Console prints your address and the new entity key.' }
+        ] as Bullet[]
+      },
+
+      // Bridge — move from playground to local when ready
       setupInstall: {
-        p: `Before we start the story, make sure your environment is ready. You’ll install the SDK, set up a tiny script, and provide credentials.`
+        p: `When you’re ready to move from the browser playground to local development, install the SDK, set up TypeScript (optional), and create a small script. You’ll keep using the same account.`
       },
-      fund: {
-        p: `Before any writes, fund your account with test ETH. You can either use your own wallet or generate a fresh keypair here (for demos). Then open the faucet and top it up.`,
-        bullets: [
-          { t: 'Goal', v: 'Have enough test ETH to pay gas.' },
-          { t: 'Why it matters', v: 'Creates, updates, extensions, and deletes all cost gas.' },
-          { t: 'Success check', v: 'Your wallet shows a non-zero balance.' }
-        ] as Bullet[]
-      },
+
+      // Chapter 2 — Turn the hello-setup into a “client”
       connect: {
-        p: `You’re the facilitator. You’ll open a team vote and watch decisions take shape on-chain. First, connect with a private key and an RPC endpoint.`,
+        p: `Reuse your account to create a client that can sign and send. This is the same identity from Hello—now formalized as a reusable connection for the rest of the journey.`,
         bullets: [
-          { t: 'Goal', v: 'Create a client that can sign & send.' },
-          { t: 'Why it matters', v: 'Everything else depends on a working connection.' },
-          { t: 'Success check', v: 'The script prints your address.' }
+          { t: 'Goal', v: 'Instantiate a client with your private key and RPC.' },
+          { t: 'Why it matters', v: 'All writes/reads will flow through this client.' },
+          { t: 'Success check', v: 'Your script logs the account address from the client.' }
         ] as Bullet[]
       },
+
+      // Chapter 3 — Open the decision “room”
       open: {
-        p: `Create the space where a decision will be made. The proposal is the room; its BTL is the voting window.`,
+        p: `Create the decision “room”: a proposal entity with a bounded time window (BTL). This is where votes will attach—still using the very same client/account you verified.`,
         bullets: [
-          { t: 'Goal', v: 'Write a proposal entity with a finite BTL.' },
-          { t: 'Why it matters', v: 'The window is enforced by expiration; predictable cost comes from time-scoping.' },
-          { t: 'Success check', v: 'You get a proposal.entityKey (the proposal id).' }
+          { t: 'Goal', v: 'Write a proposal entity with an expiration window (BTL).' },
+          { t: 'Why it matters', v: 'Gives your vote stream a clear scope and predictable cost.' },
+          { t: 'Success check', v: 'You get a proposal.entityKey (the proposal ID).' }
         ] as Bullet[]
       },
+
+      // Chapter 4 — Let participants speak
       cast: {
-        p: `Participants vote. Each vote is its own entity, linked to the proposal via proposalKey and attributed to the voter address.`,
+        p: `Attach votes to the proposal. Each vote is its own entity linked by proposalKey and attributed to a voter address. Same client, same journey—now with multiple actors.`,
         bullets: [
           { t: 'Goal', v: 'Create votes with { type="vote", proposalKey, voter, choice }.' },
-          { t: 'Why it matters', v: 'Votes are small, auditable, and independently verifiable.' },
-          { t: 'Success check', v: 'Two vote keys printed; both linked to your proposal.' }
+          { t: 'Why it matters', v: 'Votes are small, auditable facts you can query later.' },
+          { t: 'Success check', v: 'Two vote keys print, both linked to your proposal.' }
         ] as Bullet[]
       },
+
+      // Chapter 5 — Scale the interaction
       batch: {
-        p: `Optionally, add many votes at once—great for voting across multiple proposals, fixtures or demos.`,
+        p: `Add many votes in one go—useful for demos, fixtures, or cross-proposal actions. You’re still operating with the same client and proposal context.`,
         bullets: [
           { t: 'Goal', v: 'Create multiple vote entities in a single call.' },
           { t: 'Success check', v: 'Receipt count matches the number you pushed.' }
         ] as Bullet[]
       },
+
+      // Chapter 6 — Read the truth
       tally: {
-        p: `Tally by querying annotations. Deterministic reads mean the same query yields the same answer.`,
+        p: `Read the chain back. Query annotated entities to compute the result. Because reads are deterministic, the same query yields the same answer.`,
         bullets: [
           { t: 'Goal', v: 'Query votes by proposalKey and choice.' },
-          { t: 'Success check', v: 'YES/NO totals match your inputs.' }
+          { t: 'Success check', v: 'YES/NO counts match your inputs.' }
         ] as Bullet[]
       },
+
+      // Chapter 7 — Watch it live
       listen: {
-        p: `Keep your ear to the door. Watch vote and proposal creations and extensions in real time—no polling.`,
+        p: `Subscribe to creations and extensions in real time. No polling—just logs as the story unfolds. Keep the same client; it already knows where to listen.`,
         bullets: [
           { t: 'Goal', v: 'Subscribe to creation and extension events for votes (and proposals).' },
           { t: 'Success check', v: 'Console logs “[Vote created] …” or “[Vote extended] …”.' }
         ] as Bullet[]
       },
+
+      // Chapter 8 — Change the timeline
       extend: {
-        p: `Need more time? Extend the proposal’s BTL and keep the room open.`,
+        p: `Need more time to decide? Extend the proposal’s BTL. You’re updating the same entity you opened earlier—continuing the narrative of one decision from start to finish.`,
         bullets: [
           { t: 'Goal', v: 'Extend the proposal entity by N blocks.' },
-          { t: 'Success check', v: 'New expiration block printed to console.' }
+          { t: 'Success check', v: 'Console prints the new expiration block.' }
         ] as Bullet[]
       }
     }),
@@ -100,16 +177,17 @@ export default function GettingStartedPage() {
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
 
+  // New order (merged first step): Hello Arkiv → Setup → Connect → Open → Cast → Batch → Tally → Watch → Extend → Help
   const navItems = [
-    { id: 'setup-install', label: 'Setup & Installation', icon: '🧰' },
-    { id: 'fund', label: '1) Generate & Fund', icon: '💸' },
-    { id: 'connect', label: '2) Connect & Verify', icon: '🔗' },
-    { id: 'open', label: '3) Open Proposal', icon: '📥' },
-    { id: 'cast', label: '4) Cast Votes', icon: '🗳️' },
-    { id: 'batch', label: '5) (Optional) Batch', icon: '📦' },
-    { id: 'tally', label: '6) Tally Votes', icon: '🔢' },
-    { id: 'listen', label: '7) Watch Live', icon: '📡' },
-    { id: 'extend', label: '8) Extend Window', icon: '⏱️' },
+    { id: 'fund-hello', label: '1) Hello Arkiv', icon: '💸' },
+    { id: 'setup-install', label: '2) Setup & Installation', icon: '🧰' },
+    { id: 'connect', label: '3) Connect & Verify', icon: '🔗' },
+    { id: 'open', label: '4) Open Proposal', icon: '📥' },
+    { id: 'cast', label: '5) Cast Votes', icon: '🗳️' },
+    { id: 'batch', label: '6) (Optional) Batch', icon: '📦' },
+    { id: 'tally', label: '7) Tally Votes', icon: '🔢' },
+    { id: 'listen', label: '8) Watch Live', icon: '📡' },
+    { id: 'extend', label: '9) Extend Window', icon: '⏱️' },
     { id: 'help', label: 'Troubleshooting', icon: '🔧' }
   ]
 
@@ -121,6 +199,10 @@ export default function GettingStartedPage() {
     setCopied(null)
   }
 
+  function resetGenerated() {
+    setGenerated(null)
+    setCopied(null)
+  }
   async function copy(text: string, field: 'address' | 'privateKey') {
     try {
       await navigator.clipboard.writeText(text)
@@ -143,9 +225,9 @@ export default function GettingStartedPage() {
               Voting Board: Open a proposal, collect votes in real time, tally them, batch more votes, then extend the voting window.
             </p>
             <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 font-mono text-xs text-stone-700">
-              <span>Story</span>
+              <span>Flow</span>
               <span>•</span>
-              <span>Generate & Fund → Connect → Open → Cast → (Batch) → Tally → Watch → Extend</span>
+              <span>Hello Arkiv → Setup → Connect → Open → Cast → (Batch) → Tally → Watch → Extend</span>
             </div>
           </div>
 
@@ -173,9 +255,130 @@ export default function GettingStartedPage() {
             </div>
           </div>
 
-          {/* Setup & Installation */}
+          {/* 1) Hello Arkiv */}
+          <section id="fund-hello" className="mb-16">
+            <h2 className="text-3xl font-bold mb-8">1) Generate, Fund &amp; Hello</h2>
+
+            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+              {/* Friendly intro */}
+              <div className="mb-6">
+                <h3 className="text-lg font-brutal font-bold text-black mb-2">Your first on-chain action (no installs)</h3>
+                <p className="font-mono text-sm text-stone-900">
+                  In web3, you act from an <b>account</b>. Think of it like a username with a secret key:
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-3">
+                  <div className="rounded-lg border border-stone-300 bg-white p-4">
+                    <h4 className="font-brutal font-bold text-black mb-2">Address</h4>
+                    <p className="font-mono text-sm text-stone-900">
+                      Your public identifier. Safe to share. Others can send funds to it or look up its activity.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-stone-300 bg-white p-4">
+                    <h4 className="font-brutal font-bold text-black mb-2">Private key</h4>
+                    <p className="font-mono text-sm text-stone-900">
+                      Your secret. <b>Never share it.</b> Anyone with this can control the account.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-stone-300 bg-white p-4">
+                    <h4 className="font-brutal font-bold text-black mb-2">Faucet</h4>
+                    <p className="font-mono text-sm text-stone-900">
+                      Writing to the chain uses <b>gas</b>. A faucet gives you free funds so you can try things safely.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Safety note */}
+              <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-4">
+                <p className="font-mono text-sm text-amber-900">
+                  <b>Safety:</b> The account you generate here is for <b>demo/sandbox use only</b>. Don’t use it for real value.
+                </p>
+              </div>
+
+              {/* Step A — Generate */}
+              <div className="mb-4">
+                <h3 className="text-lg font-brutal font-bold text-black mb-2">A) Generate an account</h3>
+                <p className="font-mono text-sm text-stone-900 mb-3">
+                  Click once. We’ll create a new address + private key <i>in your browser</i>.
+                </p>
+                <button
+                  onClick={generateWallet}
+                  className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
+                >
+                  Generate account
+                </button>
+              </div>
+
+              {/* Keys display */}
+              {generated && (
+                <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4 mb-6">
+                  <FieldRow
+                    label="Account Address"
+                    value={generated.address}
+                    onCopy={() => copy(generated.address, 'address')}
+                    copied={copied === 'address'}
+                  />
+                  <FieldRow
+                    label="Private Key"
+                    value={generated.privateKey}
+                    onCopy={() => copy(generated.privateKey, 'privateKey')}
+                    copied={copied === 'privateKey'}
+                  />
+                  <p className="text-xs font-mono text-stone-700">Save these somewhere safe. You’ll use them in the next step.</p>
+                </div>
+              )}
+
+              {/* Step B — Fund */}
+              <div className="mb-6">
+                <h3 className="text-lg font-brutal font-bold text-black mb-2">B) Add faucet funds</h3>
+                <p className="font-mono text-sm text-stone-900 mb-3">
+                  Open the faucet and paste an <b>Account Address</b>. If you generated one above, copy it. Otherwise, you can paste an
+                  address from your own wallet.
+                </p>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://kaolin.hoodi.arkiv.network/faucet/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 rounded-lg font-mono text-sm bg-[#0f766e] text-white hover:opacity-90 transition"
+                  >
+                    Open Faucet
+                  </a>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-stone-300 my-6" />
+
+              {/* Step C — Hello */}
+              <div>
+                <h3 className="text-lg font-brutal font-bold text-black mb-2">C) Say “Hello, Arkiv”</h3>
+                <p className="font-mono text-sm text-stone-900 mb-3">
+                  Next, you’ll run a tiny example in your browser that writes a single “Hello, Arkiv!” entity— no local setup required.
+                </p>
+                <CodePlayground
+                  description={
+                    generated
+                      ? 'Prefilled with the account you just created. Click Run.'
+                      : 'Paste a private key at the top of the script, or generate one above. Then click Run.'
+                  }
+                  initialCode={helloPlaygroundTs(generated?.privateKey)}
+                  showLanguageToggle={false}
+                />
+
+                <p className="mt-2 text-xs font-mono text-stone-700">We’ll prefill it to use the account you just created.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* 2) Setup & Installation */}
           <section id="setup-install" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">Setup &amp; Installation</h2>
+            <h2 className="text-3xl font-bold mb-8">2) Setup &amp; Installation</h2>
+
+            {/* Overview */}
+            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
+              <p className="text-stone-900 font-mono text-sm">{story.setupInstall.p}</p>
+            </div>
 
             {/* Prerequisites */}
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
@@ -255,76 +458,16 @@ bun add golem-base-sdk dotenv tslib ethers`}
               <CodeBlock
                 language="bash"
                 code={`# .env
-PRIVATE_KEY=0x...
+PRIVATE_KEY=0x...                      # use the (TEST) private key generated above
 RPC_URL=https://your.rpc.endpoint/rpc    # e.g. https://kaolin.hoodi.arkiv.network/rpc
 WS_URL=wss://your.rpc.endpoint/rpc/ws    # e.g. wss://kaolin.hoodi.arkiv.network/rpc/ws`}
               />
             </div>
           </section>
 
-          {/* 1) Generate & Fund */}
-          <section id="fund" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">1) Generate &amp; Fund</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.fund.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-6">
-                {story.fund.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <button
-                  onClick={generateWallet}
-                  className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
-                >
-                  Generate keypair
-                </button>
-
-                <a
-                  href={faucetHref}
-                  className={`px-4 py-2 rounded-lg font-mono text-sm transition ${
-                    generated?.address ? 'bg-[#0f766e] text-white hover:opacity-90' : 'bg-gray-300 text-gray-700'
-                  }`}
-                >
-                  Open Faucet
-                </a>
-              </div>
-
-              {/* ⚠️ Demo-only warning */}
-              <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-4">
-                <p className="font-mono text-sm text-amber-900">
-                  <b>Warning:</b> This generated wallet is for <b>demo/testing only</b>. <br className="md:hidden" />
-                  Do <b>not</b> deposit real funds. Anyone with the private key controls the funds.
-                </p>
-              </div>
-
-              {/* Display generated keys */}
-              {generated && (
-                <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4">
-                  <FieldRow
-                    label="Address"
-                    value={generated.address}
-                    onCopy={() => copy(generated.address, 'address')}
-                    copied={copied === 'address'}
-                  />
-
-                  <FieldRow
-                    label="Private Key"
-                    value={generated.privateKey}
-                    onCopy={() => copy(generated.privateKey, 'privateKey')}
-                    copied={copied === 'privateKey'}
-                  />
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* 2) Connect & Verify */}
+          {/* 3) Connect & Verify */}
           <section id="connect" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">2) Connect &amp; Verify</h2>
+            <h2 className="text-3xl font-bold mb-8">3) Connect &amp; Verify</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.connect.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -373,9 +516,9 @@ if (owner) console.log('Your account:', owner);`}
             </div>
           </section>
 
-          {/* 3) Open Proposal */}
+          {/* 4) Open Proposal */}
           <section id="open" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">3) Open Proposal</h2>
+            <h2 className="text-3xl font-bold mb-8">4) Open Proposal</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.open.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -406,9 +549,9 @@ const proposalKey = proposal.entityKey;`}
             </div>
           </section>
 
-          {/* 4) Cast Votes */}
+          {/* 5) Cast Votes */}
           <section id="cast" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">4) Cast Votes</h2>
+            <h2 className="text-3xl font-bold mb-8">5) Cast Votes</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.cast.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -451,9 +594,9 @@ console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
             </div>
           </section>
 
-          {/* 5) (Optional) Batch Votes */}
+          {/* 6) (Optional) Batch Votes */}
           <section id="batch" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">5) (Optional) Batch Votes</h2>
+            <h2 className="text-3xl font-bold mb-8">6) (Optional) Batch Votes</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.batch.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -483,9 +626,9 @@ console.log(\`Batch created: \${receipts.length} votes\`);`}
             </div>
           </section>
 
-          {/* 6) Tally Votes */}
+          {/* 7) Tally Votes */}
           <section id="tally" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">6) Tally Votes</h2>
+            <h2 className="text-3xl font-bold mb-8">7) Tally Votes</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.tally.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -508,9 +651,9 @@ console.log(\`Tallies — YES: \${yesVotes.length}, NO: \${noVotes.length}\`);`}
             </div>
           </section>
 
-          {/* 7) Watch Live */}
+          {/* 8) Watch Live */}
           <section id="listen" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">7) Watch Live</h2>
+            <h2 className="text-3xl font-bold mb-8">8) Watch Live</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.listen.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
@@ -566,9 +709,9 @@ console.log('Watching for proposal/vote creations and extensions…');`}
             </div>
           </section>
 
-          {/* 8) Extend Window */}
+          {/* 9) Extend Window */}
           <section id="extend" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">8) Extend Window</h2>
+            <h2 className="text-3xl font-bold mb-8">9) Extend Window</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <p className="font-mono text-sm text-stone-900 mb-4">{story.extend.p}</p>
               <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
