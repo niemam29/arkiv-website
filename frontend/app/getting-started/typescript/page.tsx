@@ -13,57 +13,62 @@ export default function GettingStartedPage() {
   const [generated, setGenerated] = useState<{ address: string; privateKey: string } | null>(null)
   const [copied, setCopied] = useState<'address' | 'privateKey' | null>(null)
 
-  const helloPlaygroundTs = (generatedPk?: string) => `// Create one "Hello, Arkiv!" entity
-// This runs in the server-side playground executor (no local setup needed).
+  const helloPlaygroundTs = (generatedPk?: string) => `// 🚀 HELLO WORLD ON ARKIV
+// 1) Load the Arkiv SDK at runtime (works inside the browser playground without bundling)
+const { createClient, Annotation, Tagged } = await import('golem-base-sdk');
 
-import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'golem-base-sdk'
 
-// ---- Prefilled from the page (edit if you want) ----
-const PRIVATE_KEY = '${generatedPk ?? '0xYOUR_PRIVATE_KEY'}'
-const RPC_URL = 'https://kaolin.hoodi.arkiv.network/rpc'
-const WS_URL  = 'wss://kaolin.hoodi.arkiv.network/rpc/ws'
-// ----------------------------------------------------
+// 2) Point at the Arkiv + provide your private key
+//    – PRIVATE_KEY is auto-filled from the generator above when you click Run
+//    – CHAIN_ID is hardcoded for the Arkiv
+const CHAIN_ID = 60138453025;
+const PRIVATE_KEY = '${generatedPk ?? '0xYOUR_PRIVATE_KEY'}';
+const RPC_URL = 'https://kaolin.hoodi.arkiv.network/rpc';
+const WS_URL  = 'wss://kaolin.hoodi.arkiv.network/rpc/ws';
 
-async function getChainId(rpcUrl: string): Promise<number> {
-  const res = await fetch(rpcUrl, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_chainId', params: [] }),
-  })
-  const json = await res.json()
-  if (!json?.result) throw new Error('RPC eth_chainId failed')
-  return Number(json.result)
-}
 
-async function main() {
-  if (!PRIVATE_KEY || PRIVATE_KEY === '0xYOUR_PRIVATE_KEY') {
-    throw new Error('Please set PRIVATE_KEY at the top of the script.')
-  }
+// 3) Quick sanity check: private keys are 32 bytes (64 hex chars) prefixed with 0x
+if (!/^0x[0-9a-fA-F]{64}$/.test(PRIVATE_KEY)) throw new Error('Set PRIVATE_KEY');
 
-  const hex = PRIVATE_KEY.startsWith('0x') ? PRIVATE_KEY.slice(2) : PRIVATE_KEY
-  const key: AccountData = new Tagged('privatekey', Buffer.from(hex, 'hex'))
 
-  const chainId = await getChainId(RPC_URL)
-  const client = await createClient(chainId, key, RPC_URL, WS_URL)
+// 4) Convert "0x…"-hex into raw bytes — the client expects bytes (not a string)
+const hex = PRIVATE_KEY.slice(2);
+const toBytes = (h) => new Uint8Array(h.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
-  const enc = new TextEncoder()
-  const [hello] = await client.createEntities([
-    {
-      data: enc.encode('Hello, Arkiv!'),
-      btl: 120,
-      stringAnnotations: [ new Annotation('type', 'hello') ],
-      numericAnnotations: [ new Annotation('version', 1) ],
-    } as GolemBaseCreate
-  ])
 
-  const owner = await (client as any).getOwnerAddress?.()
-  console.log('Account:', owner)
-  console.log('Hello entity key:', hello.entityKey)
-}
+// 5) Create a client (think: “connect my account to this network”)
+const client = await createClient(
+  CHAIN_ID,
+  new Tagged('privatekey', toBytes(hex)),
+  RPC_URL,
+  WS_URL
+);
 
-main().catch((e) => { console.error(e); process.exit(1) })
+
+// 6) Helpers to turn text ↔ bytes (blockchains store bytes)
+const enc = new TextEncoder();
+const dec = new TextDecoder();
+
+
+// 7) Write one tiny record on-chain: "Hello, Arkiv!"
+//    - btl: "blocks-to-live" (expiration window)
+//    - stringAnnotations: small key/value tags you can later query by
+const [hello] = await client.createEntities([{
+  data: enc.encode('Hello, Arkiv!'),
+  btl: 120,
+  stringAnnotations: [{ key: 'type', value: 'hello' }],
+  numericAnnotations: []
+}]);
+
+
+// 8) Read back what we just wrote
+const bytes = await client.getStorageValue(hello.entityKey);
+
+
+// 9) Print the results so you can see the on-chain key and message
+console.log('Key:', hello.entityKey);
+console.log('Data:', dec.decode(bytes));
 `
-
   const story = useMemo(
     () => ({
       // Chapter 1 — Identity → Hello (in one flow)
@@ -85,7 +90,9 @@ main().catch((e) => { console.error(e); process.exit(1) })
 
       // Bridge — move from playground to local when ready
       setupInstall: {
-        p: `When you’re ready to move from the browser playground to local development, install the SDK, set up TypeScript (optional), and create a small script. You’ll keep using the same account.`
+        p: `Now that you’ve seen how a simple “Hello, Arkiv!” message works in the browser, let’s prepare your own local setup.
+This will let you keep building - turning that one-off Hello into a reusable script that powers the Voting Board.
+You’ll still use the same building blocks (account, client, and connection), but now inside your own workspace.`
       },
 
       // Chapter 2 — Turn the hello-setup into a “client”
@@ -257,7 +264,7 @@ main().catch((e) => { console.error(e); process.exit(1) })
 
           {/* 1) Hello Arkiv */}
           <section id="fund-hello" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">1) Generate, Fund &amp; Hello</h2>
+            <h2 className="text-3xl font-bold mb-8">1) Say “Hello, Arkiv”</h2>
 
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               {/* Friendly intro */}
