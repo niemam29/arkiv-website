@@ -84,3 +84,65 @@ export async function getUseCases(): Promise<UseCase[]> {
     return []
   }
 }
+
+interface MenuItem {
+  id: number
+  attributes: {
+    label: string
+    url: string
+    order: number
+    parent?: {
+      data: MenuItem | null
+    }
+  }
+}
+
+export interface NavigationItem {
+  name: string
+  href: string
+  children?: NavigationItem[]
+}
+
+export async function getMenuItems(): Promise<NavigationItem[]> {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/menu-items?populate=*&sort=order:asc`, {
+      next: { revalidate: 60 } // Revalidate every 60 seconds
+    })
+
+    if (!res.ok) {
+      console.error('Failed to fetch menu items from Strapi')
+      return getDefaultMenu()
+    }
+
+    const data = await res.json()
+
+    // Transform Strapi data to navigation format
+    const menuItems = data.data as MenuItem[]
+    const topLevelItems = menuItems.filter(item => !item.attributes.parent?.data)
+
+    return topLevelItems.map(item => ({
+      name: item.attributes.label,
+      href: item.attributes.url,
+      children: menuItems
+        .filter(child => child.attributes.parent?.data?.id === item.id)
+        .map(child => ({
+          name: child.attributes.label,
+          href: child.attributes.url
+        }))
+    }))
+  } catch (error) {
+    console.error('Error fetching menu from Strapi:', error)
+    return getDefaultMenu()
+  }
+}
+
+// Fallback menu in case Strapi is unavailable
+function getDefaultMenu(): NavigationItem[] {
+  return [
+    { name: 'Why Arkiv', href: '/#why-arkiv' },
+    { name: 'How it Works', href: '/#how-it-works' },
+    { name: 'Use Cases', href: '/#use-cases' },
+    { name: 'FAQ', href: '/#faq' },
+    { name: 'About', href: '/#about' },
+  ]
+}
