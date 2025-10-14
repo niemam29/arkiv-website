@@ -2,10 +2,23 @@
 
 import { useRef, useState, useEffect } from 'react'
 
+interface UseCase {
+  id: number
+  documentId: string
+  title: string
+  tagline: string
+  description: string
+  sortOrder: number
+  liveUrl: string
+  status: string
+}
+
 export default function UseCasesSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
+  const [useCases, setUseCases] = useState<UseCase[]>([])
+  const [loading, setLoading] = useState(true)
 
   const updateScrollState = () => {
     const el = scrollContainerRef.current
@@ -14,6 +27,143 @@ export default function UseCasesSection() {
     setCanScrollLeft(el.scrollLeft > 8)
     setCanScrollRight(el.scrollLeft < maxScrollLeft - 8)
   }
+
+  useEffect(() => {
+    async function fetchUseCases() {
+      try {
+        const response = await fetch('https://cms.arkiv.network/api/use-cases?sort=sortOrder:asc')
+        const data = await response.json()
+
+        const casesList: UseCase[] = data.data?.map((item: any) => ({
+          id: item.id,
+          documentId: item.documentId,
+          title: item.title,
+          tagline: item.tagline || '',
+          description: item.description,
+          sortOrder: item.sortOrder || 0,
+          liveUrl: item.liveUrl || '',
+          status: item.status || 'development'
+        })) || []
+
+        // If no data from CMS, use hardcoded fallback
+        if (casesList.length === 0) {
+          setUseCases([
+            {
+              id: 1,
+              documentId: 'copypal',
+              title: 'CopyPal',
+              tagline: 'Decentralized clipboard',
+              description: 'Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.',
+              sortOrder: 1,
+              liveUrl: 'https://copypal.online/',
+              status: 'live'
+            },
+            {
+              id: 2,
+              documentId: 'imagedb',
+              title: 'ImageDB',
+              tagline: 'Image processing with blockchain',
+              description: 'Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.',
+              sortOrder: 2,
+              liveUrl: 'https://imagedb.online/',
+              status: 'live'
+            },
+            {
+              id: 3,
+              documentId: 'filedb',
+              title: 'FileDB',
+              tagline: 'Universal file storage',
+              description: 'Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.',
+              sortOrder: 3,
+              liveUrl: 'https://filedb.online/',
+              status: 'live'
+            },
+            {
+              id: 4,
+              documentId: 'webdb',
+              title: 'WebDB Static Hosting',
+              tagline: 'Immutable static hosting',
+              description: 'Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.',
+              sortOrder: 4,
+              liveUrl: 'https://webdb.site',
+              status: 'live'
+            },
+            {
+              id: 5,
+              documentId: 'portfolio',
+              title: 'Arkiv Portfolio',
+              tagline: 'Showcase portfolio',
+              description: 'Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.',
+              sortOrder: 5,
+              liveUrl: 'https://usecases.arkiv.network',
+              status: 'live'
+            }
+          ])
+        } else {
+          setUseCases(casesList)
+        }
+      } catch (error) {
+        console.error('Error fetching use cases:', error)
+        // On error, use hardcoded fallback
+        setUseCases([
+          {
+            id: 1,
+            documentId: 'copypal',
+            title: 'CopyPal',
+            tagline: 'Decentralized clipboard',
+            description: 'Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.',
+            sortOrder: 1,
+            liveUrl: 'https://copypal.online/',
+            status: 'live'
+          },
+          {
+            id: 2,
+            documentId: 'imagedb',
+            title: 'ImageDB',
+            tagline: 'Image processing with blockchain',
+            description: 'Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.',
+            sortOrder: 2,
+            liveUrl: 'https://imagedb.online/',
+            status: 'live'
+          },
+          {
+            id: 3,
+            documentId: 'filedb',
+            title: 'FileDB',
+            tagline: 'Universal file storage',
+            description: 'Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.',
+            sortOrder: 3,
+            liveUrl: 'https://filedb.online/',
+            status: 'live'
+          },
+          {
+            id: 4,
+            documentId: 'webdb',
+            title: 'WebDB Static Hosting',
+            tagline: 'Immutable static hosting',
+            description: 'Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.',
+            sortOrder: 4,
+            liveUrl: 'https://webdb.site',
+            status: 'live'
+          },
+          {
+            id: 5,
+            documentId: 'portfolio',
+            title: 'Arkiv Portfolio',
+            tagline: 'Showcase portfolio',
+            description: 'Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.',
+            sortOrder: 5,
+            liveUrl: 'https://usecases.arkiv.network',
+            status: 'live'
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUseCases()
+  }, [])
 
   useEffect(() => {
     const el = scrollContainerRef.current
@@ -28,7 +178,7 @@ export default function UseCasesSection() {
       el.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', updateScrollState)
     }
-  }, [])
+  }, [useCases])
 
   const handleArrowClick = (direction: 'left' | 'right') => {
     const el = scrollContainerRef.current
@@ -37,6 +187,36 @@ export default function UseCasesSection() {
     const cardWidth = 312 + 24 // card width + gap
     const amount = direction === 'left' ? -cardWidth : cardWidth
     el.scrollBy({ left: amount, behavior: 'smooth' })
+  }
+
+  if (loading) {
+    return (
+      <section id="use-cases" className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="flex flex-col gap-[32px]">
+            <div className="flex flex-col gap-[12px]">
+              <h2 className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">
+                [ Use Cases ]
+              </h2>
+              <p className="font-mono text-sm md:text-base text-black leading-[22px] max-w-[800px]">
+                Discover real-world applications built with Arkiv - from decentralized clipboards to immutable static hosting.
+              </p>
+            </div>
+            <div className="animate-pulse bg-gray-200 h-[400px] rounded-2xl"></div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  const getScreenshotPath = (title: string) => {
+    const titleLower = title.toLowerCase()
+    if (titleLower.includes('copypal')) return '/images/copypal/copypal-online-2025-09-22-20_44_16.png'
+    if (titleLower.includes('imagedb')) return '/images/imagedb/imagedb-2025-09-22-o-21.07.38.png'
+    if (titleLower.includes('filedb')) return '/images/filedb/filedb-2025-09-22 o 21.21.59.png'
+    if (titleLower.includes('webdb')) return '/images/webdb/webdb-2025-09-22 o 21.19.32.png'
+    if (titleLower.includes('portfolio')) return '/images/portfolio/portfolio-2025-09-26 o 22.59.33.png'
+    return '/images/placeholder.png'
   }
 
   return (
@@ -52,116 +232,43 @@ export default function UseCasesSection() {
             </p>
           </div>
 
-          <div ref={scrollContainerRef} className="flex gap-6 overflow-x-auto scroll-smooth">
-            {/* CopyPal */}
-            <a href="https://copypal.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-              <div className="flex flex-col gap-6">
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">CopyPal</h3>
-                <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                  <img src="/images/copypal/copypal-online-2025-09-22-20_44_16.png" alt="CopyPal screenshot" className="w-full h-[132px] object-cover object-top" />
+          <div ref={scrollContainerRef} className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide">
+            {useCases.map((useCase, index) => (
+              <a
+                key={useCase.documentId}
+                href={useCase.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
+                <div className="flex flex-col gap-6">
+                  <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">{useCase.title}</h3>
+                  <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
+                    <img
+                      src={getScreenshotPath(useCase.title)}
+                      alt={`${useCase.title} screenshot`}
+                      className="w-full h-[132px] object-cover object-top"
+                    />
+                  </div>
+                  <p className="font-mono text-base text-black leading-[22px]">{useCase.description}</p>
                 </div>
-                <p className="font-mono text-base text-black leading-[22px]">Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.</p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="flex items-center justify-between w-[60px]">
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">1</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
+                <div className="flex justify-between items-end">
+                  <div className="flex items-center justify-between w-[60px]">
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">{index + 1}</span>
+                    <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
+                  </div>
+                  <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
+                    <img
+                      src="/images/arrow-top-right.svg"
+                      alt={`View ${useCase.title}`}
+                      className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block"
+                    />
+                  </div>
                 </div>
-                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                  <img src="/images/arrow-top-right.svg" alt="View CopyPal" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" />
-                </div>
-              </div>
-            </a>
-
-            {/* ImageDB */}
-            <a href="https://imagedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-              <div className="flex flex-col gap-6">
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">ImageDB</h3>
-                <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                  <img src="/images/imagedb/imagedb-2025-09-22-o-21.07.38.png" alt="ImageDB screenshot" className="w-full h-[132px] object-cover object-top" />
-                </div>
-                <p className="font-mono text-base text-black leading-[22px]">Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.</p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="flex items-center justify-between w-[60px]">
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">2</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                </div>
-                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                  <img src="/images/arrow-top-right.svg" alt="View ImageDB" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" />
-                </div>
-              </div>
-            </a>
-
-            {/* FileDB */}
-            <a href="https://filedb.online/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-              <div className="flex flex-col gap-6">
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">FileDB</h3>
-                <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                  <img src="/images/filedb/filedb-2025-09-22 o 21.21.59.png" alt="FileDB screenshot" className="w-full h-[132px] object-cover object-top" />
-                </div>
-                <p className="font-mono text-base text-black leading-[22px]">Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.</p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="flex items-center justify-between w-[60px]">
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">3</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                </div>
-                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                  <img src="/images/arrow-top-right.svg" alt="View FileDB" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" />
-                </div>
-              </div>
-            </a>
-
-            {/* WebDB Static Hosting */}
-            <a href="https://webdb.site" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-              <div className="flex flex-col gap-6">
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">WebDB Static Hosting</h3>
-                <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                  <img src="/images/webdb/webdb-2025-09-22 o 21.19.32.png" alt="WebDB screenshot" className="w-full h-[132px] object-cover object-top" />
-                </div>
-                <p className="font-mono text-base text-black leading-[22px]">Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.</p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="flex items-center justify-between w-[60px]">
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">4</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                </div>
-                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                  <img src="/images/arrow-top-right.svg" alt="View WebDB details" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" />
-                </div>
-              </div>
-            </a>
-
-            {/* Arkiv Portfolio */}
-            <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group">
-              <div className="absolute inset-0 pointer-events-none shadow-inner rounded-2xl" />
-              <div className="flex flex-col gap-6">
-                <h3 className="font-brutal text-xl font-medium uppercase text-black leading-6">Arkiv Portfolio</h3>
-                <div className="bg-gray-300 h-[132px] rounded-2xl overflow-hidden">
-                  <img src="/images/portfolio/portfolio-2025-09-26 o 22.59.33.png" alt="Arkiv Portfolio screenshot" className="w-full h-[132px] object-cover object-top" />
-                </div>
-                <p className="font-mono text-base text-black leading-[22px]">Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.</p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="flex items-center justify-between w-[60px]">
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">[</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">5</span>
-                  <span className="font-brutal text-[32px] font-black uppercase text-black leading-[38px]">]</span>
-                </div>
-                <div className="w-10 h-10 flex items-center justify-center transform scale-y-[-100%]">
-                  <img src="/images/arrow-top-right.svg" alt="View Portfolio" className="w-10 h-10 group-hover:invert transition-all duration-200 hidden md:block" />
-                </div>
-              </div>
-            </a>
+              </a>
+            ))}
 
             {/* More Examples */}
             <a href="https://usecases.arkiv.network" target="_blank" rel="noopener noreferrer" className="bg-[#181EA9] w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-center items-center relative flex-shrink-0 hover:bg-[#1518a0] transition-colors duration-200 cursor-pointer group">

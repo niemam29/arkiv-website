@@ -147,7 +147,7 @@ export default function GettingStartedPage() {
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
                 <p className="text-stone-900 font-mono text-sm mb-4">
-                  Tested with golem-base-sdk@0.1.16 and Node.js 20+. Bun also works.
+                  Tested with arkiv-sdk-js@0.1.16 and Node.js 20+. Bun also works.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
@@ -188,11 +188,11 @@ export default function GettingStartedPage() {
                     language="bash"
                     code={`# Using npm
 npm init -y
-npm i golem-base-sdk dotenv tslib
+npm i arkiv-sdk-js dotenv tslib
 
 # or with Bun
 bun init -y
-bun add golem-base-sdk dotenv tslib`}
+bun add arkiv-sdk-js dotenv tslib`}
                 />
               </div>
 
@@ -227,7 +227,7 @@ bun add golem-base-sdk dotenv tslib`}
     "dev": "tsx watch voting-board.ts"
   },
   "dependencies": {
-    "golem-base-sdk": "^0.1.16",
+    "arkiv-sdk-js": "^0.1.16",
     "dotenv": "^16.4.5",
     "tslib": "^2.8.1"
   },
@@ -264,7 +264,7 @@ WS_URL=wss://your.rpc.endpoint/rpc/ws`}
                 <CodeBlock
                     language="typescript"
                     code={`import 'dotenv/config';
-import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'golem-base-sdk';
+import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'arkiv-sdk-js';
 
 // Helper: query RPC for basic network info
 async function getChainId(rpcUrl: string): Promise<number> {

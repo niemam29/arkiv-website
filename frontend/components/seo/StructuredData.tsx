@@ -4,8 +4,8 @@ export default function StructuredData() {
     "@type": "Organization",
     "name": "Arkiv",
     "alternateName": "Golem Network Arkiv",
-    "url": "https://moon.dev.golem.network:8765",
-    "logo": "https://moon.dev.golem.network:8765/images/arkiv-logo.svg",
+    "url": "https://arkiv.network",
+    "logo": "https://arkiv.network/images/arkiv-logo.svg",
     "description": "Universal data layer for Ethereum with queryable, time-scoped, and verifiable database chains",
     "foundingDate": "2024",
     "founder": {
@@ -56,7 +56,7 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Arkiv",
-    "url": "https://moon.dev.golem.network:8765",
+    "url": "https://arkiv.network",
     "description": "Universal data layer for Ethereum",
     "publisher": {
       "@type": "Organization",
@@ -64,7 +64,7 @@ export default function StructuredData() {
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://moon.dev.golem.network:8765/search?q={search_term_string}",
+      "target": "https://arkiv.network/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -77,7 +77,7 @@ export default function StructuredData() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://moon.dev.golem.network:8765"
+        "item": "https://arkiv.network"
       }
     ]
   }

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { CodeBlock } from "@/components/ui/CodeBlock"
-import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPythonPage() {
   const [activeSection, setActiveSection] = useState('setup')
@@ -152,7 +151,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 
 # Install dependencies
-pip install golem-base-sdk python-dotenv`}
+pip install arkiv-sdk-python python-dotenv`}
                   language="bash"
                 />
               </div>
@@ -179,8 +178,8 @@ WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Basic Connection</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">Connect to Arkiv using your private key</p>
               <CodeBlock
-                code={`from golem_base_sdk import create_client, Tagged, Annotation
-from golem_base_sdk.types import AccountData, GolemBaseCreate, GolemBaseUpdate
+                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
+from arkiv_sdk_python.types import AccountData, ArkivCreate, ArkivUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -227,7 +226,7 @@ print(f"Connected with address: {owner_address}")`}
                   code={`# Create a new entity with annotations
 entity_id = str(uuid4())
 creates = [
-    GolemBaseCreate(
+    ArkivCreate(
         data=b"Test entity",
         btl=300,  # Block-To-Live: ~10 minutes (each block ~2 seconds)
         string_annotations=[
@@ -241,7 +240,7 @@ creates = [
 create_receipt = await client.create_entities(creates)
 print('Receipt', create_receipt)
 
-# create_entities takes a list of GolemBaseCreate objects with 4 fields:
+# create_entities takes a list of ArkivCreate objects with 4 fields:
 # - data: Payload in bytes
 # - btl: Block-To-Live, number of blocks the entity will exist
 # - string_annotations: Text annotations for querying
@@ -256,7 +255,7 @@ print('Receipt', create_receipt)
                 <CodeBlock
                   code={`# Update the entity
 update_receipt = await client.update_entities([
-    GolemBaseUpdate(
+    ArkivUpdate(
         entity_key=create_receipt[0].entity_key,
         data=b"Updated entity",
         btl=1200,  # Extend to ~40 minutes (1200 blocks * 2 seconds = 2400 seconds)
@@ -385,7 +384,7 @@ async def print_entities(label: str, entities: list):
     batch_id = str(uuid4())
 
     for i in range(10):
-        entities.append(GolemBaseCreate(
+        entities.append(ArkivCreate(
             data=f"Message {i}".encode(),
             btl=100,
             string_annotations=[
@@ -417,7 +416,7 @@ async def print_entities(label: str, entities: list):
     """Manage entity lifetime with BTL"""
 
     # Create entity with specific BTL
-    entity = GolemBaseCreate(
+    entity = ArkivCreate(
         data=b"Temporary data",
         btl=50,  # Expires after 50 blocks (50 blocks * 2 seconds = 100 seconds)
         string_annotations=[Annotation("type", "temporary")],
@@ -464,7 +463,7 @@ async def print_entities(label: str, entities: list):
                     <ul className="space-y-1 text-sm text-blue-900 font-mono">
                       <li>• Update to Python 3.8+</li>
                       <li>• Activate virtual environment before installing packages</li>
-                      <li>• Try: pip install --upgrade golem-base-sdk</li>
+                      <li>• Try: pip install --upgrade arkiv-sdk-python</li>
                     </ul>
                   </div>
 
@@ -488,8 +487,8 @@ async def print_entities(label: str, entities: list):
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Full Application</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">A complete Python application demonstrating all Arkiv features</p>
               <CodeBlock
-                code={`from golem_base_sdk import create_client, Tagged, Annotation
-from golem_base_sdk.types import GolemBaseCreate, GolemBaseUpdate
+                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
+from arkiv_sdk_python.types import ArkivCreate, ArkivUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -555,7 +554,7 @@ async def main():
 
     # 2. CREATE - Single entity with annotations
     entity_id = str(uuid4())
-    entity = GolemBaseCreate(
+    entity = ArkivCreate(
         data=json.dumps({
             "message": "Hello from Arkiv!",
             "timestamp": int(time.time() * 1000),
@@ -586,7 +585,7 @@ async def main():
         print("Query result:", data)
 
     # 4. UPDATE - Modify existing entity
-    update_data = GolemBaseUpdate(
+    update_data = ArkivUpdate(
         entity_key=entity_key,
         data=json.dumps({
             "message": "Updated message from Arkiv!",
@@ -614,7 +613,7 @@ async def main():
     # 6. BATCH OPERATIONS - Create multiple entities
     batch_entities = []
     for i in range(5):
-        batch_entities.append(GolemBaseCreate(
+        batch_entities.append(ArkivCreate(
             data=f"Batch message {i}".encode(),
             btl=100,
             string_annotations=[
@@ -679,7 +678,6 @@ if __name__ == "__main__":
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

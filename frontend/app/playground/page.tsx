@@ -1,14 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CodePlayground } from '@/components/ui/CodePlayground';
-import { ArrowLeft, Code2, Rocket, Database, Search, Activity, Layers } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { pythonExamples } from '@/data/python-examples';
-import { ThemeProvider, useTheme } from '@/components/providers/ThemeProvider';
-import ArkivHeader from '@/components/layout/ArkivHeader';
+
+const CodePlayground = dynamic(() => import('@/components/ui/CodePlayground').then(mod => ({ default: mod.CodePlayground })), {
+  loading: () => (
+    <div className="w-full h-[600px] bg-gray-50 animate-pulse rounded-lg flex items-center justify-center">
+      <div className="text-gray-400 font-mono">Loading playground...</div>
+    </div>
+  ),
+  ssr: false
+});
 
 const examples = {
   connect: {
@@ -19,27 +23,26 @@ const examples = {
 
 // Setup provider and wallet
 const provider = new ethers.JsonRpcProvider(
-  "https://ethwarsaw.holesky.golemdb.io/rpc"
+  "https://kaolin.hoodi.arkiv.network/rpc"
 );
 
-// Create wallet from private key
-const privateKey = mockPrivateKey; // Using mock key for playground
-const wallet = new ethers.Wallet(privateKey, provider);
+// Create wallet from private key (ethers needs 0x prefix)
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Get wallet information
 const address = await wallet.getAddress();
 const balance = await provider.getBalance(address);
 
-console.log("Connected to Arkiv ETHWarsaw testnet");
+console.log("Connected to Arkiv testnet");
 console.log("Wallet address:", address);
 console.log("Balance:", ethers.formatEther(balance), "ETH");
 
 // Get network info
 const network = await provider.getNetwork();
 console.log("Chain ID:", network.chainId.toString());
-console.log("Network name:", network.name === "unknown" ? "ETHWarsaw testnet" : (network.name || "ETHWarsaw testnet"));`
+console.log("Network name:", network.name === "unknown" ? "Arkiv testnet" : (network.name || "Arkiv testnet"));`
   },
-  
+
   create: {
     title: 'Smart Contract Interaction',
     description: 'Interact with Arkiv smart contract using ethers',
@@ -48,9 +51,9 @@ console.log("Network name:", network.name === "unknown" ? "ETHWarsaw testnet" : 
 
 // Setup provider and wallet
 const provider = new ethers.JsonRpcProvider(
-  "https://ethwarsaw.holesky.golemdb.io/rpc"
+  "https://kaolin.hoodi.arkiv.network/rpc"
 );
-const wallet = new ethers.Wallet(mockPrivateKey, provider);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Arkiv contract ABI (simplified example)
 const abi = [
@@ -84,7 +87,7 @@ console.log("Annotations:", annotations);
 console.log("");
 console.log("⚠️ Contract interaction example - requires deployed contract address");`
   },
-  
+
   query: {
     title: 'Read Blockchain Data',
     description: 'Query blockchain data using ethers',
@@ -92,7 +95,7 @@ console.log("⚠️ Contract interaction example - requires deployed contract ad
 // Note: ethers is already imported in the playground environment
 
 const provider = new ethers.JsonRpcProvider(
-  "https://ethwarsaw.holesky.golemdb.io/rpc"
+  "https://kaolin.hoodi.arkiv.network/rpc"
 );
 
 // Get current block information
@@ -121,7 +124,7 @@ try {
   const logs = await provider.getLogs(filter);
   console.log("");
   console.log("Found", logs.length, "logs in last 100 blocks");
-  
+
   if (logs.length > 0) {
     console.log("Sample log:", {
       address: logs[0].address,
@@ -134,7 +137,7 @@ try {
   console.log("Log query example (may require specific event filters)");
 }`
   },
-  
+
   update: {
     title: 'Send Transaction',
     description: 'Send a transaction using ethers',
@@ -142,9 +145,9 @@ try {
 // Note: ethers is already imported in the playground environment
 
 const provider = new ethers.JsonRpcProvider(
-  "https://ethwarsaw.holesky.golemdb.io/rpc"
+  "https://kaolin.hoodi.arkiv.network/rpc"
 );
-const wallet = new ethers.Wallet(mockPrivateKey, provider);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Get current gas price
 const feeData = await provider.getFeeData();
@@ -169,7 +172,7 @@ console.log("Gas limit:", tx.gasLimit);
 try {
   const estimatedGas = await wallet.estimateGas(tx);
   console.log("Estimated gas:", estimatedGas.toString());
-  
+
   // Calculate transaction cost
   const txCost = estimatedGas * feeData.gasPrice;
   console.log("Estimated cost:", ethers.formatEther(txCost), "ETH");
@@ -186,7 +189,7 @@ console.log(signedTx.slice(0, 100) + "...");
 console.log("");
 console.log("⚠️ Transaction not sent in playground environment");`
   },
-  
+
   events: {
     title: 'Event Listening',
     description: 'Listen to blockchain events with ethers',
@@ -194,7 +197,7 @@ console.log("⚠️ Transaction not sent in playground environment");`
 // Note: ethers is already imported in the playground environment
 
 const provider = new ethers.JsonRpcProvider(
-  "https://ethwarsaw.holesky.golemdb.io/rpc"
+  "https://kaolin.hoodi.arkiv.network/rpc"
 );
 
 console.log("=== Event Listening Example ===");
@@ -226,7 +229,7 @@ console.log("Searching for Transfer events in last 1000 blocks...");
 try {
   const logs = await provider.getLogs(filter);
   console.log("Found", logs.length, "Transfer events");
-  
+
   if (logs.length > 0) {
     // Show first event details
     const log = logs[0];
@@ -240,270 +243,185 @@ try {
   console.log("No Transfer events found (this is normal on test networks)");
 }
 
-// Listen for new blocks (polling mode)
-console.log("");
-console.log("Monitoring new blocks...");
-const startBlock = await provider.getBlockNumber();
-console.log("Starting from block:", startBlock);
-
-// Simulate listening for 3 blocks
-let blocksChecked = 0;
-const checkInterval = setInterval(async () => {
-  const newBlock = await provider.getBlockNumber();
-  if (newBlock > startBlock + blocksChecked) {
-    blocksChecked++;
-    console.log("New block detected:", newBlock);
-    
-    if (blocksChecked >= 3) {
-      clearInterval(checkInterval);
-      console.log("");
-      console.log("Stopped monitoring after 3 blocks");
-    }
-  }
-}, 2000); // Check every 2 seconds
-
-// Wait for monitoring to complete
-await new Promise(resolve => setTimeout(resolve, 8000));
-
-console.log("");
-console.log("=== Event Listening Complete ===");
 console.log("");
 console.log("For real-time WebSocket events, use:");
 console.log('provider.on("block", (blockNumber) => { ... })');
 console.log('provider.on("pending", (tx) => { ... })');`
   },
-  
+
   metamask: {
     title: 'MetaMask Integration',
     description: 'Use MetaMask wallet with Arkiv',
     code: `// MetaMask integration example
-// First, click "Connect MetaMask" button above
-// Then run this code to use your wallet
+// Note: ethers is already imported in the playground environment
 
-// Check if MetaMask is connected
-if (isMetaMaskConnected) {
-  console.log("✅ MetaMask is connected!");
-  console.log("Your wallet address:", userWalletAddress);
-  
-  // When MetaMask is connected, you can use ethers with the provider
-  const provider = new ethers.JsonRpcProvider(
-    "https://ethwarsaw.holesky.golemdb.io/rpc"
-  );
-  
-  // Get wallet info
-  const balance = await provider.getBalance(userWalletAddress);
-  console.log("Balance:", ethers.formatEther(balance), "ETH");
-  
-  // Get transaction count
-  const txCount = await provider.getTransactionCount(userWalletAddress);
-  console.log("Transaction count:", txCount);
-  
-  // Get current block
-  const blockNumber = await provider.getBlockNumber();
-  console.log("Current block:", blockNumber);
-  
-  console.log("");
-  console.log("🔗 Arkiv Connection");
-  console.log("To use Arkiv with your wallet:");
-  console.log("1. Sign transactions in MetaMask when prompted");
-  console.log("2. Your wallet will pay for gas fees");
-  console.log("3. All operations will be from your address");
-  
-  // Note: In the sandbox, we can't actually sign transactions
-  // But in a real dApp, you would use:
-  // const signer = await provider.getSigner();
-  // And then use signer for transactions
-  
-} else {
-  console.log("❌ MetaMask not connected");
-  console.log("Please click 'Connect MetaMask' button above first");
-  console.log("");
-  console.log("Using mock wallet for demonstration:");
-  
-  const provider = new ethers.JsonRpcProvider(
-    "https://ethwarsaw.holesky.golemdb.io/rpc"
-  );
-  const wallet = new ethers.Wallet(mockPrivateKey, provider);
-  const address = await wallet.getAddress();
-  console.log("Mock wallet address:", address);
-}`
+// In a real app, you'd check if MetaMask is connected
+// For playground, we'll use a mock wallet
+console.log("Using mock wallet for demonstration");
+console.log("");
+
+const provider = new ethers.JsonRpcProvider(
+  "https://kaolin.hoodi.arkiv.network/rpc"
+);
+const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
+const address = await wallet.getAddress();
+
+console.log("Wallet address:", address);
+
+// Get wallet info
+const balance = await provider.getBalance(address);
+console.log("Balance:", ethers.formatEther(balance), "ETH");
+
+// Get transaction count
+const txCount = await provider.getTransactionCount(address);
+console.log("Transaction count:", txCount);
+
+// Get current block
+const blockNumber = await provider.getBlockNumber();
+console.log("Current block:", blockNumber);
+
+console.log("");
+console.log("💡 In a real app:");
+console.log("1. Click 'Connect MetaMask' to use your wallet");
+console.log("2. Sign transactions when prompted");
+console.log("3. Your wallet pays for gas fees");`
   },
-  
+
   batch: {
     title: 'Batch Operations',
     description: 'Perform multiple operations efficiently',
     code: `// Initialize client first
+// Note: mockPrivateKey is already defined in the playground environment
 const privateKeyHex = mockPrivateKey;
 const privateKey = new Uint8Array(
   privateKeyHex.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
 );
 
 const client = await createClient(
-  60138453033, // ETHWarsaw testnet Chain ID
+  60138453033, // Arkiv testnet Chain ID
   new Tagged("privatekey", privateKey),
-  "https://ethwarsaw.holesky.golemdb.io/rpc",
-  "wss://ethwarsaw.holesky.golemdb.io/rpc/ws"
+  "https://kaolin.hoodi.arkiv.network/rpc",
+  "wss://kaolin.hoodi.arkiv.network/rpc/ws"
 );
 
 // Create multiple entities in a single transaction
 const batchEntities = [];
-const batchId = Date.now().toString();
-
 for (let i = 0; i < 5; i++) {
   batchEntities.push({
-    data: new TextEncoder().encode(JSON.stringify({
-      message: "Batch item #" + (i + 1),
-      batchId: batchId,
-      index: i
-    })),
-    btl: 200,
+    data: new TextEncoder().encode(\`Batch item \${i}\`),
+    btl: 300,
     stringAnnotations: [
-      new Annotation("type", "batch-item"),
-      new Annotation("batchId", batchId),
-      new Annotation("index", i.toString())
+      { key: "type", value: "batch" },
+      { key: "index", value: i.toString() }
     ],
-    numericAnnotations: [
-      new Annotation("sequence", i + 1) // Start from 1
-    ]
+    numericAnnotations: []
   });
 }
 
-console.log("Creating batch of", batchEntities.length, "entities...");
+console.log("Creating", batchEntities.length, "entities in batch...");
 const receipts = await client.createEntities(batchEntities);
+console.log("✓ Created", receipts.length, "entities");
 
-console.log("Batch created successfully!");
-receipts.forEach((receipt, i) => {
-  console.log("  Item " + (i + 1) + ": " + receipt.entityKey.slice(0, 10) + "...");
-});
+// Query all batch entities
+const results = await client.queryEntities('type = "batch"');
+console.log("✓ Found", results.length, "batch entities");
 
-// Query the batch
-const batchQuery = 'batchId = "' + batchId + '"';
-const batchResults = await client.queryEntities(batchQuery);
-console.log("");
-console.log("Queried batch: found " + batchResults.length + " entities");`
+// Display results
+results.forEach((entity, idx) => {
+  const data = new TextDecoder().decode(entity.storageValue);
+  console.log(\`  [\${idx}] \${entity.entityKey.slice(0, 10)}... → \${data}\`);
+});`
   },
-  
+
   fullExample: {
     title: 'Full Example',
-    description: 'Complete workflow: connect, create, query, update, and delete',
-    code: `// Complete Arkiv workflow example
-console.log("=== GOLEM DB FULL EXAMPLE ===");
+    description: 'Complete Arkiv workflow demonstration',
+    code: `// === COMPLETE ARKIV EXAMPLE ===
+// Note: mockPrivateKey is already defined in the playground environment
+console.log("=== ARKIV COMPLETE EXAMPLE ===");
 console.log("");
 
-// Step 1: Initialize and connect
-console.log("1. Connecting to Arkiv...");
+// 1. Initialize client
+console.log("1. Initializing Arkiv client...");
 const privateKeyHex = mockPrivateKey;
 const privateKey = new Uint8Array(
   privateKeyHex.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
 );
 
 const client = await createClient(
-  60138453033, // ETHWarsaw testnet Chain ID
+  60138453033,
   new Tagged("privatekey", privateKey),
-  "https://ethwarsaw.holesky.golemdb.io/rpc",
-  "wss://ethwarsaw.holesky.golemdb.io/rpc/ws"
+  "https://kaolin.hoodi.arkiv.network/rpc",
+  "wss://kaolin.hoodi.arkiv.network/rpc/ws"
 );
 
 const ownerAddress = await client.getOwnerAddress();
-console.log("✅ Connected! Address:", ownerAddress);
+console.log("  ✓ Connected as:", ownerAddress.slice(0, 10) + "...");
 console.log("");
 
-// Step 2: Create entities
+// 2. CREATE entities
 console.log("2. Creating entities...");
-const entities = [];
+const creates = [];
 for (let i = 1; i <= 3; i++) {
-  entities.push({
-    data: new TextEncoder().encode(JSON.stringify({
-      id: i,
-      name: "Item " + i,
-      category: i % 2 === 0 ? "even" : "odd",
-      timestamp: Date.now()
-    })),
-    btl: 500, // ~17 minutes lifetime
+  creates.push({
+    data: new TextEncoder().encode(\`Demo item \${i}\`),
+    btl: 300,
     stringAnnotations: [
-      new Annotation("type", "demo-item"),
-      new Annotation("category", i % 2 === 0 ? "even" : "odd")
+      { key: "type", value: "demo-item" },
+      { key: "name", value: \`Item \${i}\` }
     ],
-    numericAnnotations: [
-      new Annotation("id", i),
-      new Annotation("priority", i * 10)
-    ]
+    numericAnnotations: [{ key: "priority", value: i }]
   });
 }
 
-const createReceipts = await client.createEntities(entities);
-console.log("✅ Created " + createReceipts.length + " entities");
-createReceipts.forEach((receipt, i) => {
-  console.log("  - Entity " + (i + 1) + ": " + receipt.entityKey.slice(0, 16) + "...");
-});
+const createReceipts = await client.createEntities(creates);
+console.log("  ✓ Created " + createReceipts.length + " entities");
 console.log("");
 
-// Step 3: Query entities
+// 3. QUERY entities
 console.log("3. Querying entities...");
-const query = 'type = "demo-item" && category = "odd"';
-console.log("Query:", query);
-
-const results = await client.queryEntities(query);
-console.log("✅ Found " + results.length + " matching entities");
-
-results.forEach((entity) => {
-  const data = JSON.parse(new TextDecoder().decode(entity.storageValue));
-  console.log("  - ID: " + data.id + ", Name: " + data.name + ", Category: " + data.category);
+const queryResults = await client.queryEntities('type = "demo-item"');
+console.log("  ✓ Found " + queryResults.length + " entities");
+queryResults.forEach((entity, idx) => {
+  const data = new TextDecoder().decode(entity.storageValue);
+  console.log("    [" + idx + "] " + entity.entityKey.slice(0, 10) + "... → " + data);
 });
 console.log("");
 
-// Step 4: Update an entity
+// 4. UPDATE entity
 console.log("4. Updating first entity...");
-if (createReceipts.length > 0) {
-  const entityToUpdate = createReceipts[0].entityKey;
-  
-  const updateData = {
-    entityKey: entityToUpdate,
-    data: new TextEncoder().encode(JSON.stringify({
-      id: 1,
-      name: "Updated Item 1",
-      category: "modified",
-      updatedAt: Date.now()
-    })),
-    btl: 1000, // Extend lifetime
-    stringAnnotations: [
-      new Annotation("type", "demo-item"),
-      new Annotation("category", "modified"),
-      new Annotation("status", "updated")
-    ],
-    numericAnnotations: [
-      new Annotation("id", 1),
-      new Annotation("priority", 100),
-      new Annotation("version", 2)
-    ]
-  };
-  
-  const updateReceipts = await client.updateEntities([updateData]);
-  console.log("✅ Entity updated successfully");
-  console.log("  - Key: " + entityToUpdate.slice(0, 16) + "...");
-  if (updateReceipts[0].expirationBlock) {
-    console.log("  - New expiration: block " + updateReceipts[0].expirationBlock);
-  }
-}
+const firstKey = createReceipts[0].entityKey;
+const updateReceipt = await client.updateEntities([{
+  entityKey: firstKey,
+  data: new TextEncoder().encode("Updated demo item 1"),
+  btl: 600,
+  stringAnnotations: [
+    { key: "type", value: "demo-item" },
+    { key: "name", value: "Item 1" },
+    { key: "status", value: "updated" }
+  ],
+  numericAnnotations: [{ key: "priority", value: 10 }]
+}]);
+console.log("  ✓ Updated entity: " + updateReceipt[0].entityKey.slice(0, 10) + "...");
 console.log("");
 
-// Step 5: Query updated entities
-console.log("5. Verifying update...");
-const verifyQuery = 'type = "demo-item" && status = "updated"';
-const updatedResults = await client.queryEntities(verifyQuery);
-console.log("✅ Found " + updatedResults.length + " updated entities");
+// 5. EXTEND entity lifetime
+console.log("5. Extending entity BTL...");
+const extendReceipt = await client.extendEntities([{
+  entityKey: firstKey,
+  numberOfBlocks: 100
+}]);
+console.log("  ✓ Extended to block: " + extendReceipt[0].newExpirationBlock);
 console.log("");
 
-// Step 6: Delete an entity
-console.log("6. Deleting entity...");
-if (createReceipts.length > 2) {
-  const entityToDelete = createReceipts[2].entityKey;
-  await client.deleteEntities([entityToDelete]);
-  console.log("✅ Entity deleted: " + entityToDelete.slice(0, 16) + "...");
-}
+// 6. DELETE entity
+console.log("6. Deleting second entity...");
+const secondKey = createReceipts[1].entityKey;
+await client.deleteEntities([secondKey]);
+console.log("  ✓ Deleted entity: " + secondKey.slice(0, 10) + "...");
 console.log("");
 
-// Step 7: Final summary
+// 7. Final summary
 console.log("7. Final summary:");
 const finalQuery = 'type = "demo-item"';
 const finalResults = await client.queryEntities(finalQuery);
@@ -514,19 +432,18 @@ console.log("=== EXAMPLE COMPLETED ===");`
   }
 };
 
-function PlaygroundContent() {
-  const { theme } = useTheme();
+export default function PlaygroundPage() {
   const [selectedExample, setSelectedExample] = useState<keyof typeof examples>('connect');
   const [customCode, setCustomCode] = useState<string | null>(null);
   const [customTitle, setCustomTitle] = useState<string | null>(null);
   const [customLanguage, setCustomLanguage] = useState<'typescript' | 'python'>('typescript');
-  
+
 
   useEffect(() => {
     // Check if there's an example from Getting Started
     const storedExample = sessionStorage.getItem('playgroundExample');
     const storedLanguage = sessionStorage.getItem('playgroundLanguage');
-    
+
     if (storedExample) {
       // Set the selected example
       if (storedExample in examples) {
@@ -534,7 +451,7 @@ function PlaygroundContent() {
         setCustomCode(null);
         setCustomTitle(null);
       }
-      
+
       // Clear the stored data after using it
       sessionStorage.removeItem('playgroundExample');
       sessionStorage.removeItem('playgroundLanguage');
@@ -542,12 +459,12 @@ function PlaygroundContent() {
       // Check if there's custom code
       const storedCode = sessionStorage.getItem('playgroundCode');
       const storedTitle = sessionStorage.getItem('playgroundTitle');
-      
+
       if (storedCode) {
         setCustomCode(storedCode);
         setCustomTitle(storedTitle || 'Custom Code');
         setCustomLanguage(storedLanguage === 'python' ? 'python' : 'typescript');
-        
+
         // Clear the stored data after using it
         sessionStorage.removeItem('playgroundCode');
         sessionStorage.removeItem('playgroundLanguage');
@@ -557,49 +474,73 @@ function PlaygroundContent() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: theme.colors.background.primary, color: theme.colors.text.primary, minHeight: '100vh' }}>
-      <ArkivHeader />
-      <div className="container mx-auto px-4 py-8">
-
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 flex items-center gap-3">
-            <Code2 className="h-10 w-10 text-blue-500" />
-            Code Playground
-          </h1>
-          <p className="text-xl text-white">
-            Interactive examples for learning Arkiv SDK. Edit the code and see results instantly!
-          </p>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="px-4 md:px-[60px] mt-6 sticky top-6 z-[100]">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-figma-card">
+            <nav className="px-6 py-4">
+              <div className="flex items-center justify-between">
+                <a href="/" className="flex items-center">
+                  <div className="font-brutal text-3xl font-black uppercase text-black tracking-wider">
+                    [ ARKIV ]
+                  </div>
+                </a>
+                <div className="hidden lg:flex items-center space-x-6 ml-auto">
+                  <a href="/#why-arkiv" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Why Arkiv</a>
+                  <a href="/#how-it-works" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">How it Works</a>
+                  <a href="/#use-cases" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">Use Cases</a>
+                  <a href="/#faq" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">FAQ</a>
+                  <a href="/#about" className="font-mono text-sm text-black hover:text-gray-600 transition-colors">About</a>
+                </div>
+              </div>
+            </nav>
+          </div>
         </div>
+      </header>
 
-        {/* Examples Bar */}
-        <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-4 overflow-x-auto">
+      {/* Main Content */}
+      <main className="relative z-10">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-[60px] py-12">
+
+          {/* Page Header */}
+          <div className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black leading-tight mb-4">
+              Code Playground
+            </h1>
+            <p className="text-xl font-mono text-[#1F1F1F]">
+              Interactive examples for learning Arkiv SDK. Edit the code and see results instantly!
+            </p>
+          </div>
+
+          {/* Examples Bar */}
+          <div className="bg-gray-200 rounded-2xl p-4 border border-stone-300 shadow-figma-card mb-6">
+            <div className="flex items-center gap-4 overflow-x-auto pb-2">
               {customCode ? (
                 <>
-                  <span className="text-sm text-white font-medium whitespace-nowrap">Custom Code:</span>
+                  <span className="text-sm text-black font-mono font-medium whitespace-nowrap">Custom Code:</span>
                   <button
                     onClick={() => {
                       setCustomCode(null);
                       setCustomTitle(null);
                     }}
-                    className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-all"
+                    className="px-4 py-2 rounded-lg bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white transition-all font-mono text-sm border border-stone-300"
                   >
                     ← Back to Examples
                   </button>
                 </>
               ) : (
                 <>
-                  <span className="text-sm text-white font-medium whitespace-nowrap">Examples:</span>
-                  <div className="flex gap-2">
+                  <span className="text-sm text-black font-mono font-medium whitespace-nowrap">Examples:</span>
+                  <div className="flex gap-2 flex-wrap">
                     {Object.entries(examples).map(([key, example]) => (
                       <button
                         key={key}
                         onClick={() => setSelectedExample(key as keyof typeof examples)}
-                        className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
+                        className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap font-mono text-sm ${
                           selectedExample === key
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                            : 'bg-gray-700/50 text-white hover:bg-gray-700 hover:text-white'
+                            ? 'bg-[#FE7445] text-white shadow-figma-button-primary'
+                            : 'bg-white text-black border border-stone-300 hover:bg-[#FE7445] hover:text-white'
                         }`}
                       >
                         {example.title}
@@ -609,12 +550,10 @@ function PlaygroundContent() {
                 </>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Code Playground */}
-        <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-          <CardContent className="p-6">
+          {/* Code Playground */}
+          <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
             {customCode ? (
               <CodePlayground
                 initialCode={customCode}
@@ -634,142 +573,59 @@ function PlaygroundContent() {
                 showLanguageToggle={true}
               />
             )}
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Tips below */}
-        <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 mt-6">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-8 text-sm text-white">
-              <div className="flex items-center gap-2">
-                <Rocket className="h-4 w-4 text-yellow-500" />
-                <span className="font-medium">Info:</span>
+          {/* Info Box */}
+          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200 shadow-figma-card mb-6">
+            <h3 className="font-brutal text-lg font-medium uppercase text-black mb-3">Playground Tips</h3>
+            <ul className="text-sm font-mono text-stone-900 space-y-1">
+              <li>• Edit code and click "Run" to execute in browser</li>
+              <li>• Runs in sandboxed environment with limited access</li>
+              <li>• Uses test key for read-only operations</li>
+              <li>• Both TypeScript and Python supported</li>
+            </ul>
+          </div>
+
+          {/* Additional Resources */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <Link href="/getting-started">
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/ts.svg" alt="TypeScript icon" className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">TypeScript Guide</h3>
+                </div>
+                <p className="text-sm font-mono text-black group-hover:text-white">Full TypeScript SDK documentation</p>
               </div>
-              <span>• Edit code and click "Run" to execute</span>
-              <span>• Runs in sandboxed environment (limited access)</span>
-              <span>• Uses test key (read-only operations)</span>
-              <span>• Both TypeScript and Python supported</span>
-            </div>
-          </CardContent>
-        </Card>
+            </Link>
 
-        {/* Additional Resources */}
-        <div className="mt-8 grid md:grid-cols-3 gap-4">
-          <Link href="/getting-started">
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:bg-gray-800/70 transition-colors cursor-pointer">
-              <CardContent className="p-6 flex items-center gap-4">
-                <Database className="h-8 w-8 text-blue-500" />
-                <div>
-                  <h3 className="font-semibold">TypeScript Guide</h3>
-                  <p className="text-sm text-white">Full documentation</p>
+            <Link href="/getting-started/python">
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/python.svg" alt="Python icon" className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">Python Guide</h3>
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/getting-started">
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:bg-gray-800/70 transition-colors cursor-pointer">
-              <CardContent className="p-6 flex items-center gap-4">
-                <Activity className="h-8 w-8 text-green-500" />
-                <div>
-                  <h3 className="font-semibold">Python Guide</h3>
-                  <p className="text-sm text-white">Learn Python SDK</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <a href="https://github.com/golem-base" target="_blank" rel="noopener noreferrer">
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:bg-gray-800/70 transition-colors cursor-pointer">
-              <CardContent className="p-6 flex items-center gap-4">
-                <Layers className="h-8 w-8 text-purple-500" />
-                <div>
-                  <h3 className="font-semibold">GitHub</h3>
-                  <p className="text-sm text-white">View source code</p>
-                </div>
-              </CardContent>
-            </Card>
-          </a>
-        </div>
-      </div>
-
-      {/* Footer Section */}
-      <section className="px-4 md:px-[60px] py-[64px] bg-[#181EA9]">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-8">
-            {/* Main Footer Content - Single Row */}
-            <div className="flex items-start justify-between">
-              {/* Large ARKIV Logo */}
-              <div className="flex-shrink-0">
-                <h2 className="font-brutal text-[60px] md:text-[80px] font-black uppercase text-white leading-tight tracking-wider">
-                  [ ARKIV ]
-                </h2>
+                <p className="text-sm font-mono text-black group-hover:text-white">Complete Python SDK guide</p>
               </div>
+            </Link>
 
-              {/* Footer Navigation - Horizontal Layout */}
-              <div className="flex gap-16 items-start">
-                {/* Developers */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Docs</a>
-                    <a href="/getting-started" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Getting Started</a>
-                    <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
-                    <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
-                    <a href="/litepaper" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
-                    <a href="/whitepaper" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Whitepaper [Soon]</a>
-                    <a href="/aips" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">AIPs [Soon]</a>
+            <a href="https://github.com/Arkiv-network" target="_blank" rel="noopener noreferrer">
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group cursor-pointer">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <img src="/images/icons/github.svg" alt="GitHub icon" className="w-6 h-6" />
                   </div>
+                  <h3 className="font-brutal font-bold text-lg text-black group-hover:text-white">GitHub</h3>
                 </div>
-
-                {/* Company */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Company</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://www.golem.network/" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Golem</a>
-                    <a href="https://glm.golem.network/" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GLM Token</a>
-                    <a href="https://www.golem.network/careers" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Careers</a>
-                    <a href="#upcoming-events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Events</a>
-                  </div>
-                </div>
-
-                {/* Connect */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://twitter.com/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">X</a>
-                    <a href="https://discord.gg/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Discord</a>
-                  </div>
-                </div>
-
-                {/* Legal */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
-                  <div className="flex flex-col gap-1">
-                    <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Privacy Policy</a>
-                    <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Cookie Policy</a>
-                    <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Terms of Use</a>
-                  </div>
-                </div>
+                <p className="text-sm font-mono text-black group-hover:text-white">View source code and examples</p>
               </div>
-            </div>
-
-            {/* Copyright - Single Row */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <span className="font-mono text-sm text-white leading-tight">© 2025 Arkiv</span>
-              <span className="font-mono text-sm text-white leading-tight">All rights reserved</span>
-            </div>
+            </a>
           </div>
         </div>
-      </section>
+      </main>
     </div>
-  );
-}
-
-export default function Playground() {
-  return (
-    <ThemeProvider>
-      <PlaygroundContent />
-    </ThemeProvider>
   );
 }

@@ -1,22 +1,8 @@
 export default function LegalIndex() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section with Grid Background */}
+      {/* Hero Section */}
       <section className="relative px-4 md:px-[60px] pt-[120px] pb-[64px]">
-        {/* Grid Background */}
-        <div className="absolute inset-0">
-          <div className="w-full h-full bg-[#F5F5F5] opacity-50">
-            <div className="grid grid-cols-12 gap-0 h-full">
-              {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className="border-r border-gray-300 h-full"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Orange Accent Box */}
-        <div className="absolute top-[200px] left-1/2 transform -translate-x-1/2 w-[80px] h-[80px] bg-[#FE7446] rounded-lg"></div>
-
         <div className="relative z-10 max-w-[1440px] mx-auto">
           {/* Breadcrumbs */}
           <div className="flex items-center gap-2 mb-8">

@@ -7,13 +7,13 @@ WORKDIR /app
 RUN npm install -g bun
 
 # Copy package files
-COPY frontend/package.json frontend/bun.lockb* ./
+COPY package.json bun.lockb* ./
 
 # Install dependencies
 RUN bun install
 
 # Copy source code
-COPY frontend/ .
+COPY . .
 
 # Build the application
 RUN bun run build

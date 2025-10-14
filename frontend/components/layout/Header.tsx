@@ -47,13 +47,13 @@ export default function Header({ navigation }: HeaderProps) {
                   className="flex items-center gap-2 font-mono text-sm text-black hover:text-gray-600 transition-colors"
                 >
                   <span>{item.name}</span>
-                  {item.children && (
+                  {item.children && item.children.length > 0 && (
                     <img src="/images/dropdown-arrow.svg" alt="" className="w-5 h-5" />
                   )}
                 </Link>
 
                 {/* Dropdown menu for children */}
-                {item.children && (
+                {item.children && item.children.length > 0 && (
                   <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-figma-card border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-3">
                       {item.children.map((child) => (
