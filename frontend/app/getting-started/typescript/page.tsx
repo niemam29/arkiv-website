@@ -5,7 +5,18 @@ import { CodeBlock } from '@/components/ui/CodeBlock'
 import { Wallet } from 'ethers'
 import { CodePlayground } from '@/components/ui/CodePlayground'
 
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+
 type Bullet = { t: string; v: string }
+
+function T({ term, children }: { term: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger className="underline decoration-dotted underline-offset-2 cursor-help">{term}</TooltipTrigger>
+      <TooltipContent className="max-w-xs">{children}</TooltipContent>
+    </Tooltip>
+  )
+}
 
 export default function GettingStartedPage() {
   // start on the first step (Generate, Fund & Hello)
@@ -17,7 +28,6 @@ export default function GettingStartedPage() {
 // 1) Load the Arkiv SDK at runtime (works inside the browser playground without bundling)
 const { createClient, Annotation, Tagged } = await import('golem-base-sdk');
 
-
 // 2) Point at the Arkiv + provide your private key
 //    – PRIVATE_KEY is auto-filled from the generator above when you click Run
 //    – CHAIN_ID is hardcoded for the Arkiv
@@ -26,15 +36,12 @@ const PRIVATE_KEY = '${generatedPk ?? '0xYOUR_PRIVATE_KEY'}';
 const RPC_URL = 'https://kaolin.hoodi.arkiv.network/rpc';
 const WS_URL  = 'wss://kaolin.hoodi.arkiv.network/rpc/ws';
 
-
 // 3) Quick sanity check: private keys are 32 bytes (64 hex chars) prefixed with 0x
 if (!/^0x[0-9a-fA-F]{64}$/.test(PRIVATE_KEY)) throw new Error('Set PRIVATE_KEY');
-
 
 // 4) Convert "0x…"-hex into raw bytes — the client expects bytes (not a string)
 const hex = PRIVATE_KEY.slice(2);
 const toBytes = (h) => new Uint8Array(h.match(/.{1,2}/g).map(b => parseInt(b, 16)));
-
 
 // 5) Create a client (think: “connect my account to this network”)
 const client = await createClient(
@@ -44,11 +51,9 @@ const client = await createClient(
   WS_URL
 );
 
-
 // 6) Helpers to turn text ↔ bytes (blockchains store bytes)
 const enc = new TextEncoder();
 const dec = new TextDecoder();
-
 
 // 7) Write one tiny record on-chain: "Hello, Arkiv!"
 //    - btl: "blocks-to-live" (expiration window)
@@ -60,15 +65,14 @@ const [hello] = await client.createEntities([{
   numericAnnotations: []
 }]);
 
-
 // 8) Read back what we just wrote
 const bytes = await client.getStorageValue(hello.entityKey);
-
 
 // 9) Print the results so you can see the on-chain key and message
 console.log('Key:', hello.entityKey);
 console.log('Data:', dec.decode(bytes));
 `
+
   const story = useMemo(
     () => ({
       // Chapter 1 — Identity → Hello (in one flow)
@@ -219,208 +223,192 @@ You’ll still use the same building blocks (account, client, and connection), b
   }
 
   return (
-    <div className="min-h-screen bg-white pt-28">
-      <main className="relative z-10">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-[60px] py-12">
-          {/* Header */}
-          <div className="text-center space-y-4 mb-12">
-            <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
-              TypeScript SDK v0.1.16
+    <TooltipProvider>
+      <div className="min-h-screen bg-white pt-28">
+        <main className="relative z-10">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-[60px] py-12">
+            {/* Header */}
+            <div className="text-center space-y-4 mb-12">
+              <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
+                TypeScript SDK v0.1.16
+              </div>
+              <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Arkiv TS SDK — Getting Started</h1>
+              <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
+                Voting Board: Open a proposal, collect votes in real time, tally them, batch more votes, then extend the voting window.
+              </p>
+              <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 font-mono text-xs text-stone-700">
+                <span>Flow</span>
+                <span>•</span>
+                <span>Hello Arkiv → Setup → Connect → Open → Cast → (Batch) → Tally → Watch → Extend</span>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Arkiv TS SDK — Getting Started</h1>
-            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Voting Board: Open a proposal, collect votes in real time, tally them, batch more votes, then extend the voting window.
-            </p>
-            <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 font-mono text-xs text-stone-700">
-              <span>Flow</span>
-              <span>•</span>
-              <span>Hello Arkiv → Setup → Connect → Open → Cast → (Batch) → Tally → Watch → Extend</span>
-            </div>
-          </div>
 
-          {/* Sticky Nav */}
-          <div className="sticky top-[88px] z-40 backdrop-blur-md border-b border-stone-300 bg-white/95 -mx-4 px-4 py-3 mb-12">
-            <div className="flex items-center gap-4 overflow-x-auto">
-              <a
-                href="/"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white transition-all whitespace-nowrap"
-              >
-                Home
-              </a>
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
-                    activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
-                  }`}
+            {/* Sticky Nav */}
+            <div className="sticky top-[88px] z-40 backdrop-blur-md border-b border-stone-300 bg-white/95 -mx-4 px-4 py-3 mb-12">
+              <div className="flex items-center gap-4 overflow-x-auto">
+                <a
+                  href="/"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white transition-all whitespace-nowrap"
                 >
-                  <span>{item.icon}</span>
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 1) Hello Arkiv */}
-          <section id="fund-hello" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">1) Say “Hello, Arkiv”</h2>
-
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              {/* Friendly intro */}
-              <div className="mb-6">
-                <h3 className="text-lg font-brutal font-bold text-black mb-2">Your first on-chain action (no installs)</h3>
-                <p className="font-mono text-sm text-stone-900">
-                  In web3, you act from an <b>account</b>. Think of it like a username with a secret key:
-                </p>
-                <div className="grid md:grid-cols-3 gap-4 mt-3">
-                  <div className="rounded-lg border border-stone-300 bg-white p-4">
-                    <h4 className="font-brutal font-bold text-black mb-2">Address</h4>
-                    <p className="font-mono text-sm text-stone-900">
-                      Your public identifier. Safe to share. Others can send funds to it or look up its activity.
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-stone-300 bg-white p-4">
-                    <h4 className="font-brutal font-bold text-black mb-2">Private key</h4>
-                    <p className="font-mono text-sm text-stone-900">
-                      Your secret. <b>Never share it.</b> Anyone with this can control the account.
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-stone-300 bg-white p-4">
-                    <h4 className="font-brutal font-bold text-black mb-2">Faucet</h4>
-                    <p className="font-mono text-sm text-stone-900">
-                      Writing to the chain uses <b>gas</b>. A faucet gives you free funds so you can try things safely.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Safety note */}
-              <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-4">
-                <p className="font-mono text-sm text-amber-900">
-                  <b>Safety:</b> The account you generate here is for <b>demo/sandbox use only</b>. Don’t use it for real value.
-                </p>
-              </div>
-
-              {/* Step A — Generate */}
-              <div className="mb-4">
-                <h3 className="text-lg font-brutal font-bold text-black mb-2">A) Generate an account</h3>
-                <p className="font-mono text-sm text-stone-900 mb-3">
-                  Click once. We’ll create a new address + private key <i>in your browser</i>.
-                </p>
-                <button
-                  onClick={generateWallet}
-                  className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
-                >
-                  Generate account
-                </button>
-              </div>
-
-              {/* Keys display */}
-              {generated && (
-                <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4 mb-6">
-                  <FieldRow
-                    label="Account Address"
-                    value={generated.address}
-                    onCopy={() => copy(generated.address, 'address')}
-                    copied={copied === 'address'}
-                  />
-                  <FieldRow
-                    label="Private Key"
-                    value={generated.privateKey}
-                    onCopy={() => copy(generated.privateKey, 'privateKey')}
-                    copied={copied === 'privateKey'}
-                  />
-                  <p className="text-xs font-mono text-stone-700">Save these somewhere safe. You’ll use them in the next step.</p>
-                </div>
-              )}
-
-              {/* Step B — Fund */}
-              <div className="mb-6">
-                <h3 className="text-lg font-brutal font-bold text-black mb-2">B) Add faucet funds</h3>
-                <p className="font-mono text-sm text-stone-900 mb-3">
-                  Open the faucet and paste an <b>Account Address</b>. If you generated one above, copy it. Otherwise, you can paste an
-                  address from your own wallet.
-                </p>
-                <div className="flex items-center gap-3">
-                  <a
-                    href="https://kaolin.hoodi.arkiv.network/faucet/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-4 py-2 rounded-lg font-mono text-sm bg-[#0f766e] text-white hover:opacity-90 transition"
+                  Home
+                </a>
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
+                      activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
+                    }`}
                   >
-                    Open Faucet
-                  </a>
+                    <span>{item.icon}</span>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 1) Hello Arkiv */}
+            <section id="fund-hello" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">1) Say “Hello, Arkiv”</h2>
+
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                {/* Friendly intro (inline tooltips) */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-brutal font-bold text-black mb-2">Your first on-chain action (no installs)</h3>
+                  <p className="font-mono text-sm text-stone-900">
+                    In web3, you act from an <T term="account">Your on-chain identity made of a public address and a private key.</T>. Your{' '}
+                    <T term="address">Public identifier that others can view or send assets to.</T> is safe to share, but your{' '}
+                    <T term="private key">Your secret credential. Keep it private — anyone with it controls your account.</T>. Writing to
+                    the chain uses <T term="gas">A tiny fee paid to execute your write; we’ll use test funds on a test network.</T>.
+                  </p>
+                </div>
+
+                {/* Safety note */}
+                <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-4">
+                  <p className="font-mono text-sm text-amber-900">
+                    <b>Safety:</b> The account you generate here is for <b>demo/sandbox use only</b>. Don’t use it for real value.
+                  </p>
+                </div>
+
+                {/* Step A — Generate */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-brutal font-bold text-black mb-2">A) Generate an account</h3>
+                  <p className="font-mono text-sm text-stone-900 mb-3">
+                    Click once. We’ll create a new <T term="account">Address + private key pair in your browser.</T>
+                  </p>
+                  <button
+                    onClick={generateWallet}
+                    className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
+                  >
+                    Generate account
+                  </button>
+                </div>
+
+                {/* Keys display */}
+                {generated && (
+                  <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4 mb-6">
+                    <FieldRow
+                      label="Account Address"
+                      value={generated.address}
+                      onCopy={() => copy(generated.address, 'address')}
+                      copied={copied === 'address'}
+                    />
+                    <FieldRow
+                      label="Private Key"
+                      value={generated.privateKey}
+                      onCopy={() => copy(generated.privateKey, 'privateKey')}
+                      copied={copied === 'privateKey'}
+                    />
+                    <p className="text-xs font-mono text-stone-700">Save these somewhere safe. You’ll use them in the next step.</p>
+                  </div>
+                )}
+
+                {/* Step B — Fund */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-brutal font-bold text-black mb-2">B) Add faucet funds</h3>
+                  <p className="font-mono text-sm text-stone-900 mb-3">
+                    Open the <T term="faucet">A website that sends free test ETH on a test network.</T> and paste an{' '}
+                    <T term="address">Your public account string (starts with 0x…)</T>. If you generated one above, copy it. Otherwise, you
+                    can paste an address from your own wallet.
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={faucetHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2 rounded-lg font-mono text-sm bg-[#0f766e] text-white hover:opacity-90 transition"
+                    >
+                      Open Faucet
+                    </a>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-stone-300 my-6" />
+
+                {/* Step C — Hello */}
+                <div>
+                  <h3 className="text-lg font-brutal font-bold text-black mb-2">C) Say “Hello, Arkiv”</h3>
+                  <p className="font-mono text-sm text-stone-900 mb-3">
+                    Run a tiny example in your browser that writes a single on-chain record — no local setup required.
+                  </p>
+                  <CodePlayground
+                    description={
+                      generated
+                        ? 'Prefilled with the account you just created. Click Run.'
+                        : 'Paste a private key at the top of the script, or generate one above. Then click Run.'
+                    }
+                    initialCode={helloPlaygroundTs(generated?.privateKey)}
+                    showLanguageToggle={false}
+                  />
+                  <p className="mt-2 text-xs font-mono text-stone-700">We’ll prefill it to use the account you just created.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* 2) Setup & Installation */}
+            <section id="setup-install" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">2) Setup &amp; Installation</h2>
+
+              {/* Overview */}
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
+                <p className="text-stone-900 font-mono text-sm">{story.setupInstall.p}</p>
+              </div>
+
+              {/* Prerequisites */}
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
+                <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
+                <p className="text-stone-900 font-mono text-sm mb-4">Tested with golem-base-sdk@0.1.16 and Node.js 20+. Bun also works.</p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <CheckRow title="Node.js 18+ (or Bun 1.x)" subtitle="LTS recommended" />
+                  <CheckRow title="TypeScript 5+ (optional)" subtitle="For typed scripts" />
+                  <CheckRow title="Ethereum Wallet" subtitle="With test ETH for your RPC" />
+                  <CheckRow title="RPC Endpoint" subtitle="HTTP + (optionally) WS" />
                 </div>
               </div>
 
-              {/* Divider */}
-              <div className="border-t border-stone-300 my-6" />
-
-              {/* Step C — Hello */}
-              <div>
-                <h3 className="text-lg font-brutal font-bold text-black mb-2">C) Say “Hello, Arkiv”</h3>
-                <p className="font-mono text-sm text-stone-900 mb-3">
-                  Next, you’ll run a tiny example in your browser that writes a single “Hello, Arkiv!” entity— no local setup required.
-                </p>
-                <CodePlayground
-                  description={
-                    generated
-                      ? 'Prefilled with the account you just created. Click Run.'
-                      : 'Paste a private key at the top of the script, or generate one above. Then click Run.'
-                  }
-                  initialCode={helloPlaygroundTs(generated?.privateKey)}
-                  showLanguageToggle={false}
-                />
-
-                <p className="mt-2 text-xs font-mono text-stone-700">We’ll prefill it to use the account you just created.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* 2) Setup & Installation */}
-          <section id="setup-install" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">2) Setup &amp; Installation</h2>
-
-            {/* Overview */}
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
-              <p className="text-stone-900 font-mono text-sm">{story.setupInstall.p}</p>
-            </div>
-
-            {/* Prerequisites */}
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
-              <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
-              <p className="text-stone-900 font-mono text-sm mb-4">Tested with golem-base-sdk@0.1.16 and Node.js 20+. Bun also works.</p>
-              <div className="grid md:grid-cols-2 gap-4">
-                <CheckRow title="Node.js 18+ (or Bun 1.x)" subtitle="LTS recommended" />
-                <CheckRow title="TypeScript 5+ (optional)" subtitle="For typed scripts" />
-                <CheckRow title="Ethereum Wallet" subtitle="With test ETH for your RPC" />
-                <CheckRow title="RPC Endpoint" subtitle="HTTP + (optionally) WS" />
-              </div>
-            </div>
-
-            {/* Installation */}
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
-              <h3 className="text-xl font-brutal font-bold mb-2 text-black">Installation</h3>
-              <CodeBlock
-                language="bash"
-                code={`# Using npm
+              {/* Installation */}
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card mb-6">
+                <h3 className="text-xl font-brutal font-bold mb-2 text-black">Installation</h3>
+                <CodeBlock
+                  language="bash"
+                  code={`# Using npm
 npm init -y
 npm i golem-base-sdk dotenv tslib ethers
 
 # or with Bun
 bun init -y
 bun add golem-base-sdk dotenv tslib ethers`}
-              />
-            </div>
+                />
+              </div>
 
-            {/* Optional config files */}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-                <h3 className="text-xl font-brutal font-bold mb-2 text-black">tsconfig.json (optional)</h3>
-                <CodeBlock
-                  language="json"
-                  code={`{
+              {/* Optional config files */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                  <h3 className="text-xl font-brutal font-bold mb-2 text-black">tsconfig.json (optional)</h3>
+                  <CodeBlock
+                    language="json"
+                    code={`{
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
@@ -431,13 +419,13 @@ bun add golem-base-sdk dotenv tslib ethers`}
   },
   "include": ["*.ts"]
 }`}
-                />
-              </div>
-              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-                <h3 className="text-xl font-brutal font-bold mb-2 text-black">package.json (scripts)</h3>
-                <CodeBlock
-                  language="json"
-                  code={`{
+                  />
+                </div>
+                <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                  <h3 className="text-xl font-brutal font-bold mb-2 text-black">package.json (scripts)</h3>
+                  <CodeBlock
+                    language="json"
+                    code={`{
   "type": "module",
   "scripts": {
     "start": "tsx voting-board.ts",
@@ -455,38 +443,38 @@ bun add golem-base-sdk dotenv tslib ethers`}
     "typescript": "^5.6.3"
   }
 }`}
-                />
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Environment Configuration */}
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <h3 className="text-xl font-brutal font-bold mb-2 text-black">Environment Configuration</h3>
-              <CodeBlock
-                language="bash"
-                code={`# .env
+              {/* Environment Configuration */}
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <h3 className="text-xl font-brutal font-bold mb-2 text-black">Environment Configuration</h3>
+                <CodeBlock
+                  language="bash"
+                  code={`# .env
 PRIVATE_KEY=0x...                      # use the (TEST) private key generated above
 RPC_URL=https://your.rpc.endpoint/rpc    # e.g. https://kaolin.hoodi.arkiv.network/rpc
 WS_URL=wss://your.rpc.endpoint/rpc/ws    # e.g. wss://kaolin.hoodi.arkiv.network/rpc/ws`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 3) Connect & Verify */}
-          <section id="connect" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">3) Connect &amp; Verify</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.connect.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.connect.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`import 'dotenv/config';
+            {/* 3) Connect & Verify */}
+            <section id="connect" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">3) Connect &amp; Verify</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.connect.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.connect.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`import 'dotenv/config';
 import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'golem-base-sdk';
 
 // Helper: query RPC for basic network info
@@ -519,25 +507,25 @@ const decoder = new TextDecoder();
 
 const owner = await (client as any).getOwnerAddress?.();
 if (owner) console.log('Your account:', owner);`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 4) Open Proposal */}
-          <section id="open" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">4) Open Proposal</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.open.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.open.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const [proposal] = await client.createEntities([
+            {/* 4) Open Proposal */}
+            <section id="open" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">4) Open Proposal</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.open.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.open.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const [proposal] = await client.createEntities([
   {
     data: enc.encode('Proposal: Switch stand-up to 9:30?'),
     btl: 200,
@@ -552,25 +540,25 @@ console.log('Proposal key:', proposal.entityKey);
 
 // Use entityKey as this proposal's identifier
 const proposalKey = proposal.entityKey;`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 5) Cast Votes */}
-          <section id="cast" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">5) Cast Votes</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.cast.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.cast.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const voterAddr = (await (client as any).getOwnerAddress?.()) ?? 'unknown';
+            {/* 5) Cast Votes */}
+            <section id="cast" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">5) Cast Votes</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.cast.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.cast.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const voterAddr = (await (client as any).getOwnerAddress?.()) ?? 'unknown';
 
 const [vote1, vote2] = await client.createEntities([
   {
@@ -597,25 +585,25 @@ const [vote1, vote2] = await client.createEntities([
   },
 ] as GolemBaseCreate[]);
 console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 6) (Optional) Batch Votes */}
-          <section id="batch" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">6) (Optional) Batch Votes</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.batch.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.batch.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const extras = Array.from({ length: 5 }, (_, i) => ({
+            {/* 6) (Optional) Batch Votes */}
+            <section id="batch" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">6) (Optional) Batch Votes</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.batch.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.batch.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const extras = Array.from({ length: 5 }, (_, i) => ({
   data: enc.encode(\`vote: yes #\${i + 1}\`),
   btl: 200,
   stringAnnotations: [
@@ -629,50 +617,50 @@ console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
 
 const receipts = await client.createEntities(extras);
 console.log(\`Batch created: \${receipts.length} votes\`);`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 7) Tally Votes */}
-          <section id="tally" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">7) Tally Votes</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.tally.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.tally.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const yesVotes = await client.queryEntities(
+            {/* 7) Tally Votes */}
+            <section id="tally" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">7) Tally Votes</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.tally.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.tally.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const yesVotes = await client.queryEntities(
   \`type = "vote" && proposalKey = "\${proposalKey}" && choice = "yes"\`
 );
 const noVotes = await client.queryEntities(
   \`type = "vote" && proposalKey = "\${proposalKey}" && choice = "no"\`
 );
 console.log(\`Tallies — YES: \${yesVotes.length}, NO: \${noVotes.length}\`);`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 8) Watch Live */}
-          <section id="listen" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">8) Watch Live</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.listen.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.listen.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const stopWatching = client.watchLogs({
+            {/* 8) Watch Live */}
+            <section id="listen" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">8) Watch Live</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.listen.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.listen.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const stopWatching = client.watchLogs({
   fromBlock: BigInt(0),
 
   onCreated: (e) => {
@@ -712,50 +700,51 @@ console.log(\`Tallies — YES: \${yesVotes.length}, NO: \${noVotes.length}\`);`}
   onError: (err) => console.error('[watchLogs] error:', err),
 });
 console.log('Watching for proposal/vote creations and extensions…');`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* 9) Extend Window */}
-          <section id="extend" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">9) Extend Window</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-              <p className="font-mono text-sm text-stone-900 mb-4">{story.extend.p}</p>
-              <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
-                {story.extend.bullets.map((b) => (
-                  <li key={b.t}>
-                    <b>{b.t}:</b> {b.v}
-                  </li>
-                ))}
-              </ul>
-              <CodeBlock
-                language="typescript"
-                code={`const [ext] = await client.extendEntities([
+            {/* 9) Extend Window */}
+            <section id="extend" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">9) Extend Window</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
+                <p className="font-mono text-sm text-stone-900 mb-4">{story.extend.p}</p>
+                <ul className="list-disc list-inside font-mono text-sm text-stone-900 space-y-1 mb-4">
+                  {story.extend.bullets.map((b) => (
+                    <li key={b.t}>
+                      <b>{b.t}:</b> {b.v}
+                    </li>
+                  ))}
+                </ul>
+                <CodeBlock
+                  language="typescript"
+                  code={`const [ext] = await client.extendEntities([
   { entityKey: proposal.entityKey, numberOfBlocks: 150 },
 ]);
 console.log('Proposal extended to block:', ext.newExpirationBlock);`}
-              />
-            </div>
-          </section>
+                />
+              </div>
+            </section>
 
-          {/* Troubleshooting */}
-          <section id="help" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">Troubleshooting</h2>
-            <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card space-y-4">
-              <p className="font-mono text-sm text-stone-900">
-                <b>Invalid sender:</b> Your RPC may point to an unexpected network for your key. Verify your RPC URL is correct.
-              </p>
-              <p className="font-mono text-sm text-stone-900">
-                <b>Insufficient funds:</b> Get test ETH from the faucet; writes require gas.
-              </p>
-              <p className="font-mono text-sm text-stone-900">
-                <b>No events seen?</b> Ensure <code>fromBlock</code> is low enough and keep the process running to receive logs.
-              </p>
-            </div>
-          </section>
-        </div>
-      </main>
-    </div>
+            {/* Troubleshooting */}
+            <section id="help" className="mb-16">
+              <h2 className="text-3xl font-bold mb-8">Troubleshooting</h2>
+              <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card space-y-4">
+                <p className="font-mono text-sm text-stone-900">
+                  <b>Invalid sender:</b> Your RPC may point to an unexpected network for your key. Verify your RPC URL is correct.
+                </p>
+                <p className="font-mono text-sm text-stone-900">
+                  <b>Insufficient funds:</b> Get test ETH from the faucet; writes require gas.
+                </p>
+                <p className="font-mono text-sm text-stone-900">
+                  <b>No events seen?</b> Ensure <code>fromBlock</code> is low enough and keep the process running to receive logs.
+                </p>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </TooltipProvider>
   )
 }
 
