@@ -64,7 +64,7 @@ print('✅ Execution completed')
             ['python3', '-c', wrapped_code],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=30
         )
 
         return CodeExecutionResponse(
@@ -76,7 +76,7 @@ print('✅ Execution completed')
     except subprocess.TimeoutExpired:
         return CodeExecutionResponse(
             output="",
-            error="Execution timed out after 5 seconds",
+            error="Execution timed out after 30 seconds",
             success=False
         )
     except Exception as e:
@@ -133,12 +133,12 @@ main().then(() => {{
             with open(temp_file, 'w') as f:
                 f.write(wrapped_code)
 
-            # Execute with Node.js with 5 second timeout
+            # Execute with Node.js with 30 second timeout
             result = subprocess.run(
                 ['node', temp_file],
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=30,
                 cwd=temp_dir
             )
 
@@ -157,7 +157,7 @@ main().then(() => {{
     except subprocess.TimeoutExpired:
         return CodeExecutionResponse(
             output="",
-            error="Execution timed out after 5 seconds",
+            error="Execution timed out after 30 seconds",
             success=False
         )
     except Exception as e:
