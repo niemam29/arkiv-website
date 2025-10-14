@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
+import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPage() {
   const [activeSection, setActiveSection] = useState('setup')
@@ -67,12 +68,8 @@ export default function GettingStartedPage() {
             <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
               TypeScript SDK v0.1.16
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">
-              Getting Started with Arkiv
-            </h1>
-            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Build decentralized applications with TypeScript and Arkiv
-            </p>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Getting Started with Arkiv</h1>
+            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">Build decentralized applications with TypeScript and Arkiv</p>
           </div>
 
           {/* Sticky Navigation */}
@@ -83,9 +80,7 @@ export default function GettingStartedPage() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
-                    activeSection === item.id
-                      ? 'bg-[#FE7445] text-white'
-                      : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
+                    activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -103,7 +98,9 @@ export default function GettingStartedPage() {
               {/* Prerequisites */}
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">What you need before starting (Tested with arkiv-sdk-js@0.1.16 and Node.js 24.7.0)</p>
+                <p className="text-stone-900 font-mono text-sm mb-4">
+                  What you need before starting (Tested with golem-base-sdk@0.1.16 and Node.js 24.7.0)
+                </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
                     <div className="text-[#FE7445] text-xl">✓</div>
@@ -148,7 +145,7 @@ cd arkiv-sdk-practice
 bun init -y
 
 # Install dependencies
-bun add arkiv-sdk-js crypto dotenv tslib
+bun add golem-base-sdk crypto dotenv tslib
 bun add -d @types/node @types/bun typescript`}
                   language="bash"
                 />
@@ -189,7 +186,7 @@ bun add -d @types/node @types/bun typescript`}
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "arkiv-sdk-js": "^0.1.16",
+    "golem-base-sdk": "^0.1.16",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.1",
     "tslib": "^2.8.1"
@@ -225,8 +222,8 @@ WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Basic Connection</h3>
               <CodeBlock
-                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk-js'
-import type { AccountData, ArkivClient } from 'arkiv-sdk-js'
+                code={`import { createClient, Tagged, Annotation } from 'golem-base-sdk'
+import type { AccountData, GolemBaseClient } from 'golem-base-sdk'
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env' })
 import { randomUUID } from 'crypto'
@@ -247,7 +244,7 @@ const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
 // Create a client
-const client: ArkivClient = await createClient(
+const client: GolemBaseClient = await createClient(
   chainId,
   key,
   rpcUrl,
@@ -465,7 +462,9 @@ console.log(\`Created \${results.length} entities\`)`}
             <div className="space-y-6">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Understanding BTL</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">BTL determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.</p>
+                <p className="text-stone-900 font-mono text-sm mb-4">
+                  BTL determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.
+                </p>
 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 bg-white rounded-lg">
@@ -592,8 +591,8 @@ await client.createEntity({
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Full CRUD Application</h3>
               <CodeBlock
-                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk-js'
-import type { AccountData, ArkivClient } from 'arkiv-sdk-js'
+                code={`import { createClient, Tagged, Annotation } from 'golem-base-sdk'
+import type { AccountData, GolemBaseClient } from 'golem-base-sdk'
 import dotenv from 'dotenv'
 import { randomUUID } from 'crypto'
 
@@ -612,7 +611,7 @@ const decoder = new TextDecoder()
 
 async function main() {
   // Connect
-  const client: ArkivClient = await createClient(chainId, key, rpcUrl, wsUrl)
+  const client: GolemBaseClient = await createClient(chainId, key, rpcUrl, wsUrl)
   console.log("✅ Connected to Arkiv testnet!")
 
   // Create
@@ -665,6 +664,7 @@ main().catch(console.error)`}
           </section>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

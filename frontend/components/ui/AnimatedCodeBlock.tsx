@@ -66,7 +66,7 @@ export default function AnimatedCodeBlock({ examples, className = '' }: Animated
         setTimeout(typeChar, typingSpeed)
       } else {
         setIsAnimating(false)
-        setHasAnimated(prev => {
+        setHasAnimated((prev) => {
           const newState = [...prev]
           newState[currentExample] = true
           return newState
@@ -115,7 +115,10 @@ export default function AnimatedCodeBlock({ examples, className = '' }: Animated
       <div className="bg-[#1F1F1F] rounded-2xl p-6 overflow-hidden">
         <div className="flex items-center justify-between mb-4">
           <span className="font-mono text-sm text-white">TypeScript</span>
-          <a href="/playground" className="px-4 py-2 bg-[#FE7446] text-white font-mono text-sm rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2">
+          <a
+            href="/playground"
+            className="px-4 py-2 bg-[#FE7446] text-white font-mono text-sm rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+          >
             <img src="/images/play.svg" alt="Play icon" className="w-4 h-4" />
             <span>Explore Playground</span>
           </a>

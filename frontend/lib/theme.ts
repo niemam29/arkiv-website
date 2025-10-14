@@ -32,8 +32,8 @@ export const lightTheme: Theme = {
   colors: {
     primary: {
       orange: '#FE7446', // Primary orange from Figma
-      blue: '#2563EB',   // Blue accent
-      gray: '#6B7280'    // Gray neutral
+      blue: '#2563EB', // Blue accent
+      gray: '#6B7280' // Gray neutral
     },
     background: {
       primary: '#FFFFFF',

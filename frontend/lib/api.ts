@@ -5,8 +5,8 @@ const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 export const api = axios.create({
   baseURL: `${API_URL}/api`,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 })
 
 // Types for Strapi responses
@@ -48,14 +48,14 @@ export const strapiApi = {
   async getPages(params?: Record<string, any>) {
     return this.fetch('/pages', {
       populate: '*',
-      ...params,
+      ...params
     })
   },
 
   async getPage(slug: string) {
     return this.fetch('/pages', {
       filters: { slug: { $eq: slug } },
-      populate: '*',
+      populate: '*'
     })
   },
 
@@ -64,14 +64,14 @@ export const strapiApi = {
     return this.fetch('/posts', {
       populate: '*',
       sort: 'publishedAt:desc',
-      ...params,
+      ...params
     })
   },
 
   async getPost(slug: string) {
     return this.fetch('/posts', {
       filters: { slug: { $eq: slug } },
-      populate: '*',
+      populate: '*'
     })
   },
 
@@ -79,7 +79,7 @@ export const strapiApi = {
   async getServices(params?: Record<string, any>) {
     return this.fetch('/services', {
       populate: '*',
-      ...params,
+      ...params
     })
   },
 
@@ -87,7 +87,7 @@ export const strapiApi = {
   async getGlobal(params?: Record<string, any>) {
     return this.fetchOne('/global', 1, {
       populate: 'deep',
-      ...params,
+      ...params
     })
-  },
+  }
 }

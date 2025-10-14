@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
+import Footer from '@/components/layout/Footer'
 
 export default function GettingStartedPythonPage() {
   const [activeSection, setActiveSection] = useState('setup')
@@ -67,12 +68,8 @@ export default function GettingStartedPythonPage() {
             <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
               Python SDK
             </div>
-            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">
-              Getting Started with Arkiv (Python)
-            </h1>
-            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
-              Build decentralized applications with Python and Arkiv
-            </p>
+            <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">Getting Started with Arkiv (Python)</h1>
+            <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">Build decentralized applications with Python and Arkiv</p>
           </div>
 
           {/* Sticky Navigation */}
@@ -83,9 +80,7 @@ export default function GettingStartedPythonPage() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-mono transition-all whitespace-nowrap ${
-                    activeSection === item.id
-                      ? 'bg-[#FE7445] text-white'
-                      : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
+                    activeSection === item.id ? 'bg-[#FE7445] text-white' : 'bg-gray-200 text-black hover:bg-[#FE7445] hover:text-white'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -151,7 +146,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 
 # Install dependencies
-pip install arkiv-sdk-python python-dotenv`}
+pip install golem-base-sdk python-dotenv`}
                   language="bash"
                 />
               </div>
@@ -178,8 +173,8 @@ WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Basic Connection</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">Connect to Arkiv using your private key</p>
               <CodeBlock
-                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
-from arkiv_sdk_python.types import AccountData, ArkivCreate, ArkivUpdate
+                code={`from golem_base_sdk import create_client, Tagged, Annotation
+from golem_base_sdk.types import AccountData, GolemBaseCreate, GolemBaseUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -226,7 +221,7 @@ print(f"Connected with address: {owner_address}")`}
                   code={`# Create a new entity with annotations
 entity_id = str(uuid4())
 creates = [
-    ArkivCreate(
+    GolemBaseCreate(
         data=b"Test entity",
         btl=300,  # Block-To-Live: ~10 minutes (each block ~2 seconds)
         string_annotations=[
@@ -240,7 +235,7 @@ creates = [
 create_receipt = await client.create_entities(creates)
 print('Receipt', create_receipt)
 
-# create_entities takes a list of ArkivCreate objects with 4 fields:
+# create_entities takes a list of GolemBaseCreate objects with 4 fields:
 # - data: Payload in bytes
 # - btl: Block-To-Live, number of blocks the entity will exist
 # - string_annotations: Text annotations for querying
@@ -255,7 +250,7 @@ print('Receipt', create_receipt)
                 <CodeBlock
                   code={`# Update the entity
 update_receipt = await client.update_entities([
-    ArkivUpdate(
+    GolemBaseUpdate(
         entity_key=create_receipt[0].entity_key,
         data=b"Updated entity",
         btl=1200,  # Extend to ~40 minutes (1200 blocks * 2 seconds = 2400 seconds)
@@ -384,7 +379,7 @@ async def print_entities(label: str, entities: list):
     batch_id = str(uuid4())
 
     for i in range(10):
-        entities.append(ArkivCreate(
+        entities.append(GolemBaseCreate(
             data=f"Message {i}".encode(),
             btl=100,
             string_annotations=[
@@ -416,7 +411,7 @@ async def print_entities(label: str, entities: list):
     """Manage entity lifetime with BTL"""
 
     # Create entity with specific BTL
-    entity = ArkivCreate(
+    entity = GolemBaseCreate(
         data=b"Temporary data",
         btl=50,  # Expires after 50 blocks (50 blocks * 2 seconds = 100 seconds)
         string_annotations=[Annotation("type", "temporary")],
@@ -463,7 +458,7 @@ async def print_entities(label: str, entities: list):
                     <ul className="space-y-1 text-sm text-blue-900 font-mono">
                       <li>• Update to Python 3.8+</li>
                       <li>• Activate virtual environment before installing packages</li>
-                      <li>• Try: pip install --upgrade arkiv-sdk-python</li>
+                      <li>• Try: pip install --upgrade golem-base-sdk</li>
                     </ul>
                   </div>
 
@@ -487,8 +482,8 @@ async def print_entities(label: str, entities: list):
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Full Application</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">A complete Python application demonstrating all Arkiv features</p>
               <CodeBlock
-                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
-from arkiv_sdk_python.types import ArkivCreate, ArkivUpdate
+                code={`from golem_base_sdk import create_client, Tagged, Annotation
+from golem_base_sdk.types import GolemBaseCreate, GolemBaseUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -554,7 +549,7 @@ async def main():
 
     # 2. CREATE - Single entity with annotations
     entity_id = str(uuid4())
-    entity = ArkivCreate(
+    entity = GolemBaseCreate(
         data=json.dumps({
             "message": "Hello from Arkiv!",
             "timestamp": int(time.time() * 1000),
@@ -585,7 +580,7 @@ async def main():
         print("Query result:", data)
 
     # 4. UPDATE - Modify existing entity
-    update_data = ArkivUpdate(
+    update_data = GolemBaseUpdate(
         entity_key=entity_key,
         data=json.dumps({
             "message": "Updated message from Arkiv!",
@@ -613,7 +608,7 @@ async def main():
     # 6. BATCH OPERATIONS - Create multiple entities
     batch_entities = []
     for i in range(5):
-        batch_entities.append(ArkivCreate(
+        batch_entities.append(GolemBaseCreate(
             data=f"Batch message {i}".encode(),
             btl=100,
             string_annotations=[
@@ -662,15 +657,24 @@ if __name__ == "__main__":
           {/* Footer Links */}
           <div className="mt-16 pt-8 border-t border-stone-300">
             <div className="grid md:grid-cols-3 gap-6">
-              <a href="/getting-started" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/getting-started"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">TypeScript SDK</h3>
                 <p className="text-sm font-mono">Build with TypeScript and Arkiv</p>
               </a>
-              <a href="/docs" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/docs"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">Documentation</h3>
                 <p className="text-sm font-mono">Comprehensive guides and references</p>
               </a>
-              <a href="/playground" className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group">
+              <a
+                href="/playground"
+                className="bg-gray-200 p-6 rounded-xl shadow-figma-card hover:bg-[#FE7445] hover:text-white transition-all group"
+              >
                 <h3 className="font-brutal font-bold text-lg mb-2">Playground</h3>
                 <p className="text-sm font-mono">Try Arkiv in your browser</p>
               </a>
@@ -678,6 +682,7 @@ if __name__ == "__main__":
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

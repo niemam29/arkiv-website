@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <section className="px-4 md:px-[60px] py-[32px] bg-[#181EA9] relative z-20">
+    <section className="px-4 md:px-[60px] py-[32px] bg-[#181EA9]">
       <div className="max-w-[1280px] mx-auto">
         <div className="flex flex-col gap-8">
           {/* Main Footer Content */}
@@ -18,11 +18,32 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <h3 className="font-mono text-sm text-white leading-tight mb-2">Developers</h3>
                 <div className="flex flex-col gap-1">
-                  <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Docs</a>
-                  <a href="/getting-started/typescript" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Getting Started</a>
-                  <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Playground</a>
-                  <a href="https://github.com/arkiv-network" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">GitHub</a>
-                  <a href="/pdf/ARKIV_Litepaper.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Litepaper</a>
+                  <a href="/docs" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Docs
+                  </a>
+                  <a
+                    href="/getting-started/typescript"
+                    className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                  >
+                    Getting Started
+                  </a>
+                  <a href="/playground" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Playground
+                  </a>
+                  <a
+                    href="https://github.com/arkiv-network"
+                    className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                  >
+                    GitHub
+                  </a>
+                  <a
+                    href="/pdf/ARKIV_Litepaper.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                  >
+                    Litepaper
+                  </a>
                 </div>
               </div>
 
@@ -30,9 +51,21 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <h3 className="font-mono text-sm text-white leading-tight mb-2">Connect</h3>
                 <div className="flex flex-col gap-1">
-                  <a href="https://x.com/arkivnetwork" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">X</a>
-                  <a href="https://discord.gg/arkiv" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Discord</a>
-                  <a href="/#events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Events</a>
+                  <a
+                    href="https://twitter.com/arkiv"
+                    className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                  >
+                    X
+                  </a>
+                  <a
+                    href="https://discord.gg/arkiv"
+                    className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors"
+                  >
+                    Discord
+                  </a>
+                  <a href="/#upcoming-events" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Events
+                  </a>
                 </div>
               </div>
 
@@ -40,9 +73,15 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <h3 className="font-mono text-sm text-white leading-tight mb-2">Legal</h3>
                 <div className="flex flex-col gap-1">
-                  <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Privacy Policy</a>
-                  <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Cookie Policy</a>
-                  <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">Terms of Use</a>
+                  <a href="/legal/privacy" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Privacy Policy
+                  </a>
+                  <a href="/legal/cookies" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Cookie Policy
+                  </a>
+                  <a href="/legal/terms" className="font-mono text-sm text-white leading-tight hover:text-gray-200 transition-colors">
+                    Terms of Use
+                  </a>
                 </div>
               </div>
             </div>

@@ -19,7 +19,7 @@ export default function HoverVideo({
   playsInline = true,
   autoPlay = false,
   loop = false,
-  poster,
+  poster
 }: HoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isInView, setIsInView] = useState(false)

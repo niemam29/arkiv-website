@@ -8,23 +8,18 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
-    margin: 0;
-    padding: 0;
   }
 
   body {
     @apply text-neutral-800 bg-white;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden;
   }
 
-  html, body, #__next {
-    margin: 0;
-    padding: 0;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-semibold text-neutral-900;
   }
 }
@@ -48,14 +43,5 @@
 
   .hero-gradient {
     @apply bg-gradient-to-br from-primary-50 via-white to-accent-50;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
   }
 }

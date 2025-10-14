@@ -12,15 +12,7 @@ export default function ConditionalVideo() {
 
   return (
     <div className="fixed inset-0 z-0">
-      <video
-        src="/movies/hero.mp4"
-        className="w-full h-full object-cover"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-      />
+      <video src="/movies/hero.mp4" className="w-full h-full object-cover" autoPlay loop muted playsInline preload="metadata" />
     </div>
   )
 }

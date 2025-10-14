@@ -13,7 +13,7 @@ export default function ArkivHeader() {
     { name: 'Getting Started', href: '/getting-started' },
     { name: 'Playground', href: '/playground' },
     { name: 'Documentation', href: '/docs' },
-    { name: 'GitHub', href: 'https://github.com/arkiv-network' },
+    { name: 'GitHub', href: 'https://github.com/arkiv-network' }
   ]
 
   return (
@@ -21,17 +21,14 @@ export default function ArkivHeader() {
       className="sticky top-0 z-50 border-b"
       style={{
         backgroundColor: theme.colors.background.primary,
-        borderColor: theme.colors.border.primary,
+        borderColor: theme.colors.border.primary
       }}
     >
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div
-              className="font-brutal text-2xl font-black uppercase tracking-wider"
-              style={{ color: theme.colors.text.primary }}
-            >
+            <div className="font-brutal text-2xl font-black uppercase tracking-wider" style={{ color: theme.colors.text.primary }}>
               [ ARKIV ]
             </div>
           </Link>
@@ -95,10 +92,7 @@ export default function ArkivHeader() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div
-            className="md:hidden py-4 border-t"
-            style={{ borderColor: theme.colors.border.primary }}
-          >
+          <div className="md:hidden py-4 border-t" style={{ borderColor: theme.colors.border.primary }}>
             <nav className="space-y-3">
               {navigation.map((item) => (
                 <Link

@@ -6,7 +6,8 @@ import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
-import { CodeBlock } from "@/components/ui/CodeBlock"
+import { CodeBlock } from '@/components/ui/CodeBlock'
+import Footer from '@/components/layout/Footer'
 
 interface BlogPost {
   id: number
@@ -80,14 +81,12 @@ export default function BlogPostPage() {
           <div className="text-center">
             <h1 className="font-mono text-3xl font-bold mb-4">Post Not Found</h1>
             <p className="font-mono text-gray-400 mb-8">{error || 'The blog post you are looking for does not exist.'}</p>
-            <Link
-              href="/blog"
-              className="font-mono text-sm text-white hover:text-gray-300 transition-colors"
-            >
+            <Link href="/blog" className="font-mono text-sm text-white hover:text-gray-300 transition-colors">
               ← Back to Blog
             </Link>
           </div>
         </div>
+        <Footer />
       </div>
     )
   }
@@ -98,10 +97,10 @@ export default function BlogPostPage() {
       <div className="border-b border-black/10">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
-            href="/blog"
+            href="/article"
             className="font-mono text-sm text-gray-600 hover:text-black transition-colors inline-flex items-center gap-2"
           >
-            ← Back to Blog
+            ← Back to Articles
           </Link>
         </div>
       </div>
@@ -111,34 +110,22 @@ export default function BlogPostPage() {
         {/* Category */}
         {post.category && (
           <div className="mb-6">
-            <span className="font-mono text-sm px-3 py-1 bg-black/10 rounded">
-              {post.category.name}
-            </span>
+            <span className="font-mono text-sm px-3 py-1 bg-black/10 rounded">{post.category.name}</span>
           </div>
         )}
 
         {/* Title */}
-        <h1 className="font-mono text-4xl md:text-5xl font-bold mb-6">
-          {post.title}
-        </h1>
+        <h1 className="font-mono text-4xl md:text-5xl font-bold mb-6">{post.title}</h1>
 
         {/* Excerpt */}
-        {post.excerpt && (
-          <p className="font-mono text-xl text-gray-600 mb-8">
-            {post.excerpt}
-          </p>
-        )}
+        {post.excerpt && <p className="font-mono text-xl text-gray-600 mb-8">{post.excerpt}</p>}
 
         {/* Meta Info */}
         <div className="flex items-center gap-4 mb-12 pb-8 border-b border-black/10">
           {post.author && (
             <div className="flex items-center gap-3">
               {post.author.avatar?.url && (
-                <img
-                  src={`https://cms.arkiv.network${post.author.avatar.url}`}
-                  alt={post.author.name}
-                  className="w-10 h-10 rounded-full"
-                />
+                <img src={`https://cms.arkiv.network${post.author.avatar.url}`} alt={post.author.name} className="w-10 h-10 rounded-full" />
               )}
               <span className="font-mono text-sm">{post.author.name}</span>
             </div>
@@ -162,36 +149,17 @@ export default function BlogPostPage() {
                 const match = /language-(\w+)/.exec(className || '')
                 const inline = !match
                 return !inline && match ? (
-                  <CodeBlock
-                    language={match[1]}
-                    code={String(children).replace(/\n$/, '')}
-                  />
+                  <CodeBlock language={match[1]} code={String(children).replace(/\n$/, '')} />
                 ) : (
                   <code className={className} {...props}>
                     {children}
                   </code>
                 )
               },
-              h1: ({ children }) => (
-                <h1 className="font-mono text-3xl font-bold mt-12 mb-6 first:mt-0 text-black">
-                  {children}
-                </h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="font-mono text-2xl font-bold mt-10 mb-4 text-black">
-                  {children}
-                </h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="font-mono text-xl font-bold mt-8 mb-3 text-black">
-                  {children}
-                </h3>
-              ),
-              p: ({ children }) => (
-                <p className="font-mono text-base mb-6 leading-relaxed text-gray-800">
-                  {children}
-                </p>
-              ),
+              h1: ({ children }) => <h1 className="font-mono text-3xl font-bold mt-12 mb-6 first:mt-0 text-black">{children}</h1>,
+              h2: ({ children }) => <h2 className="font-mono text-2xl font-bold mt-10 mb-4 text-black">{children}</h2>,
+              h3: ({ children }) => <h3 className="font-mono text-xl font-bold mt-8 mb-3 text-black">{children}</h3>,
+              p: ({ children }) => <p className="font-mono text-base mb-6 leading-relaxed text-gray-800">{children}</p>,
               a: ({ href, children }) => (
                 <a
                   href={href}
@@ -202,27 +170,19 @@ export default function BlogPostPage() {
                   {children}
                 </a>
               ),
-              ul: ({ children }) => (
-                <ul className="font-mono list-disc pl-6 mb-6 space-y-2 text-gray-800">
-                  {children}
-                </ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="font-mono list-decimal pl-6 mb-6 space-y-2 text-gray-800">
-                  {children}
-                </ol>
-              ),
+              ul: ({ children }) => <ul className="font-mono list-disc pl-6 mb-6 space-y-2 text-gray-800">{children}</ul>,
+              ol: ({ children }) => <ol className="font-mono list-decimal pl-6 mb-6 space-y-2 text-gray-800">{children}</ol>,
               blockquote: ({ children }) => (
-                <blockquote className="font-mono border-l-4 border-gray-300 pl-6 my-6 italic text-gray-600">
-                  {children}
-                </blockquote>
-              ),
+                <blockquote className="font-mono border-l-4 border-gray-300 pl-6 my-6 italic text-gray-600">{children}</blockquote>
+              )
             }}
           >
             {post.content}
           </ReactMarkdown>
         </div>
       </article>
+
+      <Footer />
     </div>
   )
 }

@@ -1,29 +1,29 @@
 'use client'
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Copy, Check, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { Copy, Check, Play } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface CodeBlockProps {
-  code: string;
-  language: string;
-  showCopy?: boolean;
-  showPlayground?: boolean;
-  playgroundTitle?: string;
+  code: string
+  language: string
+  showCopy?: boolean
+  showPlayground?: boolean
+  playgroundTitle?: string
 }
 
 export function CodeBlock({ code, language, showCopy = true, showPlayground = false, playgroundTitle }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false);
-  const router = useRouter();
+  const [copied, setCopied] = useState(false)
+  const router = useRouter()
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handlePlayground = () => {
     // Map titles to playground examples
@@ -31,23 +31,23 @@ export function CodeBlock({ code, language, showCopy = true, showPlayground = fa
       'Connect to Golem DB': 'connect',
       'Create Entity': 'create',
       'Query Entities': 'query'
-    };
-    
-    const exampleKey = exampleMap[playgroundTitle || ''];
+    }
+
+    const exampleKey = exampleMap[playgroundTitle || '']
     if (exampleKey) {
       // Store which example to open
-      sessionStorage.setItem('playgroundExample', exampleKey);
-      sessionStorage.setItem('playgroundLanguage', language);
+      sessionStorage.setItem('playgroundExample', exampleKey)
+      sessionStorage.setItem('playgroundLanguage', language)
     } else {
       // For custom code, store the actual code
-      sessionStorage.setItem('playgroundCode', code);
-      sessionStorage.setItem('playgroundLanguage', language);
+      sessionStorage.setItem('playgroundCode', code)
+      sessionStorage.setItem('playgroundLanguage', language)
       if (playgroundTitle) {
-        sessionStorage.setItem('playgroundTitle', playgroundTitle);
+        sessionStorage.setItem('playgroundTitle', playgroundTitle)
       }
     }
-    router.push('/playground');
-  };
+    router.push('/playground')
+  }
 
   return (
     <div className="relative group">
@@ -64,16 +64,8 @@ export function CodeBlock({ code, language, showCopy = true, showPlayground = fa
           </Button>
         )}
         {showCopy && (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleCopy}
-          >
-            {copied ? (
-              <Check className="h-4 w-4 text-green-500" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+          <Button size="sm" variant="ghost" onClick={handleCopy}>
+            {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
           </Button>
         )}
       </div>
@@ -85,14 +77,14 @@ export function CodeBlock({ code, language, showCopy = true, showPlayground = fa
           borderRadius: '0.5rem',
           background: '#1e1e1e',
           fontSize: '14px',
-          overflow: 'auto',
+          overflow: 'auto'
         }}
         showLineNumbers={true}
         wrapLongLines={false}
-        lineProps={{style: {wordBreak: 'normal', whiteSpace: 'pre'}}}
+        lineProps={{ style: { wordBreak: 'normal', whiteSpace: 'pre' } }}
       >
         {code}
       </SyntaxHighlighter>
     </div>
-  );
+  )
 }
