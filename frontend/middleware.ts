@@ -4,6 +4,11 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
+  // Disable caching to ensure CSP headers are fresh
+  response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+  response.headers.set('Pragma', 'no-cache')
+  response.headers.set('Expires', '0')
+
   // Set Content Security Policy
   response.headers.set(
     'Content-Security-Policy',
