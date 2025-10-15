@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button'
 import StructuredData from '@/components/seo/StructuredData'
 import HoverVideo from '@/components/ui/HoverVideo'
 
+// Force dynamic rendering to enable middleware CSP headers
+export const dynamic = 'force-dynamic'
+
 const AnimatedCodeBlock = dynamic(() => import('@/components/ui/AnimatedCodeBlock'), {
   loading: () => <div className="h-[400px] bg-gray-50 animate-pulse rounded-lg" />,
   ssr: false
