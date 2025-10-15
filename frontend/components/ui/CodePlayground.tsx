@@ -1,199 +1,217 @@
-import { useState, useEffect } from 'react'
-import { Play, Loader2, Copy, Check, RotateCcw, Save, Wallet } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import CodeMirror from '@uiw/react-codemirror'
-import { javascript } from '@codemirror/lang-javascript'
-import { python } from '@codemirror/lang-python'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { useState, useEffect } from "react";
+import {
+  Play,
+  Loader2,
+  Copy,
+  Check,
+  RotateCcw,
+  Save,
+  Wallet,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { python } from "@codemirror/lang-python";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 declare global {
   interface Window {
     ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>
-      isMetaMask?: boolean
-    }
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      isMetaMask?: boolean;
+    };
   }
 }
 
 interface CodePlaygroundProps {
-  initialCode: string
-  initialCodePython?: string
-  language?: 'typescript' | 'python'
-  title?: string
-  description?: string
-  showLanguageToggle?: boolean
+  initialCode: string;
+  initialCodePython?: string;
+  language?: "typescript" | "python";
+  title?: string;
+  description?: string;
+  showLanguageToggle?: boolean;
 }
 
 export function CodePlayground({
   initialCode,
   initialCodePython,
-  language = 'typescript',
+  language = "typescript",
   title,
   description,
-  showLanguageToggle = true
+  showLanguageToggle = true,
 }: CodePlaygroundProps) {
-  const [currentLanguage, setCurrentLanguage] = useState<'typescript' | 'python'>(language)
-  const [tsCode, setTsCode] = useState(initialCode)
-  const [pyCode, setPyCode] = useState(initialCodePython || '')
-  const [output, setOutput] = useState('')
-  const [isRunning, setIsRunning] = useState(false)
-  const [error, setError] = useState('')
-  const [copied, setCopied] = useState(false)
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
-  const [isConnecting, setIsConnecting] = useState(false)
+  const [currentLanguage, setCurrentLanguage] = useState<
+    "typescript" | "python"
+  >(language);
+  const [tsCode, setTsCode] = useState(initialCode);
+  const [pyCode, setPyCode] = useState(initialCodePython || "");
+  const [output, setOutput] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  const code = currentLanguage === 'typescript' ? tsCode : pyCode
-  const setCode = currentLanguage === 'typescript' ? setTsCode : setPyCode
+  const code = currentLanguage === "typescript" ? tsCode : pyCode;
+  const setCode = currentLanguage === "typescript" ? setTsCode : setPyCode;
 
   // Update code when example changes
   useEffect(() => {
-    setTsCode(initialCode)
-    setPyCode(initialCodePython || '')
-    setOutput('')
-    setError('')
-  }, [initialCode, initialCodePython])
+    setTsCode(initialCode);
+    setPyCode(initialCodePython || "");
+    setOutput("");
+    setError("");
+  }, [initialCode, initialCodePython]);
 
   const connectMetaMask = async () => {
-    if (typeof window.ethereum === 'undefined') {
-      setError('MetaMask is not installed. Please install MetaMask to use this feature.')
-      return
+    if (typeof window.ethereum === "undefined") {
+      setError(
+        "MetaMask is not installed. Please install MetaMask to use this feature.",
+      );
+      return;
     }
 
-    setIsConnecting(true)
+    setIsConnecting(true);
     try {
       const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      })
+        method: "eth_requestAccounts",
+      });
       if (accounts && accounts.length > 0) {
-        setWalletAddress(accounts[0])
+        setWalletAddress(accounts[0]);
 
         // Add Arkiv network to MetaMask if not already added
         try {
           await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
+            method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: '0xe0087f829', // 60138453033 in hex - correct Chain ID from RPC
-                chainName: 'Arkiv ETHWarsaw Testnet',
+                chainId: "0xe0087f829", // 60138453033 in hex - correct Chain ID from RPC
+                chainName: "Arkiv ETHWarsaw Testnet",
                 nativeCurrency: {
-                  name: 'ETH',
-                  symbol: 'ETH',
-                  decimals: 18
+                  name: "ETH",
+                  symbol: "ETH",
+                  decimals: 18,
                 },
-                rpcUrls: ['https://kaolin.hoodi.arkiv.network/rpc'],
-                blockExplorerUrls: []
-              }
-            ]
-          })
+                rpcUrls: ["https://kaolin.hoodi.arkiv.network/rpc"],
+                blockExplorerUrls: [],
+              },
+            ],
+          });
         } catch (addError) {
-          console.log('Network already added or user rejected')
+          console.log("Network already added or user rejected");
         }
 
         // Switch to Arkiv network
         await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0xe0087f829' }]
-        })
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0xe0087f829" }],
+        });
 
-        setOutput(`Connected to MetaMask!\nWallet: ${accounts[0]}\nNetwork: Arkiv ETHWarsaw Testnet`)
+        setOutput(
+          `Connected to MetaMask!\nWallet: ${accounts[0]}\nNetwork: Arkiv ETHWarsaw Testnet`,
+        );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to connect MetaMask')
+      setError(
+        err instanceof Error ? err.message : "Failed to connect MetaMask",
+      );
     } finally {
-      setIsConnecting(false)
+      setIsConnecting(false);
     }
-  }
+  };
 
   const handleRun = async () => {
-    setIsRunning(true)
-    setError('')
-    setOutput('')
+    setIsRunning(true);
+    setError("");
+    setOutput("");
 
     try {
-      const response = await fetch('/api/execute', {
-        method: 'POST',
+      const response = await fetch("/api/execute", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           code,
           language: currentLanguage,
-          walletAddress: walletAddress // Pass connected wallet if available
-        })
-      })
+          walletAddress: walletAddress, // Pass connected wallet if available
+        }),
+      });
 
       if (!response.ok) {
         // If response is not ok, check if it's JSON or HTML
-        const contentType = response.headers.get('content-type')
-        if (contentType && contentType.includes('application/json')) {
-          const errorData = await response.json()
-          throw new Error(errorData.error || 'Execution failed')
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Execution failed");
         } else {
           // It's likely an HTML error page (404, 500, etc.)
-          throw new Error(`API Error: ${response.status} ${response.statusText}. The code execution endpoint is not available.`)
+          throw new Error(
+            `API Error: ${response.status} ${response.statusText}. The code execution endpoint is not available.`,
+          );
         }
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
-      setOutput(data.output)
+      setOutput(data.output);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleReset = () => {
-    if (currentLanguage === 'typescript') {
-      setTsCode(initialCode)
+    if (currentLanguage === "typescript") {
+      setTsCode(initialCode);
     } else {
-      setPyCode(initialCodePython || '')
+      setPyCode(initialCodePython || "");
     }
-    setOutput('')
-    setError('')
-  }
+    setOutput("");
+    setError("");
+  };
 
   const handleSave = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`playground-${title}-${currentLanguage}`, code)
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`playground-${title}-${currentLanguage}`, code);
     }
     // Show saved indicator
-    const savedIndicator = document.getElementById('saved-indicator')
+    const savedIndicator = document.getElementById("saved-indicator");
     if (savedIndicator) {
-      savedIndicator.classList.remove('opacity-0')
+      savedIndicator.classList.remove("opacity-0");
       setTimeout(() => {
-        savedIndicator.classList.add('opacity-0')
-      }, 2000)
+        savedIndicator.classList.add("opacity-0");
+      }, 2000);
     }
-  }
+  };
 
-  const handleLanguageSwitch = (lang: 'typescript' | 'python') => {
-    setCurrentLanguage(lang)
-    setOutput('')
-    setError('')
-  }
+  const handleLanguageSwitch = (lang: "typescript" | "python") => {
+    setCurrentLanguage(lang);
+    setOutput("");
+    setError("");
+  };
 
   // Load saved code on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTs = localStorage.getItem(`playground-${title}-typescript`)
-      const savedPy = localStorage.getItem(`playground-${title}-python`)
+    if (typeof window !== "undefined") {
+      const savedTs = localStorage.getItem(`playground-${title}-typescript`);
+      const savedPy = localStorage.getItem(`playground-${title}-python`);
       if (savedTs) {
-        setTsCode(savedTs)
+        setTsCode(savedTs);
       }
       if (savedPy) {
-        setPyCode(savedPy)
+        setPyCode(savedPy);
       }
     }
-  }, [title])
+  }, [title]);
 
   return (
     <div className="w-full">
@@ -214,17 +232,21 @@ export function CodePlayground({
               {showLanguageToggle && initialCodePython && (
                 <div className="flex gap-1 bg-gray-800 rounded-md p-1">
                   <button
-                    onClick={() => handleLanguageSwitch('typescript')}
+                    onClick={() => handleLanguageSwitch("typescript")}
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                      currentLanguage === 'typescript' ? 'bg-purple-600 text-white' : 'text-white hover:text-white'
+                      currentLanguage === "typescript"
+                        ? "bg-purple-600 text-white"
+                        : "text-white hover:text-white"
                     }`}
                   >
                     TypeScript
                   </button>
                   <button
-                    onClick={() => handleLanguageSwitch('python')}
+                    onClick={() => handleLanguageSwitch("python")}
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                      currentLanguage === 'python' ? 'bg-purple-600 text-white' : 'text-white hover:text-white'
+                      currentLanguage === "python"
+                        ? "bg-purple-600 text-white"
+                        : "text-white hover:text-white"
                     }`}
                   >
                     Python
@@ -236,14 +258,16 @@ export function CodePlayground({
             {/* Right: wallet button (left) + icon buttons (right) */}
             <div className="flex items-center gap-2">
               {/* Wallet button — compact width, truncates address */}
-              {currentLanguage === 'typescript' ? (
+              {currentLanguage === "typescript" ? (
                 <Button
                   onClick={connectMetaMask}
                   disabled={isConnecting || !!walletAddress}
-                  variant={walletAddress ? 'secondary' : 'outline'}
+                  variant={walletAddress ? "secondary" : "outline"}
                   className="h-8 px-2 min-w-[120px] max-w-[220px] md:max-w-[260px] overflow-hidden"
-                  aria-label={walletAddress ? 'Wallet connected' : 'Connect MetaMask'}
-                  title={walletAddress || 'Connect MetaMask'}
+                  aria-label={
+                    walletAddress ? "Wallet connected" : "Connect MetaMask"
+                  }
+                  title={walletAddress || "Connect MetaMask"}
                 >
                   {isConnecting ? (
                     <span className="flex items-center gap-2">
@@ -275,13 +299,35 @@ export function CodePlayground({
               )}
 
               {/* Icon actions */}
-              <Button size="sm" variant="ghost" onClick={handleSave} className="h-8" aria-label="Save">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleSave}
+                className="h-8"
+                aria-label="Save"
+              >
                 <Save className="h-4 w-4" />
               </Button>
-              <Button size="sm" variant="ghost" onClick={handleCopy} className="h-8" aria-label="Copy">
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleCopy}
+                className="h-8"
+                aria-label="Copy"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
-              <Button size="sm" variant="ghost" onClick={handleReset} className="h-8" aria-label="Reset">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleReset}
+                className="h-8"
+                aria-label="Reset"
+              >
                 <RotateCcw className="h-4 w-4" />
               </Button>
               <Button
@@ -293,7 +339,11 @@ export function CodePlayground({
                 aria-label="Run"
                 title="Run (Ctrl/Cmd + Enter)"
               >
-                {isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                {isRunning ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -303,7 +353,11 @@ export function CodePlayground({
               value={code}
               height="400px"
               theme={oneDark}
-              extensions={[currentLanguage === 'typescript' ? javascript({ typescript: true }) : python()]}
+              extensions={[
+                currentLanguage === "typescript"
+                  ? javascript({ typescript: true })
+                  : python(),
+              ]}
               onChange={(value) => setCode(value)}
               className="text-sm"
             />
@@ -314,7 +368,10 @@ export function CodePlayground({
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <h4 className="text-sm font-medium text-black">Output</h4>
-            <div id="saved-indicator" className="text-sm text-green-500 opacity-0 transition-opacity">
+            <div
+              id="saved-indicator"
+              className="text-sm text-green-500 opacity-0 transition-opacity"
+            >
               Saved!
             </div>
           </div>
@@ -327,9 +384,16 @@ export function CodePlayground({
             )}
 
             {output ? (
-              <pre className="text-sm text-white font-mono whitespace-pre-wrap">{output}</pre>
+              <pre className="text-sm text-white font-mono whitespace-pre-wrap">
+                {output}
+              </pre>
             ) : (
-              !error && !isRunning && <p className="text-white text-sm">Click "Run Code" to execute your code</p>
+              !error &&
+              !isRunning && (
+                <p className="text-white text-sm">
+                  Click "Run Code" to execute your code
+                </p>
+              )
             )}
 
             {isRunning && (
@@ -342,5 +406,5 @@ export function CodePlayground({
         </div>
       </div>
     </div>
-  )
+  );
 }
