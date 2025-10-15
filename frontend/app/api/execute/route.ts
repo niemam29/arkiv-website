@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-    const response = await fetch(`${EXECUTION_SERVICE_URL}/execute`, {
+    const response = await fetch(`https://arkiv.network/api/execute`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
