@@ -27,7 +27,6 @@ services:
       - "traefik.http.routers.arkiv-website.entrypoints=websecure"
       - "traefik.http.routers.arkiv-website.tls=true"
       - "traefik.http.routers.arkiv-website.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.arkiv-website.middlewares=umami-analytics"
       - "traefik.http.routers.arkiv-website.priority=5"
       # Service definition
       - "traefik.http.services.arkiv-website.loadbalancer.server.port=3000"
