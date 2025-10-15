@@ -526,11 +526,11 @@ You’ll still use the same building blocks (account, client, and connection), b
                   language="bash"
                   code={`# Using npm
 npm init -y
-npm i arkiv-base-sdk dotenv tslib ethers
+npm i arkiv-sdk-js dotenv tslib ethers
 
 # or with Bun
 bun init -y
-bun add arkiv-base-sdk dotenv tslib ethers`}
+bun add arkiv-sdk-js dotenv tslib ethers`}
                 />
               </div>
 
