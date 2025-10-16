@@ -315,7 +315,7 @@ print(f"Created entity: {entity.key}")
 | Use Cases | Web, APIs, Node.js | Data Science, Backend |
 
 **Resources:**
-[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk) — [GitHub](https://github.com/Arkiv-network/arkiv-sdk) — [Discord](https://discord.gg/arkiv)
+[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk) — [GitHub](https://github.com/Arkiv-Network/arkiv-sdk-js) — [Discord](https://discord.gg/arkiv)
 `
 }
 
@@ -624,7 +624,7 @@ const data = await client.getStorageValue(entityKey)
 ### **SDK Documentation**
 - **📦 NPM Package**: [arkiv-sdk](https://www.npmjs.com/package/arkiv-sdk)
 - **📚 TypeScript Docs**: [API Reference](https://docs.golemdb.io/typescript-sdk)
-- **🛠️ GitHub Repository**: [Source Code](https://github.com/Arkiv-network/arkiv-sdk)
+- **🛠️ GitHub Repository**: [Source Code](https://github.com/Arkiv-Network/arkiv-sdk-js)
 
 ## 🎯 **Best Practices**
 
