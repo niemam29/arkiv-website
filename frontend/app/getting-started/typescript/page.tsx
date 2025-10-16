@@ -494,7 +494,7 @@ You’ll still use the same building blocks (account, client, and connection), b
                   Prerequisites
                 </h3>
                 <p className="text-stone-900 font-mono text-sm mb-4">
-                  Tested with arkiv-sdk-js@0.1.16 and Node.js 20+. Bun also works.
+                  Tested with arkiv-sdk@0.1.16 and Node.js 20+. Bun also works.
                   works.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -526,11 +526,11 @@ You’ll still use the same building blocks (account, client, and connection), b
                   language="bash"
                   code={`# Using npm
 npm init -y
-npm i arkiv-sdk-js dotenv tslib ethers
+npm i arkiv-sdk dotenv tslib ethers
 
 # or with Bun
 bun init -y
-bun add arkiv-sdk-js dotenv tslib ethers`}
+bun add arkiv-sdk dotenv tslib ethers`}
                 />
               </div>
 
@@ -569,7 +569,7 @@ bun add arkiv-sdk-js dotenv tslib ethers`}
     "dev": "tsx watch voting-board.ts"
   },
   "dependencies": {
-    "arkiv-base-sdk": "^0.1.16",
+    "arkiv-sdk": "^0.1.16",
     "dotenv": "^16.4.5",
     "tslib": "^2.8.1",
     "ethers": "^6.13.4"
