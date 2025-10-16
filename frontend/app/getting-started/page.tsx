@@ -103,7 +103,7 @@ export default function GettingStartedPage() {
               {/* Prerequisites */}
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 <h3 className="text-xl font-brutal font-bold mb-4 text-black">Prerequisites</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">What you need before starting (Tested with arkiv-sdk-js@0.1.16 and Node.js 24.7.0)</p>
+                <p className="text-stone-900 font-mono text-sm mb-4">What you need before starting (Tested with arkiv-sdk@0.1.16 and Node.js 24.7.0)</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
                     <div className="text-[#FE7445] text-xl">✓</div>
@@ -148,7 +148,7 @@ cd arkiv-sdk-practice
 bun init -y
 
 # Install dependencies
-bun add arkiv-sdk-js crypto dotenv tslib
+bun add arkiv-sdk crypto dotenv tslib
 bun add -d @types/node @types/bun typescript`}
                   language="bash"
                 />
@@ -189,7 +189,7 @@ bun add -d @types/node @types/bun typescript`}
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "arkiv-sdk-js": "^0.1.16",
+    "arkiv-sdk": "^0.1.16",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.1",
     "tslib": "^2.8.1"
@@ -225,8 +225,8 @@ WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Basic Connection</h3>
               <CodeBlock
-                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk-js'
-import type { AccountData, ArkivClient } from 'arkiv-sdk-js'
+                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk'
+import type { AccountData, ArkivClient } from 'arkiv-sdk'
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env' })
 import { randomUUID } from 'crypto'
@@ -592,8 +592,8 @@ await client.createEntity({
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Full CRUD Application</h3>
               <CodeBlock
-                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk-js'
-import type { AccountData, ArkivClient } from 'arkiv-sdk-js'
+                code={`import { createClient, Tagged, Annotation } from 'arkiv-sdk'
+import type { AccountData, ArkivClient } from 'arkiv-sdk'
 import dotenv from 'dotenv'
 import { randomUUID } from 'crypto'
 

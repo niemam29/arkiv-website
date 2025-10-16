@@ -103,7 +103,7 @@ type = "note" && priority > 3 && created > 1672531200
 Quick example:
 
 \`\`\`typescript
-import { createClient, Annotation } from 'arkiv-sdk-js'
+import { createClient, Annotation } from 'arkiv-sdk'
 
 const client = await createClient(
   60138453033,
@@ -167,14 +167,14 @@ const sdkContent = {
 ## Installation
 
 \`\`\`bash
-bun add arkiv-sdk-js crypto dotenv
+bun add arkiv-sdk crypto dotenv
 # or
-npm install arkiv-sdk-js crypto dotenv
+npm install arkiv-sdk crypto dotenv
 \`\`\`
 
 ## Quickstart
 \`\`\`typescript
-import { createClient, Annotation, Tagged } from 'arkiv-sdk-js'
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
 import { randomUUID } from 'crypto'
 
 // Create client connection
@@ -315,7 +315,7 @@ print(f"Created entity: {entity.key}")
 | Use Cases | Web, APIs, Node.js | Data Science, Backend |
 
 **Resources:**
-[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk-js) — [GitHub](https://github.com/Arkiv-network/arkiv-sdk-js) — [Discord](https://discord.gg/arkiv)
+[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk) — [GitHub](https://github.com/Arkiv-network/arkiv-sdk) — [Discord](https://discord.gg/arkiv)
 `
 }
 
@@ -622,9 +622,9 @@ const data = await client.getStorageValue(entityKey)
 - **📊 Network Dashboard**: [Status & Metrics](https://kaolin.hoodi.arkiv.network/)
 
 ### **SDK Documentation**
-- **📦 NPM Package**: [arkiv-sdk-js](https://www.npmjs.com/package/arkiv-sdk-js)
+- **📦 NPM Package**: [arkiv-sdk](https://www.npmjs.com/package/arkiv-sdk)
 - **📚 TypeScript Docs**: [API Reference](https://docs.golemdb.io/typescript-sdk)
-- **🛠️ GitHub Repository**: [Source Code](https://github.com/Arkiv-network/arkiv-sdk-js)
+- **🛠️ GitHub Repository**: [Source Code](https://github.com/Arkiv-network/arkiv-sdk)
 
 ## 🎯 **Best Practices**
 
@@ -672,7 +672,7 @@ Step-by-step guides to help you build with Arkiv using real examples.
 Create a simple note-taking app with automatic expiration and annotations.
 
 \`\`\`typescript
-import { createClient, Annotation } from 'arkiv-sdk-js'
+import { createClient, Annotation } from 'arkiv-sdk'
 
 const client = await createClient(
   60138453033, // Arkiv testnet
