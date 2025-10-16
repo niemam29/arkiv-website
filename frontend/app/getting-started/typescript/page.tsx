@@ -617,7 +617,7 @@ WS_URL=wss://your.rpc.endpoint/rpc/ws    # e.g. wss://kaolin.hoodi.arkiv.network
                 <CodeBlock
                   language="typescript"
                   code={`import 'dotenv/config';
-import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'arkiv-base-sdk';
+import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'arkiv-sdk';
 
 // Helper: query RPC for basic network info
 async function getChainId(rpcUrl: string): Promise<number> {
