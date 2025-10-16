@@ -37,6 +37,20 @@ export default function ConditionalHeader({ navigation: initialNavigation }: Con
               href: child.url
             }))
           }))
+
+          // Check if Blog already exists in CMS
+          const hasBlog = items.some((item: any) => item.name === 'Blog' || item.href === '/blog')
+
+          // If Blog is not in CMS, add it before "About"
+          if (!hasBlog) {
+            const aboutIndex = items.findIndex((item: any) => item.name === 'About')
+            if (aboutIndex > -1) {
+              items.splice(aboutIndex, 0, { name: 'Blog', href: '/blog' })
+            } else {
+              items.push({ name: 'Blog', href: '/blog' })
+            }
+          }
+
           setNavigation(items)
         }
       } catch (error) {
