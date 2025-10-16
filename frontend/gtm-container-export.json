@@ -1,0 +1,686 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2025-10-16 12:00:00",
+  "containerVersion": {
+    "path": "accounts/6317153898/containers/232269051/versions/5",
+    "accountId": "6317153898",
+    "containerId": "232269051",
+    "containerVersionId": "5",
+    "name": "Arkiv GTM - All Events Configured",
+    "description": "Complete GTM configuration with all custom events for arkiv.network including get_started_click, litepaper_download, code_execution, wallet_connect, code_copy, external_link_click, scroll_depth, and guide_start events",
+    "container": {
+      "path": "accounts/6317153898/containers/232269051",
+      "accountId": "6317153898",
+      "containerId": "232269051",
+      "name": "arkiv.network",
+      "publicId": "GTM-KW755WH8",
+      "usageContext": ["WEB"],
+      "fingerprint": "1760350275936",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6317153898/containers/232269051/workspaces?apiLink=container"
+    },
+    "tag": [
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "tagId": "5",
+        "name": "GA4 - Configuration",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "G-T51L4JTDZV"
+          }
+        ],
+        "fingerprint": "1760598705861",
+        "firingTriggerId": ["2147479573"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "tagId": "6",
+        "name": "Event - Get Started Click",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-T51L4JTDZV"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "get_started_click"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "button_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Button Location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "button_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "page_path"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Page Path}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599130000",
+        "firingTriggerId": ["10"],
+        "tagFiringOption": "UNLIMITED",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "tagId": "7",
+        "name": "Event - Litepaper Download",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-T51L4JTDZV"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "litepaper_download"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "button_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Button Location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "file_name"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "page_path"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Page Path}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599130001",
+        "firingTriggerId": ["11"],
+        "tagFiringOption": "UNLIMITED",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "tagId": "8",
+        "name": "Event - Code Execution",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-T51L4JTDZV"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "code_execution"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "language"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - language}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "code_type"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - code_type}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "execution_status"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - execution_status}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "page_path"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Page Path}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599130002",
+        "firingTriggerId": ["12"],
+        "tagFiringOption": "UNLIMITED",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "tagId": "9",
+        "name": "Event - Wallet Connect",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-T51L4JTDZV"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "wallet_connect"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "wallet_type"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - wallet_type}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "network"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - network}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "page_path"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Page Path}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599130003",
+        "firingTriggerId": ["13"],
+        "tagFiringOption": "UNLIMITED",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "triggerId": "10",
+        "name": "Click - Get Started Buttons",
+        "type": "CLICK",
+        "filter": [
+          {
+            "type": "MATCH_REGEX",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Text}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "(?i)build now|get started|quickstart|getting started"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599140000"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "triggerId": "11",
+        "name": "Click - Litepaper",
+        "type": "CLICK",
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click URL}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "ARKIV_Litepaper"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599140001"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "triggerId": "12",
+        "name": "Custom Event - Code Executed",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "codeExecuted"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599140002"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "triggerId": "13",
+        "name": "Custom Event - Wallet Connected",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "walletConnected"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760599140003"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "20",
+        "name": "Button Location",
+        "type": "jsm",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "javascript",
+            "value": "function() {\n  var btn = {{Click Element}};\n  if (!btn) return 'unknown';\n  \n  if (btn.closest('section') && btn.closest('section').className.includes('hero')) {\n    return 'hero';\n  }\n  \n  if (btn.closest('footer')) {\n    return 'footer';\n  }\n  \n  if (btn.closest('.docs-content') || btn.closest('[class*=\"docs\"]')) {\n    return 'docs';\n  }\n  \n  if (window.location.pathname.includes('/getting-started')) {\n    return 'getting-started';\n  }\n  \n  return 'body';\n}"
+          }
+        ],
+        "fingerprint": "1760599150000"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "21",
+        "name": "DLV - language",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "language"
+          }
+        ],
+        "fingerprint": "1760599150001"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "22",
+        "name": "DLV - code_type",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "code_type"
+          }
+        ],
+        "fingerprint": "1760599150002"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "23",
+        "name": "DLV - execution_status",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "execution_status"
+          }
+        ],
+        "fingerprint": "1760599150003"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "24",
+        "name": "DLV - wallet_type",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "wallet_type"
+          }
+        ],
+        "fingerprint": "1760599150004"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "variableId": "25",
+        "name": "DLV - network",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "network"
+          }
+        ],
+        "fingerprint": "1760599150005"
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "REFERRER",
+        "name": "Referrer"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "EVENT",
+        "name": "Event"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "CLICK_ELEMENT",
+        "name": "Click Element"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "CLICK_CLASSES",
+        "name": "Click Classes"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "CLICK_ID",
+        "name": "Click ID"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "CLICK_URL",
+        "name": "Click URL"
+      },
+      {
+        "accountId": "6317153898",
+        "containerId": "232269051",
+        "type": "CLICK_TEXT",
+        "name": "Click Text"
+      }
+    ],
+    "fingerprint": "1760599160000",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6317153898/containers/232269051/versions/5?apiLink=version"
+  }
+}

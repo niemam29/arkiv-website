@@ -82,10 +82,43 @@ export default async function RootLayout({
         {/* End cookieyes banner */}
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
+        {/* Google Tag Manager - DataLayer Init */}
+        <Script
+          id="gtm-datalayer"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+            `
+          }}
+        />
+
+        {/* Google Analytics 4 - Direct Implementation */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-T51L4JTDZV"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga4-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-T51L4JTDZV', {
+                page_path: window.location.pathname,
+              });
+            `
+          }}
+        />
+        {/* End Google Analytics 4 */}
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

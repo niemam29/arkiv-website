@@ -21,6 +21,7 @@ declare global {
       request: (args: { method: string; params?: any[] }) => Promise<any>;
       isMetaMask?: boolean;
     };
+    dataLayer?: any[];
   }
 }
 
@@ -111,6 +112,16 @@ export function CodePlayground({
         setOutput(
           `Connected to MetaMask!\nWallet: ${accounts[0]}\nNetwork: Arkiv ETHWarsaw Testnet`,
         );
+
+        // GTM Event: Wallet Connected
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'walletConnected',
+            wallet_type: 'MetaMask',
+            network: 'Arkiv ETHWarsaw Testnet',
+            page_path: window.location.pathname
+          });
+        }
       }
     } catch (err) {
       setError(
@@ -156,8 +167,30 @@ export function CodePlayground({
       const data = await response.json();
 
       setOutput(data.output);
+
+      // GTM Event: Code Execution Success
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'codeExecuted',
+          language: currentLanguage,
+          code_type: code === (currentLanguage === 'typescript' ? initialCode : initialCodePython) ? 'example' : 'custom',
+          execution_status: 'success',
+          page_path: window.location.pathname
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
+
+      // GTM Event: Code Execution Error
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'codeExecuted',
+          language: currentLanguage,
+          code_type: code === (currentLanguage === 'typescript' ? initialCode : initialCodePython) ? 'example' : 'custom',
+          execution_status: 'error',
+          page_path: window.location.pathname
+        });
+      }
     } finally {
       setIsRunning(false);
     }
@@ -167,6 +200,16 @@ export function CodePlayground({
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+
+    // GTM Event: Code Copied
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'codeCopied',
+        language: currentLanguage,
+        code_snippet_type: title || 'playground',
+        page_path: window.location.pathname
+      });
+    }
   };
 
   const handleReset = () => {
