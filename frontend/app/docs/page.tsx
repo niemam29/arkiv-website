@@ -47,7 +47,7 @@ Arkiv treats data as a first-class citizen on Ethereum:
 
 **Instant Queries** — SQL-like queries with annotations, real-time data retrieval, no external indexing required.
 
-**Cost-Efficient** — Pay only for storage duration (BTL - Blocks To Live), automatic data pruning, no permanent storage fees.
+**Cost-Efficient** — Pay only for storage duration (Expires In), automatic data pruning, no permanent storage fees.
 
 **Ethereum-Native** — Built on Ethereum infrastructure, fully transparent and verifiable, compatible with existing Web3 tools.
 
@@ -64,7 +64,7 @@ Final settlement and security. Proof verification, commitments, and ultimate sou
 Data management and registry. DB-chain coordination, cross-chain synchronization, deterministic query resolution.
 
 **Layer 3: Specialized DB-Chains**
-High-performance data operations. CRUD via JSON-RPC, indexed queries with annotations, programmable expiration (BTL).
+High-performance data operations. CRUD via JSON-RPC, indexed queries with annotations, programmable expiration (Expires In).
 
 ## Use Cases
 
@@ -82,7 +82,7 @@ High-performance data operations. CRUD via JSON-RPC, indexed queries with annota
 
 **Annotations** — Key-value pairs for querying. String annotations like \`type = "note"\` or numeric like \`priority = 5\`.
 
-**BTL (Blocks To Live)** — Automatic expiration:
+**Expires In** — Automatic expiration:
 - \`900\` blocks ≈ 30 minutes
 - \`43200\` blocks ≈ 24 hours
 - \`302400\` blocks ≈ 7 days
@@ -114,7 +114,7 @@ const client = await createClient(
 
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode("Hello Arkiv!"),
-  btl: 1800,
+  expires_in: 1800,
   stringAnnotations: [new Annotation("type", "greeting")],
   numericAnnotations: []
 }])
@@ -189,7 +189,7 @@ const client = await createClient(
 const noteData = { title: "My Note", content: "Hello Arkiv!" }
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify(noteData)),
-  btl: 43200, // 24 hours
+  expires_in: 43200, // 24 hours
   stringAnnotations: [
     new Annotation("type", "note"),
     new Annotation("id", randomUUID())
@@ -223,7 +223,7 @@ const updateReceipt = await client.updateEntities([{
     title: "Updated Note",
     content: "This note has been updated"
   })),
-  btl: 86400, // Extend to 48 hours
+  expires_in: 86400, // Extend to 48 hours
   stringAnnotations: [new Annotation("type", "note")],
   numericAnnotations: [new Annotation("updated", Date.now())]
 }])
@@ -257,7 +257,7 @@ const unwatch = client.watchLogs({
 // Create multiple entities at once
 const entities = Array.from({ length: 5 }, (_, i) => ({
   data: new TextEncoder().encode(\`Batch item \${i}\`),
-  btl: 1800, // 1 hour
+  expires_in: 1800, // 1 hour
   stringAnnotations: [new Annotation("type", "batch")],
   numericAnnotations: [new Annotation("index", i)]
 }))
@@ -266,7 +266,7 @@ const batchReceipts = await client.createEntities(entities)
 console.log(\`Created \${batchReceipts.length} entities\`)
 \`\`\`
 
-## BTL Management
+## Expires In Management
 \`\`\`typescript
 // Extend entity lifetime
 const extendReceipts = await client.extendEntities([{
@@ -293,7 +293,7 @@ client = ArkivClient(
 # Create entity
 entity = client.create_entity(
     data={"message": "Hello from Python!"},
-    btl=43200,  # 24 hours
+    expires_in=43200,  # 24 hours
     annotations={
         "type": "greeting",
         "language": "python"
@@ -354,7 +354,7 @@ const client = await createClient(
 // Create single entity
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify({ message: "Hello" })),
-  btl: 43200, // ~24 hours (blocks to live)
+  expires_in: 43200, // ~24 hours (blocks to live)
   stringAnnotations: [
     new Annotation("type", "message"),
     new Annotation("category", "general")
@@ -414,7 +414,7 @@ const updateReceipt = await client.updateEntities([{
     message: "Updated content",
     lastModified: Date.now()
   })),
-  btl: 86400, // Extend to ~48 hours
+  expires_in: 86400, // Extend to ~48 hours
   stringAnnotations: [
     new Annotation("type", "message"),
     new Annotation("status", "updated")
@@ -442,7 +442,7 @@ deleteReceipts.forEach(receipt => {
 
 ### ⏰ **Extend Entity Lifetime**
 
-Add more blocks to entity's BTL (Blocks To Live).
+Add more blocks to entity's Expires In.
 
 \`\`\`typescript
 const extendReceipts = await client.extendEntities([{
@@ -494,7 +494,7 @@ Perform multiple operations efficiently.
 // Create multiple entities
 const entities = Array.from({ length: 10 }, (_, i) => ({
   data: new TextEncoder().encode(\`Batch item \${i}\`),
-  btl: 1800,
+  expires_in: 1800,
   stringAnnotations: [new Annotation("type", "batch")],
   numericAnnotations: [new Annotation("index", i)]
 }))
@@ -507,11 +507,11 @@ const batchItems = await client.queryEntities('type = "batch"')
 console.log(\`📊 Found \${batchItems.length} batch items\`)
 \`\`\`
 
-## 💡 **BTL (Blocks To Live) Reference**
+## 💡 **Expires In Reference**
 
 Understanding entity expiration times:
 
-| BTL Value | Time (approx.) | Use Case |
+| Expires In Value | Time (approx.) | Use Case |
 |-----------|----------------|----------|
 | \`900\` | 30 minutes | Session data, temporary cache |
 | \`1800\` | 1 hour | Short-term storage, clipboard |
@@ -637,12 +637,12 @@ const notes = await client.queryEntities('type = "note" && priority > 3')
 const all = await client.queryEntities('type = "note"') // Returns everything
 \`\`\`
 
-### **Proper BTL Management**
+### **Proper Expires In Management**
 \`\`\`typescript
-// ✅ Good: Choose appropriate BTL for data type
-const sessionData = { btl: 900 }    // 30 minutes
-const dailyNotes = { btl: 43200 }   // 24 hours
-const weeklyBackup = { btl: 302400 } // 7 days
+// ✅ Good: Choose appropriate Expires In for data type
+const sessionData = { expires_in: 900 }    // 30 minutes
+const dailyNotes = { expires_in: 43200 }   // 24 hours
+const weeklyBackup = { expires_in: 302400 } // 7 days
 \`\`\`
 
 ### **Error Handling**
@@ -691,7 +691,7 @@ const noteData = {
 
 const createReceipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify(noteData)),
-  btl: 43200, // ~24 hours (43200 blocks * 2 seconds)
+  expires_in: 43200, // ~24 hours (43200 blocks * 2 seconds)
   stringAnnotations: [
     new Annotation("type", "note"),
     new Annotation("noteId", noteId),

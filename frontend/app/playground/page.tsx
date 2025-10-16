@@ -57,7 +57,7 @@ const wallet = new ethers.Wallet(mockPrivateKeyWithPrefix, provider);
 
 // Arkiv contract ABI (simplified example)
 const abi = [
-  "function createEntity(bytes data, uint256 btl, tuple(string key, string value)[] stringAnnotations) returns (bytes32)",
+  "function createEntity(bytes data, uint256 expires_in, tuple(string key, string value)[] stringAnnotations) returns (bytes32)",
   "function getEntity(bytes32 entityKey) view returns (bytes, uint256, tuple(string, string)[])",
   "event EntityCreated(bytes32 indexed entityKey, address indexed owner, uint256 expirationBlock)"
 ];
@@ -72,7 +72,7 @@ const entityData = ethers.toUtf8Bytes(JSON.stringify({
   timestamp: Date.now()
 }));
 
-const btl = 300; // Block-to-live
+const expires_in = 300; // Block-to-live
 const annotations = [
   { key: "type", value: "message" },
   { key: "author", value: "ethers-demo" }
@@ -80,7 +80,7 @@ const annotations = [
 
 console.log("Preparing to create entity...");
 console.log("Data:", ethers.toUtf8String(entityData));
-console.log("BTL:", btl);
+console.log("Expires In:", expires_in);
 console.log("Annotations:", annotations);
 
 // Note: In playground, actual transaction would require deployed contract
@@ -309,7 +309,7 @@ const batchEntities = [];
 for (let i = 0; i < 5; i++) {
   batchEntities.push({
     data: new TextEncoder().encode(\`Batch item \${i}\`),
-    btl: 300,
+    expires_in: 300,
     stringAnnotations: [
       { key: "type", value: "batch" },
       { key: "index", value: i.toString() }
@@ -365,7 +365,7 @@ const creates = [];
 for (let i = 1; i <= 3; i++) {
   creates.push({
     data: new TextEncoder().encode(\`Demo item \${i}\`),
-    btl: 300,
+    expires_in: 300,
     stringAnnotations: [
       { key: "type", value: "demo-item" },
       { key: "name", value: \`Item \${i}\` }
@@ -394,7 +394,7 @@ const firstKey = createReceipts[0].entityKey;
 const updateReceipt = await client.updateEntities([{
   entityKey: firstKey,
   data: new TextEncoder().encode("Updated demo item 1"),
-  btl: 600,
+  expires_in: 600,
   stringAnnotations: [
     { key: "type", value: "demo-item" },
     { key: "name", value: "Item 1" },
@@ -406,7 +406,7 @@ console.log("  ✓ Updated entity: " + updateReceipt[0].entityKey.slice(0, 10) +
 console.log("");
 
 // 5. EXTEND entity lifetime
-console.log("5. Extending entity BTL...");
+console.log("5. Extending entity expiration...");
 const extendReceipt = await client.extendEntities([{
   entityKey: firstKey,
   numberOfBlocks: 100

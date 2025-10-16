@@ -52,7 +52,7 @@ export default function GettingStartedPythonPage() {
     { id: 'queries', label: 'Queries', icon: '🔍' },
     { id: 'events', label: 'Events', icon: '📡' },
     { id: 'batch', label: 'Batch', icon: '📦' },
-    { id: 'btl', label: 'BTL', icon: '⚡' },
+    { id: 'expires-in', label: 'Expires In', icon: '⚡' },
     { id: 'troubleshooting', label: 'Troubleshooting', icon: '🔧' },
     { id: 'example', label: 'Full Example', icon: '🚀' }
   ]
@@ -228,7 +228,7 @@ entity_id = str(uuid4())
 creates = [
     ArkivCreate(
         data=b"Test entity",
-        btl=300,  # Block-To-Live: ~10 minutes (each block ~2 seconds)
+        expires_in=300,  # Block-To-Live: ~10 minutes (each block ~2 seconds)
         string_annotations=[
             Annotation("testTextAnnotation", "demo"),
             Annotation("id", entity_id)
@@ -242,7 +242,7 @@ print('Receipt', create_receipt)
 
 # create_entities takes a list of ArkivCreate objects with 4 fields:
 # - data: Payload in bytes
-# - btl: Block-To-Live, number of blocks the entity will exist
+# - expires_in: Number of blocks the entity will exist
 # - string_annotations: Text annotations for querying
 # - numeric_annotations: Numeric annotations for querying`}
                   language="python"
@@ -258,7 +258,7 @@ update_receipt = await client.update_entities([
     ArkivUpdate(
         entity_key=create_receipt[0].entity_key,
         data=b"Updated entity",
-        btl=1200,  # Extend to ~40 minutes (1200 blocks * 2 seconds = 2400 seconds)
+        expires_in=1200,  # Extend to ~40 minutes (1200 blocks * 2 seconds = 2400 seconds)
         string_annotations=[Annotation("id", entity_id)],
         numeric_annotations=[Annotation("version", 2)]
     )
@@ -266,7 +266,7 @@ update_receipt = await client.update_entities([
 print('Update', update_receipt)
 
 # Updating an entity overrides all of its elements,
-# including the payload, annotations, and BTL.
+# including the payload, annotations, and expiration.
 
 # Delete the entity
 delete_receipt = await client.delete_entities([entity_key])
@@ -386,7 +386,7 @@ async def print_entities(label: str, entities: list):
     for i in range(10):
         entities.append(ArkivCreate(
             data=f"Message {i}".encode(),
-            btl=100,
+            expires_in=100,
             string_annotations=[
                 Annotation("type", "batch"),
                 Annotation("batchId", batch_id),
@@ -405,20 +405,20 @@ async def print_entities(label: str, entities: list):
             </div>
           </section>
 
-          {/* BTL Section */}
-          <section id="btl" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">BTL & Data Lifecycle</h2>
+          {/* Expires In Section */}
+          <section id="expires-in" className="mb-16">
+            <h2 className="text-3xl font-bold mb-8">Expires In & Data Lifecycle</h2>
             <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Managing Entity Lifetime</h3>
-              <p className="text-stone-900 font-mono text-sm mb-4">Control when your data expires with Blocks To Live (BTL)</p>
+              <p className="text-stone-900 font-mono text-sm mb-4">Control when your data expires with Expires In</p>
               <CodeBlock
-                code={`async def manage_btl(client):
-    """Manage entity lifetime with BTL"""
+                code={`async def manage_expires_in(client):
+    """Manage entity lifetime with Expires In"""
 
-    # Create entity with specific BTL
+    # Create entity with specific Expires In
     entity = ArkivCreate(
         data=b"Temporary data",
-        btl=50,  # Expires after 50 blocks (50 blocks * 2 seconds = 100 seconds)
+        expires_in=50,  # Expires after 50 blocks (50 blocks * 2 seconds = 100 seconds)
         string_annotations=[Annotation("type", "temporary")],
         numeric_annotations=[]
     )
@@ -434,7 +434,7 @@ async def print_entities(label: str, entities: list):
 
     print(f'Extended to block: {extend_receipts[0].new_expiration_block}')
 
-    # Check remaining BTL
+    # Check remaining expiration
     metadata = await client.get_entity_metadata(receipt.entity_key)
     print(f'Entity expires at block: {metadata.expires_at_block}')`}
                 language="python"
@@ -472,7 +472,7 @@ async def print_entities(label: str, entities: list):
                     <ul className="space-y-1 text-sm text-amber-900 font-mono">
                       <li>• Use double quotes for string values in queries</li>
                       <li>• Verify annotation names match exactly</li>
-                      <li>• Check entity still exists (BTL not expired)</li>
+                      <li>• Check entity still exists (not expired)</li>
                     </ul>
                   </div>
                 </div>
@@ -560,7 +560,7 @@ async def main():
             "timestamp": int(time.time() * 1000),
             "author": "Developer"
         }).encode(),
-        btl=300,  # ~10 minutes (300 blocks * 2 seconds = 600 seconds)
+        expires_in=300,  # ~10 minutes (300 blocks * 2 seconds = 600 seconds)
         string_annotations=[
             Annotation("type", "message"),
             Annotation("event", "arkiv"),
@@ -592,7 +592,7 @@ async def main():
             "updated": True,
             "update_time": int(time.time() * 1000)
         }).encode(),
-        btl=600,  # ~20 minutes (600 blocks * 2 seconds = 1200 seconds)
+        expires_in=600,  # ~20 minutes (600 blocks * 2 seconds = 1200 seconds)
         string_annotations=[
             Annotation("type", "message"),
             Annotation("id", entity_id),
@@ -615,7 +615,7 @@ async def main():
     for i in range(5):
         batch_entities.append(ArkivCreate(
             data=f"Batch message {i}".encode(),
-            btl=100,
+            expires_in=100,
             string_annotations=[
                 Annotation("type", "batch"),
                 Annotation("index", str(i))
@@ -628,14 +628,14 @@ async def main():
     batch_receipts = await client.create_entities(batch_entities)
     print(f"Created {len(batch_receipts)} entities in batch")
 
-    # 7. BTL MANAGEMENT - Extend entity lifetime
+    # 7. EXPIRATION MANAGEMENT - Extend entity lifetime
     extend_receipts = await client.extend_entities([{
         'entity_key': entity_key,
         'number_of_blocks': 100
     }])
-    print(f"Extended BTL to block: {extend_receipts[0].new_expiration_block}")
+    print(f"Extended expiration to block: {extend_receipts[0].new_expiration_block}")
 
-    # Check metadata to verify BTL
+    # Check metadata to verify expiration
     metadata = await client.get_entity_metadata(entity_key)
     print(f"Entity expires at block: {metadata.expires_at_block}")
 

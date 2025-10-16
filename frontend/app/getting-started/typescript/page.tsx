@@ -65,11 +65,11 @@ const enc = new TextEncoder();
 const dec = new TextDecoder();
 
 // 6) Write one tiny record on-chain: "Hello, Arkiv!"
-//    - btl: "blocks-to-live" (expiration window)
+//    - expires_in: "blocks-to-live" (expiration window)
 //    - stringAnnotations: small key/value tags you can later query by
 const [hello] = await client.createEntities([{
   data: enc.encode('Hello, Arkiv!'),
-  btl: 120,
+  expires_in: 120,
   stringAnnotations: [{ key: 'type', value: 'hello' }],
   numericAnnotations: []
 }]);
@@ -138,11 +138,11 @@ You’ll still use the same building blocks (account, client, and connection), b
 
       // Chapter 3 — Open the decision “room”
       open: {
-        p: `Create the decision “room”: a proposal entity with a bounded time window (BTL). This is where votes will attach—still using the very same client/account you verified.`,
+        p: `Create the decision “room”: a proposal entity with a bounded time window (Expires In). This is where votes will attach—still using the very same client/account you verified.`,
         bullets: [
           {
             t: "Goal",
-            v: "Write a proposal entity with an expiration window (BTL).",
+            v: "Write a proposal entity with an expiration window (Expires In).",
           },
           {
             t: "Why it matters",
@@ -212,7 +212,7 @@ You’ll still use the same building blocks (account, client, and connection), b
 
       // Chapter 8 — Change the timeline
       extend: {
-        p: `Need more time to decide? Extend the proposal’s BTL. You’re updating the same entity you opened earlier—continuing the narrative of one decision from start to finish.`,
+        p: `Need more time to decide? Extend the proposal’s Expires In. You’re updating the same entity you opened earlier—continuing the narrative of one decision from start to finish.`,
         bullets: [
           { t: "Goal", v: "Extend the proposal entity by N blocks." },
           { t: "Success check", v: "Console prints the new expiration block." },
@@ -672,7 +672,7 @@ if (owner) console.log('Your account:', owner);`}
                   code={`const [proposal] = await client.createEntities([
   {
     data: enc.encode('Proposal: Switch stand-up to 9:30?'),
-    btl: 200,
+    expires_in: 200,
     stringAnnotations: [
       new Annotation('type', 'proposal'),
       new Annotation('status', 'open'),
@@ -709,7 +709,7 @@ const proposalKey = proposal.entityKey;`}
 const [vote1, vote2] = await client.createEntities([
   {
     data: enc.encode('vote: yes'),
-    btl: 200,
+    expires_in: 200,
     stringAnnotations: [
       new Annotation('type', 'vote'),
       new Annotation('proposalKey', proposalKey),
@@ -720,7 +720,7 @@ const [vote1, vote2] = await client.createEntities([
   },
   {
     data: enc.encode('vote: no'),
-    btl: 200,
+    expires_in: 200,
     stringAnnotations: [
       new Annotation('type', 'vote'),
       new Annotation('proposalKey', proposalKey),
@@ -755,7 +755,7 @@ console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
                   language="typescript"
                   code={`const extras = Array.from({ length: 5 }, (_, i) => ({
   data: enc.encode(\`vote: yes #\${i + 1}\`),
-  btl: 200,
+  expires_in: 200,
   stringAnnotations: [
     new Annotation('type', 'vote'),
     new Annotation('proposalKey', proposalKey),

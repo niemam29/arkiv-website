@@ -52,7 +52,7 @@ export default function GettingStartedPage() {
     { id: 'queries', label: 'Queries', icon: '🔍' },
     { id: 'events', label: 'Events', icon: '📡' },
     { id: 'batch', label: 'Batch', icon: '📦' },
-    { id: 'btl', label: 'BTL', icon: '⚡' },
+    { id: 'expires-in', label: 'Expires In', icon: '⚡' },
     { id: 'troubleshooting', label: 'Troubleshooting', icon: '🔧' },
     { id: 'example', label: 'Full Example', icon: '🚀' }
   ]
@@ -280,7 +280,7 @@ const data = {
 const result = await client.createEntity({
   id: entityId,
   data: encoder.encode(JSON.stringify(data)),
-  btl: 300, // Time-to-live in blocks
+  expires_in: 300, // Time-to-live in blocks
   stringAnnotations: [
     new Annotation("type", "message"),
     new Annotation("user", "alice"),
@@ -322,7 +322,7 @@ const updatedData = {
 await client.updateEntity({
   entityKey: result.entityKey,
   data: encoder.encode(JSON.stringify(updatedData)),
-  btl: 600 // Extended TTL
+  expires_in: 600 // Extended TTL
 })
 
 console.log("Entity updated!")`}
@@ -441,7 +441,7 @@ const entities = Array.from({ length: 10 }, (_, i) => ({
     timestamp: Date.now(),
     index: i
   })),
-  btl: 300,
+  expires_in: 300,
   stringAnnotations: [
     new Annotation("type", "batch"),
     new Annotation("index", i.toString())
@@ -458,53 +458,53 @@ console.log(\`Created \${results.length} entities\`)`}
             </div>
           </section>
 
-          {/* BTL Section */}
-          <section id="btl" className="mb-16">
-            <h2 className="text-3xl font-bold mb-8">Blocks-to-Live (BTL)</h2>
+          {/* Expires In Section */}
+          <section id="expires-in" className="mb-16">
+            <h2 className="text-3xl font-bold mb-8">Expires In</h2>
 
             <div className="space-y-6">
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-                <h3 className="text-xl font-brutal font-bold mb-4 text-black">Understanding BTL</h3>
-                <p className="text-stone-900 font-mono text-sm mb-4">BTL determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.</p>
+                <h3 className="text-xl font-brutal font-bold mb-4 text-black">Understanding Expires In</h3>
+                <p className="text-stone-900 font-mono text-sm mb-4">Expires In determines how long data lives on Arkiv. Each block is approximately 2 seconds on Arkiv Hoodi testnet.</p>
 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 bg-white rounded-lg">
-                    <p className="font-mono font-bold text-black mb-1">BTL: 150</p>
+                    <p className="font-mono font-bold text-black mb-1">Expires In: 150</p>
                     <p className="text-sm text-stone-900">~5 minutes</p>
                   </div>
                   <div className="p-4 bg-white rounded-lg">
-                    <p className="font-mono font-bold text-black mb-1">BTL: 1800</p>
+                    <p className="font-mono font-bold text-black mb-1">Expires In: 1800</p>
                     <p className="text-sm text-stone-900">~1 hour</p>
                   </div>
                   <div className="p-4 bg-white rounded-lg">
-                    <p className="font-mono font-bold text-black mb-1">BTL: 43200</p>
+                    <p className="font-mono font-bold text-black mb-1">Expires In: 43200</p>
                     <p className="text-sm text-stone-900">~24 hours</p>
                   </div>
                 </div>
               </div>
 
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
-                <h3 className="text-xl font-brutal font-bold mb-2 text-black">Setting BTL</h3>
+                <h3 className="text-xl font-brutal font-bold mb-2 text-black">Setting Expires In</h3>
                 <CodeBlock
                   code={`// Short-lived data (5 minutes)
 await client.createEntity({
   id: randomUUID(),
   data: encoder.encode("Temporary data"),
-  btl: 150
+  expires_in: 150
 })
 
 // Medium-lived data (1 hour)
 await client.createEntity({
   id: randomUUID(),
   data: encoder.encode("Session data"),
-  btl: 1800
+  expires_in: 1800
 })
 
 // Long-lived data (24 hours)
 await client.createEntity({
   id: randomUUID(),
   data: encoder.encode("Daily data"),
-  btl: 43200
+  expires_in: 43200
 })`}
                   language="typescript"
                 />
@@ -542,7 +542,7 @@ await client.createEntity({
                   <div>
                     <p className="font-mono font-bold text-black mb-2">Entity Not Found</p>
                     <ul className="list-disc list-inside text-stone-900 font-mono text-sm space-y-1">
-                      <li>Entity may have expired (BTL reached)</li>
+                      <li>Entity may have expired (expires_in reached)</li>
                       <li>Check entity key is correct</li>
                       <li>Verify entity was successfully created</li>
                     </ul>
@@ -625,7 +625,7 @@ async function main() {
   const createResult = await client.createEntity({
     id: entityId,
     data: encoder.encode(JSON.stringify(data)),
-    btl: 300,
+    expires_in: 300,
     stringAnnotations: [
       new Annotation("type", "demo"),
       new Annotation("event", "arkiv")
@@ -643,7 +643,7 @@ async function main() {
   await client.updateEntity({
     entityKey: createResult.entityKey,
     data: encoder.encode(JSON.stringify(updatedData)),
-    btl: 600
+    expires_in: 600
   })
   console.log("✅ Updated entity")
 

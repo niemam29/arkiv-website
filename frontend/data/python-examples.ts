@@ -71,7 +71,7 @@ print("  Numeric annotations:")
 print("    - version: 1")
 print("    - priority: 5")
 print("")
-print("  BTL (Block-To-Live): 300 blocks (~10 minutes)")
+print("  Expires In: 300 blocks (~10 minutes)")
 print("")
 
 # Simulated entity creation
@@ -181,7 +181,7 @@ print(f"Entity key: {entity_key[:10]}...")
 print(f"New expiration block: 234567")
 print("")
 print("In production, use:")
-print("receipt = await client.update_entity(entity_key, new_data, btl=300)")`
+print("receipt = await client.update_entity(entity_key, new_data, expires_in=300)")`
   },
   
   events: {

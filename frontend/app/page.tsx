@@ -425,7 +425,7 @@ export default function Home() {
 const creates = [
   {
     data: encoder.encode("Test entity"),
-    btl: 300, // Block-To-Live: ~10 minutes
+    expires_in: 300, // Expires In: ~10 minutes
     // (each block ~2 seconds)
     stringAnnotations: [
       new Annotation("testTextAnnotation", "demo"),

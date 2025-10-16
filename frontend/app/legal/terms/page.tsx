@@ -83,7 +83,7 @@ export default function TermsOfUse() {
                   <ul className="list-disc list-inside space-y-2 mb-4 font-mono text-base text-black leading-[22px]">
                     <li>Decentralized data storage and management infrastructure</li>
                     <li>Queryable database chains with cryptographic verification</li>
-                    <li>Time-scoped data lifecycle management (BTL - Blocks to Live)</li>
+                    <li>Time-scoped data lifecycle management (Expires In)</li>
                     <li>Developer tools and SDKs for blockchain application development</li>
                     <li>Integration capabilities with Ethereum and compatible networks</li>
                   </ul>
