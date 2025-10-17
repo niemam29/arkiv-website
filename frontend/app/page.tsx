@@ -166,7 +166,7 @@ export default function Home() {
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main Content Area */}
-            <div className="w-full lg:w-[984px] h-[400px] lg:h-[624px] relative rounded-2xl overflow-hidden">
+            <div className="w-full lg:w-[984px] h-[500px] lg:h-[624px] relative rounded-2xl overflow-hidden">
               <HoverVideo
                 src="/movies/how_it_works.mp4"
                 className="w-full h-full object-cover"
@@ -176,7 +176,7 @@ export default function Home() {
                 loop={true}
                 poster="/images/how-it-works-3d.png"
               />
-              <div className="absolute bottom-8 right-8 left-8 md:left-auto flex flex-col md:flex-row gap-3">
+              <div className="absolute bottom-4 md:bottom-8 right-4 md:right-8 left-4 md:left-auto flex flex-col md:flex-row gap-3">
                 <a href="#getting-started" className="px-5 py-2 bg-stone-900 text-white font-mono text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors text-center w-full md:w-auto">
                   Quickstart
                 </a>

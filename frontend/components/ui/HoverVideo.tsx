@@ -28,6 +28,12 @@ export default function HoverVideo({
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting)
+        // Auto-play on mobile when in view
+        if (entry.isIntersecting && autoPlay && videoRef.current) {
+          videoRef.current.play().catch(() => {
+            // Ignore autoplay errors (e.g., browser policy restrictions)
+          })
+        }
       },
       { threshold: 0.1 }
     )
@@ -41,7 +47,7 @@ export default function HoverVideo({
         observer.unobserve(videoRef.current)
       }
     }
-  }, [])
+  }, [autoPlay])
 
   const handleMouseEnter = () => {
     if (videoRef.current && isInView) {
