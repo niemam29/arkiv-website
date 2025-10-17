@@ -496,7 +496,7 @@ async function printEntities(label: string, entities: any[]) {
       <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
-          <h2 id="about" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ built by ]</h2>
+          <h2 id="about" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ Emerged by Golem Ecosystem ]</h2>
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main Description */}
