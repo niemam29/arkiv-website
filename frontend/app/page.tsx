@@ -41,11 +41,8 @@ export default function Home() {
   return (
     <>
       <StructuredData />
-      <div className="min-h-screen bg-transparent overflow-hidden relative">
       {/* Hero Section - Zgodny z Figma Frame 2147238531 */}
-      <section className="relative bg-transparent min-h-screen px-4 md:px-[60px] py-[32px]">
-        {/* Remove the local background div since it's now on the parent */}
-
+      <section className="relative bg-transparent min-h-screen px-4 md:px-[60px] py-[32px] overflow-hidden">
         {/* Hero Content - max-w-[1280px] container */}
         <div className="relative z-10 max-w-[1280px] mx-auto pt-20">
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6">
@@ -561,7 +558,6 @@ async function printEntities(label: string, entities: any[]) {
             Talk to us
           </button>
         </div>
-      </div>
       </div>
     </>
   )

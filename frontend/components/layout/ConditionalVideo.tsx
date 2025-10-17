@@ -11,7 +11,7 @@ export default function ConditionalVideo() {
   }
 
   return (
-    <div className="fixed inset-0 z-0">
+    <div className="absolute inset-0 z-0">
       <video
         src="/movies/hero.mp4"
         className="w-full h-full object-cover"
