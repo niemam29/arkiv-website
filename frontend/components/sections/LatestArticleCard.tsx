@@ -5,15 +5,11 @@ import Link from 'next/link'
 
 interface Article {
   id: number
-  documentId: string
   title: string
   excerpt: string
   slug: string
-  publishedAt: string
-  cover?: {
-    url: string
-    alternativeText?: string
-  }
+  published_at: string
+  cover_image?: string
 }
 
 export default function LatestArticleCard() {
@@ -23,19 +19,32 @@ export default function LatestArticleCard() {
   useEffect(() => {
     async function fetchLatestArticle() {
       try {
-        const response = await fetch('https://cms.arkiv.network/api/articles?sort=publishedAt:desc&pagination[limit]=1')
-        const data = await response.json()
+        // First, try to get featured article
+        const featuredFilter = JSON.stringify({
+          _and: [
+            { status: { _eq: 'published' } },
+            { featured: { _eq: true } }
+          ]
+        })
+        let response = await fetch(`https://cms.arkiv.network/items/articles?filter=${encodeURIComponent(featuredFilter)}&sort=-published_at&limit=1`)
+        let data = await response.json()
+
+        // If no featured article, get the latest published one
+        if (!data.data || data.data.length === 0) {
+          const regularFilter = JSON.stringify({ status: { _eq: 'published' } })
+          response = await fetch(`https://cms.arkiv.network/items/articles?filter=${encodeURIComponent(regularFilter)}&sort=-published_at&limit=1`)
+          data = await response.json()
+        }
 
         if (data.data && data.data.length > 0) {
           const item = data.data[0]
           setArticle({
             id: item.id,
-            documentId: item.documentId,
             title: item.title,
             excerpt: item.excerpt || '',
             slug: item.slug,
-            publishedAt: item.publishedAt,
-            cover: item.cover
+            published_at: item.published_at,
+            cover_image: item.cover_image
           })
         }
       } catch (error) {
@@ -74,11 +83,11 @@ export default function LatestArticleCard() {
         href={`/blog/${article.slug}`}
         className="w-full lg:w-[420px] p-5 bg-[#EDEDED] rounded-2xl shadow-figma-card flex flex-col gap-5 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group"
       >
-        {article.cover?.url && (
+        {article.cover_image && (
           <div className="w-full h-48 rounded-lg overflow-hidden">
             <img
-              src={`https://cms.arkiv.network${article.cover.url}`}
-              alt={article.cover.alternativeText || article.title}
+              src={article.cover_image}
+              alt={article.title}
               className="w-full h-full object-cover"
             />
           </div>
@@ -86,7 +95,7 @@ export default function LatestArticleCard() {
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="font-mono text-sm text-[#1F1F1F] group-hover:text-white transition-colors">
-              {formatDate(article.publishedAt)}
+              {formatDate(article.published_at)}
             </div>
           </div>
         </div>

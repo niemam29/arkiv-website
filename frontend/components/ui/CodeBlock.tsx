@@ -82,7 +82,8 @@ export function CodeBlock({ code, language, showCopy = true, showPlayground = fa
         style={vscDarkPlus}
         customStyle={{
           margin: 0,
-          borderRadius: '0.5rem',
+          padding: '8px 12px',
+          borderRadius: 0,
           background: '#1e1e1e',
           fontSize: '14px',
           overflow: 'auto',

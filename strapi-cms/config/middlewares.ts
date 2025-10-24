@@ -1,7 +1,6 @@
 export default [
   'strapi::logger',
   'strapi::errors',
-  'global::force-https-protocol',
   'strapi::security',
   'strapi::cors',
   'strapi::poweredBy',
@@ -12,10 +11,11 @@ export default [
     config: {
       key: 'strapi.sid',
       httpOnly: true,
-      secure: false, // Set to false since we're behind a proxy
+      secure: true,
       signed: true,
       rolling: false,
       renew: false,
+      sameSite: 'lax', // Back to 'lax' - 'none' might not work with our setup
     },
   },
   'strapi::favicon',

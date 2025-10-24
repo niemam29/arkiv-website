@@ -93,10 +93,10 @@ async def execute_javascript(code: str) -> CodeExecutionResponse:
         # Wrap code with necessary imports and setup
         wrapped_code = f"""
 const {{ ethers }} = require('ethers');
-const {{ createClient, Annotation, Tagged }} = require('golem-base-sdk');
+const {{ createClient, Annotation, Tagged }} = require('arkiv-sdk');
 
 // Mock environment for playground (read-only test key)
-// Without 0x prefix for golem-base-sdk (32 bytes requirement)
+// Without 0x prefix for arkiv-sdk (32 bytes requirement)
 const mockPrivateKey = '1e951be867cba332c76e83ca9f0e55fffcd858f574973a5feac3148b308ff8ae';
 // With 0x prefix for ethers.js
 const mockPrivateKeyWithPrefix = '0x' + mockPrivateKey;

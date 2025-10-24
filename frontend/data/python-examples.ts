@@ -6,7 +6,7 @@ export const pythonExamples = {
 # Note: Real WebSocket connections are not supported in playground
 # This example demonstrates the connection pattern
 
-from golem_base_sdk import GolemBaseClient
+from arkiv_sdk import ArkivClient
 import json
 
 private_key_hex = mock_private_key  # Using mock key for playground
@@ -26,7 +26,7 @@ owner_address = "0x4393CE3C46f74CC5c30809b122acd69EE74aC532"
 print(f"✅ Connected with address: {owner_address}")
 print("")
 print("In production, use:")
-print("client = await GolemBaseClient.create_rw_client(")
+print("client = await ArkivClient.create_rw_client(")
 print("    rpc_url='https://kaolin.hoodi.arkiv.network/rpc',")
 print("    ws_url='wss://kaolin.hoodi.arkiv.network/ws',")
 print("    private_key=private_key")
@@ -40,7 +40,7 @@ print("Ready to interact with Arkiv!")`
     description: 'Create a new entity with annotations',
     code: `# Create Entity Example
 # Note: Actual client connections are not supported in playground
-from golem_base_sdk import GolemBaseCreate, Annotation
+from arkiv_sdk import ArkivCreate, Annotation
 import json
 import time
 

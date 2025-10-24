@@ -10,21 +10,13 @@ import { CodeBlock } from "@/components/ui/CodeBlock"
 
 interface BlogPost {
   id: number
-  documentId: string
   title: string
   slug: string
   excerpt: string
   content: string
-  publishedAt: string
-  author?: {
-    name: string
-    avatar?: {
-      url: string
-    }
-  }
-  category?: {
-    name: string
-  }
+  published_at: string
+  author?: string
+  status: string
 }
 
 export default function BlogPostPage() {
@@ -37,22 +29,19 @@ export default function BlogPostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        // Try by slug first
-        let response = await fetch(`https://cms.arkiv.network/api/articles?filters[slug][$eq]=${slug}&populate=*`)
-        let data = await response.json()
+        const filter = JSON.stringify({
+          _and: [
+            { slug: { _eq: slug } },
+            { status: { _eq: 'published' } }
+          ]
+        })
+        const response = await fetch(`https://cms.arkiv.network/items/articles?filter=${encodeURIComponent(filter)}`)
+        const data = await response.json()
 
-        // If not found by slug, try by documentId
-        if (!data.data || data.data.length === 0) {
-          response = await fetch(`https://cms.arkiv.network/api/articles/${slug}?populate=*`)
-          data = await response.json()
-
-          if (data.data) {
-            setPost(data.data)
-          } else {
-            setError('Post not found')
-          }
-        } else {
+        if (data.data && data.data.length > 0) {
           setPost(data.data[0])
+        } else {
+          setError('Post not found')
         }
       } catch (err) {
         console.error('Failed to fetch blog post:', err)
@@ -108,15 +97,6 @@ export default function BlogPostPage() {
 
       {/* Article Header */}
       <article className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Category */}
-        {post.category && (
-          <div className="mb-6">
-            <span className="font-mono text-sm px-3 py-1 bg-black/10 rounded">
-              {post.category.name}
-            </span>
-          </div>
-        )}
-
         {/* Title */}
         <h1 className="font-mono text-4xl md:text-5xl font-bold mb-6">
           {post.title}
@@ -132,19 +112,10 @@ export default function BlogPostPage() {
         {/* Meta Info */}
         <div className="flex items-center gap-4 mb-12 pb-8 border-b border-black/10">
           {post.author && (
-            <div className="flex items-center gap-3">
-              {post.author.avatar?.url && (
-                <img
-                  src={`https://cms.arkiv.network${post.author.avatar.url}`}
-                  alt={post.author.name}
-                  className="w-10 h-10 rounded-full"
-                />
-              )}
-              <span className="font-mono text-sm">{post.author.name}</span>
-            </div>
+            <span className="font-mono text-sm">{post.author}</span>
           )}
           <span className="font-mono text-sm text-gray-500">
-            {new Date(post.publishedAt).toLocaleDateString('en-US', {
+            {new Date(post.published_at).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'

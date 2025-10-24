@@ -323,7 +323,7 @@ console.log(window.gtag)
 window.dataLayer.push({
   event: 'walletConnected',
   wallet_type: 'MetaMask',
-  network: 'Arkiv ETHWarsaw Testnet',
+  network: 'Kaolin Testnet',
   page_path: window.location.pathname
 });
 

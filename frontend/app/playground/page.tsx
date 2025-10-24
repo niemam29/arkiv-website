@@ -291,6 +291,7 @@ console.log("3. Your wallet pays for gas fees");`
     title: 'Batch Operations',
     description: 'Perform multiple operations efficiently',
     code: `// Initialize client first
+// Note: arkiv-sdk (createClient, Annotation, Tagged) and mockPrivateKey are already available
 // Note: mockPrivateKey is already defined in the playground environment
 const privateKeyHex = mockPrivateKey;
 const privateKey = new Uint8Array(
@@ -298,7 +299,7 @@ const privateKey = new Uint8Array(
 );
 
 const client = await createClient(
-  60138453033, // Arkiv testnet Chain ID
+  60138453025, // Arkiv testnet Chain ID
   new Tagged("privatekey", privateKey),
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -309,10 +310,10 @@ const batchEntities = [];
 for (let i = 0; i < 5; i++) {
   batchEntities.push({
     data: new TextEncoder().encode(\`Batch item \${i}\`),
-    expires_in: 300,
+    expiresIn: 300,
     stringAnnotations: [
-      { key: "type", value: "batch" },
-      { key: "index", value: i.toString() }
+      new Annotation("type", "batch"),
+      new Annotation("index", i.toString())
     ],
     numericAnnotations: []
   });
@@ -337,6 +338,7 @@ results.forEach((entity, idx) => {
     title: 'Full Example',
     description: 'Complete Arkiv workflow demonstration',
     code: `// === COMPLETE ARKIV EXAMPLE ===
+// Note: arkiv-sdk (createClient, Annotation, Tagged) and mockPrivateKey are already available
 // Note: mockPrivateKey is already defined in the playground environment
 console.log("=== ARKIV COMPLETE EXAMPLE ===");
 console.log("");
@@ -349,7 +351,7 @@ const privateKey = new Uint8Array(
 );
 
 const client = await createClient(
-  60138453033,
+  60138453025,
   new Tagged("privatekey", privateKey),
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -365,12 +367,12 @@ const creates = [];
 for (let i = 1; i <= 3; i++) {
   creates.push({
     data: new TextEncoder().encode(\`Demo item \${i}\`),
-    expires_in: 300,
+    expiresIn: 300,
     stringAnnotations: [
-      { key: "type", value: "demo-item" },
-      { key: "name", value: \`Item \${i}\` }
+      new Annotation("type", "demo-item"),
+      new Annotation("name", \`Item \${i}\`)
     ],
-    numericAnnotations: [{ key: "priority", value: i }]
+    numericAnnotations: [new Annotation("priority", i)]
   });
 }
 
@@ -394,13 +396,13 @@ const firstKey = createReceipts[0].entityKey;
 const updateReceipt = await client.updateEntities([{
   entityKey: firstKey,
   data: new TextEncoder().encode("Updated demo item 1"),
-  expires_in: 600,
+  expiresIn: 600,
   stringAnnotations: [
-    { key: "type", value: "demo-item" },
-    { key: "name", value: "Item 1" },
-    { key: "status", value: "updated" }
+    new Annotation("type", "demo-item"),
+    new Annotation("name", "Item 1"),
+    new Annotation("status", "updated")
   ],
-  numericAnnotations: [{ key: "priority", value: 10 }]
+  numericAnnotations: [new Annotation("priority", 10)]
 }]);
 console.log("  ✓ Updated entity: " + updateReceipt[0].entityKey.slice(0, 10) + "...");
 console.log("");

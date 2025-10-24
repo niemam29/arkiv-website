@@ -32,6 +32,10 @@ interface CodePlaygroundProps {
   title?: string;
   description?: string;
   showLanguageToggle?: boolean;
+  disabled?: boolean;
+  disabledMessage?: string;
+  hideWalletButton?: boolean;
+  hideSaveButton?: boolean;
 }
 
 export function CodePlayground({
@@ -40,7 +44,11 @@ export function CodePlayground({
   language = "typescript",
   title,
   description,
+  disabled = false,
+  disabledMessage,
   showLanguageToggle = true,
+  hideWalletButton = false,
+  hideSaveButton = false,
 }: CodePlaygroundProps) {
   const [currentLanguage, setCurrentLanguage] = useState<
     "typescript" | "python"
@@ -87,8 +95,8 @@ export function CodePlayground({
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: "0xe0087f829", // 60138453033 in hex - correct Chain ID from RPC
-                chainName: "Arkiv ETHWarsaw Testnet",
+                chainId: "0xe0087f821", // 60138453025 in hex - correct Chain ID from RPC
+                chainName: "Kaolin Testnet",
                 nativeCurrency: {
                   name: "ETH",
                   symbol: "ETH",
@@ -106,11 +114,11 @@ export function CodePlayground({
         // Switch to Arkiv network
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0xe0087f829" }],
+          params: [{ chainId: "0xe0087f821" }],
         });
 
         setOutput(
-          `Connected to MetaMask!\nWallet: ${accounts[0]}\nNetwork: Arkiv ETHWarsaw Testnet`,
+          `Connected to MetaMask!\nWallet: ${accounts[0]}\nNetwork: Kaolin Testnet`,
         );
 
         // GTM Event: Wallet Connected
@@ -118,7 +126,7 @@ export function CodePlayground({
           window.dataLayer.push({
             event: 'walletConnected',
             wallet_type: 'MetaMask',
-            network: 'Arkiv ETHWarsaw Testnet',
+            network: 'Kaolin Testnet',
             page_path: window.location.pathname
           });
         }
@@ -301,56 +309,60 @@ export function CodePlayground({
             {/* Right: wallet button (left) + icon buttons (right) */}
             <div className="flex items-center gap-2">
               {/* Wallet button — compact width, truncates address */}
-              {currentLanguage === "typescript" ? (
-                <Button
-                  onClick={connectMetaMask}
-                  disabled={isConnecting || !!walletAddress}
-                  variant={walletAddress ? "secondary" : "outline"}
-                  className="h-8 px-2 min-w-[120px] max-w-[220px] md:max-w-[260px] overflow-hidden"
-                  aria-label={
-                    walletAddress ? "Wallet connected" : "Connect MetaMask"
-                  }
-                  title={walletAddress || "Connect MetaMask"}
-                >
-                  {isConnecting ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-xs">Connecting…</span>
-                    </span>
-                  ) : walletAddress ? (
-                    <span className="flex items-center gap-2">
-                      <Wallet className="h-4 w-4 text-green-500 shrink-0" />
-                      <span className="text-xs truncate">
-                        {walletAddress.slice(0, 6)}…{walletAddress.slice(-4)}
+              {!hideWalletButton && (
+                currentLanguage === "typescript" ? (
+                  <Button
+                    onClick={connectMetaMask}
+                    disabled={isConnecting || !!walletAddress}
+                    variant={walletAddress ? "secondary" : "outline"}
+                    className="h-8 px-2 min-w-[120px] max-w-[220px] md:max-w-[260px] overflow-hidden"
+                    aria-label={
+                      walletAddress ? "Wallet connected" : "Connect MetaMask"
+                    }
+                    title={walletAddress || "Connect MetaMask"}
+                  >
+                    {isConnecting ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-xs">Connecting…</span>
                       </span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <Wallet className="h-4 w-4 shrink-0" />
-                      <span className="text-xs truncate">Connect Wallet</span>
-                    </span>
-                  )}
-                </Button>
-              ) : (
-                <div
-                  className="hidden sm:flex items-center gap-2 px-2 h-8 bg-gray-800 rounded-lg border border-gray-700 text-white text-xs"
-                  title="MetaMask runs in browser (TypeScript only)"
-                >
-                  <Wallet className="h-4 w-4" />
-                  <span className="truncate">TS-only wallet</span>
-                </div>
+                    ) : walletAddress ? (
+                      <span className="flex items-center gap-2">
+                        <Wallet className="h-4 w-4 text-green-500 shrink-0" />
+                        <span className="text-xs truncate">
+                          {walletAddress.slice(0, 6)}…{walletAddress.slice(-4)}
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Wallet className="h-4 w-4 shrink-0" />
+                        <span className="text-xs truncate">Connect Wallet</span>
+                      </span>
+                    )}
+                  </Button>
+                ) : (
+                  <div
+                    className="hidden sm:flex items-center gap-2 px-2 h-8 bg-gray-800 rounded-lg border border-gray-700 text-white text-xs"
+                    title="MetaMask runs in browser (TypeScript only)"
+                  >
+                    <Wallet className="h-4 w-4" />
+                    <span className="truncate">TS-only wallet</span>
+                  </div>
+                )
               )}
 
               {/* Icon actions */}
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={handleSave}
-                className="h-8"
-                aria-label="Save"
-              >
-                <Save className="h-4 w-4" />
-              </Button>
+              {!hideSaveButton && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleSave}
+                  className="h-8"
+                  aria-label="Save"
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant="ghost"
@@ -377,10 +389,10 @@ export function CodePlayground({
                 size="sm"
                 variant="ghost"
                 onClick={handleRun}
-                disabled={isRunning}
-                className="h-8"
+                disabled={isRunning || disabled}
+                className={`h-8 ${!disabled && !isRunning ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
                 aria-label="Run"
-                title="Run (Ctrl/Cmd + Enter)"
+                title={disabled ? (disabledMessage || "Disabled") : "Run (Ctrl/Cmd + Enter)"}
               >
                 {isRunning ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

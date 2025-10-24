@@ -5,8 +5,8 @@ export default ({ env }) => ({
       refreshToken: {
         cookie: {
           httpOnly: true,
-          secure: false, // False because we're behind Traefik proxy
-          sameSite: 'lax',
+          secure: true,
+          sameSite: 'none', // Changed from 'lax' to 'none' for proxy
         },
       },
     },
@@ -24,4 +24,10 @@ export default ({ env }) => ({
     promoteEE: env.bool('FLAG_PROMOTE_EE', true),
   },
   url: env('ADMIN_URL', '/admin'),
+  vite: {
+    server: {
+      host: true,
+      allowedHosts: ['cms.arkiv.network', 'localhost', '127.0.0.1'],
+    },
+  },
 });

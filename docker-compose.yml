@@ -32,7 +32,7 @@ services:
       - "traefik.http.services.arkiv-website.loadbalancer.server.port=3000"
 
   execution-service:
-    image: moonplkr/arkiv-execution:latest
+    image: moonplkr/arkiv-execution-service:latest
     ports:
       - "8001:8001"
     environment:
@@ -43,29 +43,37 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=payload
-      - POSTGRES_PASSWORD=payload_secret
-      - POSTGRES_DB=arkiv_cms
+      - POSTGRES_USER=directus
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-directus}
+      - POSTGRES_DB=directus
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U payload"]
+      test: ["CMD-SHELL", "pg_isready -U directus"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   arkiv-cms:
-    image: moonplkr/arkiv-cms:latest
+    image: directus/directus:11
     ports:
-      - "1337:1337"
+      - "8055:8055"
     environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgres://payload:payload_secret@postgres:5432/arkiv_cms
-      - PAYLOAD_SECRET=${PAYLOAD_SECRET:-your-secret-key-change-in-production}
-      - PORT=1337
-      - FRONTEND_URL=http://frontend:3000
+      - KEY=${DIRECTUS_KEY:-replace-with-random-value}
+      - SECRET=${DIRECTUS_SECRET:-replace-with-random-value}
+      - DB_CLIENT=pg
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=directus
+      - DB_USER=directus
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-directus}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-d1r3ctu5}
+      - PUBLIC_URL=https://cms.arkiv.network
+      - CORS_ENABLED=true
+      - CORS_ORIGIN=true
     depends_on:
       postgres:
         condition: service_healthy
@@ -79,7 +87,7 @@ services:
       - "traefik.http.routers.arkiv-cms.entrypoints=websecure"
       - "traefik.http.routers.arkiv-cms.tls=true"
       - "traefik.http.routers.arkiv-cms.tls.certresolver=letsencrypt"
-      - "traefik.http.services.arkiv-cms.loadbalancer.server.port=1337"
+      - "traefik.http.services.arkiv-cms.loadbalancer.server.port=8055"
 
 networks:
   internal:

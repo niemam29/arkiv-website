@@ -80,12 +80,20 @@ High-performance data operations. CRUD via JSON-RPC, indexed queries with annota
 
 **Entities** — Data records containing content, annotations, and expiration time.
 
-**Annotations** — Key-value pairs for querying. String annotations like \`type = "note"\` or numeric like \`priority = 5\`.
+**Annotations** — Key-value pairs for querying:
 
-**Expires In** — Automatic expiration:
-- \`900\` blocks ≈ 30 minutes
-- \`43200\` blocks ≈ 24 hours
-- \`302400\` blocks ≈ 7 days
+\`\`\`typescript
+type = "note"      // String annotation
+priority = 5       // Numeric annotation
+\`\`\`
+
+**Expires In** — Automatic expiration (in seconds):
+
+\`\`\`typescript
+expiresIn: 1800    // 30 minutes
+expiresIn: 86400   // 24 hours
+expiresIn: 604800  // 7 days
+\`\`\`
 
 **Query Language** — SQL-like syntax:
 \`\`\`sql
@@ -94,19 +102,23 @@ type = "note" && priority > 3 && created > 1672531200
 
 ## Testnet Access
 
-**Chain ID:** \`60138453033\`
-**RPC URL:** \`https://kaolin.hoodi.arkiv.network/rpc\`
-**WebSocket:** \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
+\`\`\`typescript
+Chain ID:  60138453025
+RPC URL:   https://kaolin.hoodi.arkiv.network/rpc
+WebSocket: wss://kaolin.hoodi.arkiv.network/rpc/ws
+\`\`\`
+
 **Faucet:** [Get Test ETH](https://kaolin.hoodi.arkiv.network/faucet/)
 **Explorer:** [View Transactions](https://explorer.kaolin.hoodi.arkiv.network)
 
 Quick example:
 
 \`\`\`typescript
-import { createClient, Annotation } from 'arkiv-sdk'
+import { createClient, createROClient, Annotation } from 'arkiv-sdk'
 
+// Full client (read/write) - requires private key
 const client = await createClient(
-  60138453033,
+  60138453025,
   "YOUR_PRIVATE_KEY",
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -114,12 +126,21 @@ const client = await createClient(
 
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode("Hello Arkiv!"),
-  expires_in: 1800,
+  expiresIn: 1800,
   stringAnnotations: [new Annotation("type", "greeting")],
   numericAnnotations: []
 }])
 
 console.log("Stored:", receipt[0].entityKey)
+
+// Read-only client (queries only) - no private key needed
+const roClient = await createROClient(
+  60138453025,
+  "https://kaolin.hoodi.arkiv.network/rpc",
+  "wss://kaolin.hoodi.arkiv.network/rpc/ws"
+)
+
+const data = await roClient.queryEntities('type = "greeting"')
 \`\`\`
 
 ## Next Steps
@@ -179,7 +200,7 @@ import { randomUUID } from 'crypto'
 
 // Create client connection
 const client = await createClient(
-  60138453033, // Arkiv Chain ID
+  60138453025, // Arkiv Chain ID
   new Tagged("privatekey", Buffer.from("YOUR_PRIVATE_KEY", "hex")),
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -189,7 +210,7 @@ const client = await createClient(
 const noteData = { title: "My Note", content: "Hello Arkiv!" }
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify(noteData)),
-  expires_in: 43200, // 24 hours
+  expiresIn: 43200, // 43200 seconds = 12 hours
   stringAnnotations: [
     new Annotation("type", "note"),
     new Annotation("id", randomUUID())
@@ -201,6 +222,37 @@ const receipt = await client.createEntities([{
 
 console.log('Entity created:', receipt[0].entityKey)
 \`\`\`
+
+## Read-Only Client
+
+For applications that only need to query data without writing, use \`createROClient\`:
+
+\`\`\`typescript
+import { createROClient } from 'arkiv-sdk'
+
+// Create read-only client (no private key needed)
+const roClient = await createROClient(
+  60138453025, // Arkiv Chain ID
+  "https://kaolin.hoodi.arkiv.network/rpc",
+  "wss://kaolin.hoodi.arkiv.network/rpc/ws"
+)
+
+// Query entities (read-only)
+const publicData = await roClient.queryEntities('type = "public"')
+
+// Watch for changes (read-only)
+const unwatch = roClient.watchLogs({
+  fromBlock: BigInt(0),
+  onCreated: (args) => console.log("New entity:", args.entityKey),
+  pollingInterval: 2000
+})
+\`\`\`
+
+**Benefits:**
+- No private key required
+- Safe for frontend/public use
+- Prevents accidental writes
+- Ideal for analytics and monitoring
 
 ## Query Data
 \`\`\`typescript
@@ -223,7 +275,7 @@ const updateReceipt = await client.updateEntities([{
     title: "Updated Note",
     content: "This note has been updated"
   })),
-  expires_in: 86400, // Extend to 48 hours
+  expiresIn: 86400, // 86400 seconds = 24 hours
   stringAnnotations: [new Annotation("type", "note")],
   numericAnnotations: [new Annotation("updated", Date.now())]
 }])
@@ -257,7 +309,7 @@ const unwatch = client.watchLogs({
 // Create multiple entities at once
 const entities = Array.from({ length: 5 }, (_, i) => ({
   data: new TextEncoder().encode(\`Batch item \${i}\`),
-  expires_in: 1800, // 1 hour
+  expiresIn: 1800, // 1800 seconds = 30 minutes
   stringAnnotations: [new Annotation("type", "batch")],
   numericAnnotations: [new Annotation("index", i)]
 }))
@@ -277,45 +329,70 @@ const extendReceipts = await client.extendEntities([{
 console.log(\`Extended to block: \${extendReceipts[0].newExpirationBlock}\`)
 \`\`\`
 
-## Python SDK (In Development)
+## Python SDK
 
 \`\`\`python
-# Preview of upcoming Python SDK
-from arkiv_python import ArkivClient
+from arkiv_sdk import create_client, Tagged, Annotation
+from arkiv_sdk.types import AccountData, ArkivCreate
 import os
 
-client = ArkivClient(
-    chain_id=60138453033,
-    private_key=os.getenv("PRIVATE_KEY"),
-    rpc_url="https://kaolin.hoodi.arkiv.network/rpc"
+# Load private key
+raw_key = os.getenv('PRIVATE_KEY', '')
+hex_key = raw_key[2:] if raw_key.startswith('0x') else raw_key
+key: AccountData = Tagged("privatekey", bytes.fromhex(hex_key))
+
+# Create client (async)
+client = await create_client(
+    60138453025,  # Chain ID
+    key,
+    "https://kaolin.hoodi.arkiv.network/rpc",
+    "wss://kaolin.hoodi.arkiv.network/rpc/ws"
 )
 
 # Create entity
-entity = client.create_entity(
-    data={"message": "Hello from Python!"},
-    expires_in=43200,  # 24 hours
-    annotations={
-        "type": "greeting",
-        "language": "python"
-    }
+creates = [
+    ArkivCreate(
+        data=b"Hello from Python!",
+        expires_in=43200,  # 43200 seconds = 12 hours
+        string_annotations=[
+            Annotation("type", "greeting"),
+            Annotation("language", "python")
+        ],
+        numeric_annotations=[]
+    )
+]
+
+receipts = await client.create_entities(creates)
+print(f"Created entity: {receipts[0].entity_key}")
+
+# Read-only client (no private key needed)
+from arkiv_sdk import create_ro_client
+
+ro_client = await create_ro_client(
+    60138453025,  # Chain ID
+    "https://kaolin.hoodi.arkiv.network/rpc",
+    "wss://kaolin.hoodi.arkiv.network/rpc/ws"
 )
 
-print(f"Created entity: {entity.key}")
+# Query entities (read-only)
+entities = await ro_client.query_entities('type = "greeting"')
+for entity in entities:
+    print(f"Entity: {entity.entity_key}")
 \`\`\`
 
 ## SDK Comparison
 
 | Feature | TypeScript | Python |
 |---------|-----------|--------|
-| Status | Production | In Development |
-| CRUD Operations | Full Support | Coming Soon |
-| Real-time Events | WebSocket | Coming Soon |
-| Batch Operations | Supported | Coming Soon |
+| Status | Production | Production |
+| CRUD Operations | Full Support | Full Support |
+| Real-time Events | WebSocket | WebSocket |
+| Batch Operations | Supported | Supported |
 | Type Safety | TypeScript | Type Hints |
 | Use Cases | Web, APIs, Node.js | Data Science, Backend |
 
 **Resources:**
-[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk) — [GitHub](https://github.com/Arkiv-Network/arkiv-sdk-js) — [Discord](https://discord.gg/arkiv)
+[Getting Started](/getting-started) — [NPM Package](https://www.npmjs.com/package/arkiv-sdk) — [GitHub](https://github.com/arkiv-network/arkiv-sdk-js) — [Discord](https://discord.gg/arkiv)
 `
 }
 
@@ -328,7 +405,7 @@ Arkiv uses standard Ethereum JSON-RPC.
 
 ## Network
 
-**Chain ID:** \`60138453033\`
+**Chain ID:** \`60138453025\`
 **RPC:** \`https://kaolin.hoodi.arkiv.network/rpc\`
 **WebSocket:** \`wss://kaolin.hoodi.arkiv.network/rpc/ws\`
 **Explorer:** [explorer.kaolin.hoodi.arkiv.network](https://explorer.kaolin.hoodi.arkiv.network)
@@ -341,7 +418,7 @@ Uses Ethereum private key signing:
 \`\`\`typescript
 // SDK handles authentication automatically
 const client = await createClient(
-  60138453033,
+  60138453025,
   new Tagged("privatekey", Buffer.from("YOUR_PRIVATE_KEY", "hex")),
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -354,7 +431,7 @@ const client = await createClient(
 // Create single entity
 const receipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify({ message: "Hello" })),
-  expires_in: 43200, // ~24 hours (blocks to live)
+  expiresIn: 43200, // 43200 seconds = 12 hours
   stringAnnotations: [
     new Annotation("type", "message"),
     new Annotation("category", "general")
@@ -414,7 +491,7 @@ const updateReceipt = await client.updateEntities([{
     message: "Updated content",
     lastModified: Date.now()
   })),
-  expires_in: 86400, // Extend to ~48 hours
+  expiresIn: 86400, // 86400 seconds = 24 hours
   stringAnnotations: [
     new Annotation("type", "message"),
     new Annotation("status", "updated")
@@ -442,12 +519,12 @@ deleteReceipts.forEach(receipt => {
 
 ### ⏰ **Extend Entity Lifetime**
 
-Add more blocks to entity's Expires In.
+Add more seconds to entity's expiration time.
 
 \`\`\`typescript
 const extendReceipts = await client.extendEntities([{
   entityKey: "0x1234567890abcdef...",
-  numberOfBlocks: 43200 // Add 24 more hours
+  numberOfBlocks: 86400 // Add 24 more hours (in seconds)
 }])
 
 console.log(\`New expiration: \${extendReceipts[0].newExpirationBlock}\`)
@@ -494,7 +571,7 @@ Perform multiple operations efficiently.
 // Create multiple entities
 const entities = Array.from({ length: 10 }, (_, i) => ({
   data: new TextEncoder().encode(\`Batch item \${i}\`),
-  expires_in: 1800,
+  expiresIn: 1800,
   stringAnnotations: [new Annotation("type", "batch")],
   numericAnnotations: [new Annotation("index", i)]
 }))
@@ -509,17 +586,15 @@ console.log(\`📊 Found \${batchItems.length} batch items\`)
 
 ## 💡 **Expires In Reference**
 
-Understanding entity expiration times:
+Understanding entity expiration times (in seconds):
 
-| Expires In Value | Time (approx.) | Use Case |
-|-----------|----------------|----------|
-| \`900\` | 30 minutes | Session data, temporary cache |
-| \`1800\` | 1 hour | Short-term storage, clipboard |
-| \`43200\` | 24 hours | Daily data, notes, messages |
-| \`302400\` | 7 days | Weekly data, file metadata |
-| \`1296000\` | 30 days | Monthly archives, backups |
-
-**Note**: Each block is approximately 2 seconds on Arkiv Hoodi testnet.
+| Expires In Value | Time | Use Case |
+|-----------------|------|----------|
+| \`1800\` | 30 minutes | Session data, temporary cache |
+| \`3600\` | 1 hour | Short-term storage, clipboard |
+| \`86400\` | 24 hours | Daily data, notes, messages |
+| \`604800\` | 7 days | Weekly data, file metadata |
+| \`2592000\` | 30 days | Monthly archives, backups |
 
 ## 🚨 **Error Handling**
 
@@ -623,8 +698,8 @@ const data = await client.getStorageValue(entityKey)
 
 ### **SDK Documentation**
 - **📦 NPM Package**: [arkiv-sdk](https://www.npmjs.com/package/arkiv-sdk)
-- **📚 TypeScript Docs**: [API Reference](https://docs.golemdb.io/typescript-sdk)
-- **🛠️ GitHub Repository**: [Source Code](https://github.com/Arkiv-Network/arkiv-sdk-js)
+- **📚 TypeScript Docs**: [Getting Started](/getting-started/typescript)
+- **🛠️ GitHub Repository**: [Source Code](https://github.com/arkiv-network/arkiv-sdk-js)
 
 ## 🎯 **Best Practices**
 
@@ -639,10 +714,10 @@ const all = await client.queryEntities('type = "note"') // Returns everything
 
 ### **Proper Expires In Management**
 \`\`\`typescript
-// ✅ Good: Choose appropriate Expires In for data type
-const sessionData = { expires_in: 900 }    // 30 minutes
-const dailyNotes = { expires_in: 43200 }   // 24 hours
-const weeklyBackup = { expires_in: 302400 } // 7 days
+// ✅ Good: Choose appropriate expiresIn for data type
+const sessionData = { expiresIn: 1800 }    // 1800 seconds = 30 minutes
+const dailyNotes = { expiresIn: 43200 }   // 43200 seconds = 12 hours
+const weeklyBackup = { expiresIn: 604800 } // 604800 seconds = 7 days
 \`\`\`
 
 ### **Error Handling**
@@ -675,7 +750,7 @@ Create a simple note-taking app with automatic expiration and annotations.
 import { createClient, Annotation } from 'arkiv-sdk'
 
 const client = await createClient(
-  60138453033, // Arkiv testnet
+  60138453025, // Arkiv testnet
   privateKey,
   "https://kaolin.hoodi.arkiv.network/rpc",
   "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -691,7 +766,7 @@ const noteData = {
 
 const createReceipt = await client.createEntities([{
   data: new TextEncoder().encode(JSON.stringify(noteData)),
-  expires_in: 43200, // ~24 hours (43200 blocks * 2 seconds)
+  expiresIn: 43200, // 43200 seconds = 12 hours
   stringAnnotations: [
     new Annotation("type", "note"),
     new Annotation("noteId", noteId),
@@ -707,35 +782,305 @@ console.log('Note created:', createReceipt[0].entityKey)
 
 ### 2. Cross-Device Clipboard
 
-Implement efficient image storage by splitting large files into chunks.
+Build a clipboard that syncs across devices using temporary storage.
 
-**→ Image Storage Guide** (soon)
+\`\`\`typescript
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
+import { randomUUID } from 'crypto'
 
-### Real-time Data Sync
+// Setup client
+const client = await createClient(
+  60138453025,
+  new Tagged("privatekey", Buffer.from("YOUR_PRIVATE_KEY", "hex")),
+  "https://kaolin.hoodi.arkiv.network/rpc",
+  "wss://kaolin.hoodi.arkiv.network/rpc/ws"
+)
 
-Build applications that sync data in real-time across multiple clients.
+// Copy to clipboard (store data)
+async function copyToClipboard(text: string, deviceId: string) {
+  const clipId = randomUUID()
 
-**→ Real-time Sync Guide** (soon)
+  const receipt = await client.createEntities([{
+    data: new TextEncoder().encode(text),
+    expiresIn: 3600, // 1 hour
+    stringAnnotations: [
+      new Annotation("type", "clipboard"),
+      new Annotation("deviceId", deviceId),
+      new Annotation("clipId", clipId)
+    ],
+    numericAnnotations: [
+      new Annotation("timestamp", Date.now())
+    ]
+  }])
+
+  return clipId
+}
+
+// Paste from clipboard (retrieve latest)
+async function getLatestClip(deviceId: string) {
+  const clips = await client.queryEntities(
+    \`type = "clipboard" && deviceId = "\${deviceId}"\`
+  )
+
+  // Sort by timestamp (newest first)
+  clips.sort((a, b) => {
+    const aTime = a.numericAnnotations.find(an => an.key === "timestamp")?.value || 0
+    const bTime = b.numericAnnotations.find(an => an.key === "timestamp")?.value || 0
+    return Number(bTime) - Number(aTime)
+  })
+
+  if (clips.length > 0) {
+    return new TextDecoder().decode(clips[0].storageValue)
+  }
+  return null
+}
+
+// Usage
+const myDeviceId = "device-" + randomUUID()
+await copyToClipboard("Hello from device A!", myDeviceId)
+const clipText = await getLatestClip(myDeviceId)
+console.log("Pasted:", clipText)
+\`\`\`
+
+### 3. Real-time Data Sync
+
+Sync data in real-time across multiple clients using event subscriptions.
+
+\`\`\`typescript
+// Client 1: Publisher
+const publisher = await createClient(chainId, key1, rpcUrl, wsUrl)
+
+// Watch for changes
+const unwatch = publisher.watchLogs({
+  fromBlock: BigInt(0),
+  onCreated: async (args) => {
+    const meta = await publisher.getEntityMetaData(args.entityKey)
+    const annotations = Object.fromEntries(
+      meta.stringAnnotations.map(a => [a.key, a.value])
+    )
+
+    if (annotations.type === "message") {
+      const data = await publisher.getStorageValue(args.entityKey)
+      console.log("New message:", new TextDecoder().decode(data))
+      // Update UI, trigger notifications, etc.
+    }
+  },
+  transport: "websocket"
+})
+
+// Client 2: Subscriber
+const subscriber = await createClient(chainId, key2, rpcUrl, wsUrl)
+
+// Post a message
+await subscriber.createEntities([{
+  data: new TextEncoder().encode("Hello everyone!"),
+  expiresIn: 7200,
+  stringAnnotations: [
+    new Annotation("type", "message"),
+    new Annotation("channel", "general")
+  ],
+  numericAnnotations: [new Annotation("timestamp", Date.now())]
+}])
+
+// Client 1 will receive the event in real-time
+\`\`\`
 
 ## Advanced Guides
-
-### Custom DB-Chain Deployment
-
-Deploy your own specialized database chain for specific use cases.
-
-**→ DB-Chain Deployment** (soon)
 
 ### Performance Optimization
 
 Best practices for optimizing query performance and reducing costs.
 
-**→ Performance Guide** (soon)
+**1. Use Specific Queries**
+\`\`\`typescript
+// ❌ Bad: Returns all notes
+const allNotes = await client.queryEntities('type = "note"')
+
+// ✅ Good: Filter by additional criteria
+const recentNotes = await client.queryEntities(
+  \`type = "note" && created > \${Date.now() - 86400000} && priority > 3\`
+)
+\`\`\`
+
+**2. Batch Operations**
+\`\`\`typescript
+// ❌ Bad: Multiple individual creates
+for (const item of items) {
+  await client.createEntities([item]) // Slow!
+}
+
+// ✅ Good: Single batch create
+await client.createEntities(items) // Fast!
+\`\`\`
+
+**3. Choose Appropriate expiresIn**
+\`\`\`typescript
+// Match data lifetime to use case
+const sessionData = { expiresIn: 1800 }     // 30 min for sessions
+const cacheData = { expiresIn: 3600 }       // 1 hour for cache
+const tempFiles = { expiresIn: 86400 }      // 24 hours for temp files
+const weeklyData = { expiresIn: 604800 }    // 7 days for weekly data
+
+// Don't over-allocate storage time
+\`\`\`
+
+**4. Optimize Annotations**
+\`\`\`typescript
+// ✅ Good: Use numeric annotations for numbers
+new Annotation("priority", 5)  // Numeric - can use > < operators
+
+// ❌ Bad: Using string for numbers
+new Annotation("priority", "5")  // String - only equality checks
+\`\`\`
 
 ### Security Best Practices
 
 Ensure your applications follow security best practices.
 
-**→ Security Guide** (soon)
+**1. Never Expose Private Keys**
+\`\`\`typescript
+// ✅ Good: Use environment variables
+const privateKey = process.env.PRIVATE_KEY
+
+// ❌ Bad: Hardcoded keys
+const privateKey = "0x1234..." // NEVER DO THIS!
+\`\`\`
+
+**2. Validate User Input**
+\`\`\`typescript
+// ✅ Good: Sanitize and validate
+function createNote(userInput: string) {
+  // Validate input
+  if (!userInput || userInput.length > 10000) {
+    throw new Error("Invalid input")
+  }
+
+  // Sanitize
+  const sanitized = userInput.trim()
+
+  return client.createEntities([{
+    data: new TextEncoder().encode(sanitized),
+    expiresIn: 43200,
+    stringAnnotations: [new Annotation("type", "note")]
+  }])
+}
+\`\`\`
+
+**3. Use Read-Only Clients for Queries**
+\`\`\`typescript
+import { createROClient } from 'arkiv-sdk'
+
+// For public data queries, use a read-only client
+// This prevents accidental writes and doesn't require private key
+const readOnlyClient = await createROClient(
+  chainId,
+  rpcUrl,
+  wsUrl
+)
+
+// Safe for public use - query only, no write operations
+const publicData = await readOnlyClient.queryEntities('type = "public"')
+\`\`\`
+
+**4. Implement Rate Limiting**
+\`\`\`typescript
+// Prevent abuse with rate limiting
+class RateLimiter {
+  private requests = new Map<string, number[]>()
+
+  canMakeRequest(userId: string, maxRequests = 10, windowMs = 60000) {
+    const now = Date.now()
+    const userRequests = this.requests.get(userId) || []
+
+    // Remove old requests outside the window
+    const recentRequests = userRequests.filter(time => now - time < windowMs)
+
+    if (recentRequests.length >= maxRequests) {
+      return false
+    }
+
+    recentRequests.push(now)
+    this.requests.set(userId, recentRequests)
+    return true
+  }
+}
+
+const limiter = new RateLimiter()
+
+async function createEntity(userId: string, data: any) {
+  if (!limiter.canMakeRequest(userId)) {
+    throw new Error("Rate limit exceeded")
+  }
+
+  return client.createEntities([data])
+}
+\`\`\`
+
+### Image & File Storage Guide
+
+Store large files efficiently using chunking strategy.
+
+\`\`\`typescript
+// Chunk large files for efficient storage
+const CHUNK_SIZE = 64 * 1024 // 64KB chunks
+
+async function uploadFile(file: Buffer, fileName: string) {
+  const fileId = randomUUID()
+  const chunks = []
+
+  // Split file into chunks
+  for (let i = 0; i < file.length; i += CHUNK_SIZE) {
+    const chunk = file.slice(i, i + CHUNK_SIZE)
+    const chunkIndex = Math.floor(i / CHUNK_SIZE)
+
+    chunks.push({
+      data: chunk,
+      expiresIn: 604800, // 7 days
+      stringAnnotations: [
+        new Annotation("type", "file-chunk"),
+        new Annotation("fileId", fileId),
+        new Annotation("fileName", fileName)
+      ],
+      numericAnnotations: [
+        new Annotation("chunkIndex", chunkIndex),
+        new Annotation("totalChunks", Math.ceil(file.length / CHUNK_SIZE))
+      ]
+    })
+  }
+
+  // Upload all chunks
+  await client.createEntities(chunks)
+
+  return fileId
+}
+
+async function downloadFile(fileId: string): Promise<Buffer> {
+  // Query all chunks for this file
+  const chunks = await client.queryEntities(
+    \`type = "file-chunk" && fileId = "\${fileId}"\`
+  )
+
+  // Sort by chunk index
+  chunks.sort((a, b) => {
+    const aIdx = a.numericAnnotations.find(an => an.key === "chunkIndex")?.value || 0
+    const bIdx = b.numericAnnotations.find(an => an.key === "chunkIndex")?.value || 0
+    return Number(aIdx) - Number(bIdx)
+  })
+
+  // Combine chunks
+  const buffers = chunks.map(chunk => Buffer.from(chunk.storageValue))
+  return Buffer.concat(buffers)
+}
+
+// Usage
+const imageBuffer = fs.readFileSync("photo.jpg")
+const fileId = await uploadFile(imageBuffer, "photo.jpg")
+console.log("Uploaded file:", fileId)
+
+// Later, download it
+const downloaded = await downloadFile(fileId)
+fs.writeFileSync("downloaded.jpg", downloaded)
+\`\`\`
 
 ## Integration Examples
 
@@ -743,20 +1088,27 @@ Ensure your applications follow security best practices.
 
 \`\`\`typescript
 // pages/api/store.ts
-import { ArkivClient } from '@arkiv/typescript-sdk'
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
 
-const client = new ArkivClient({
-  rpcUrl: process.env.ARKIV_RPC_URL!,
-  privateKey: process.env.ARKIV_PRIVATE_KEY!
-})
+const key = new Tagged("privatekey", Buffer.from(process.env.PRIVATE_KEY!, "hex"))
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const result = await client.store({
-      data: req.body,
-      expiration: '24h'
-    })
-    res.json(result)
+    const client = await createClient(
+      60138453025,
+      key,
+      process.env.RPC_URL!,
+      process.env.WS_URL!
+    )
+
+    const receipt = await client.createEntities([{
+      data: new TextEncoder().encode(JSON.stringify(req.body)),
+      expiresIn: 86400, // 24 hours
+      stringAnnotations: [new Annotation("type", "api-data")],
+      numericAnnotations: []
+    }])
+
+    res.json({ entityKey: receipt[0].entityKey })
   }
 }
 \`\`\`
@@ -765,20 +1117,34 @@ export default async function handler(req, res) {
 
 \`\`\`typescript
 import express from 'express'
-import { ArkivClient } from '@arkiv/typescript-sdk'
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
 
 const app = express()
-const arkiv = new ArkivClient({
-  rpcUrl: process.env.ARKIV_RPC_URL!,
-  privateKey: process.env.ARKIV_PRIVATE_KEY!
-})
+const key = new Tagged("privatekey", Buffer.from(process.env.PRIVATE_KEY!, "hex"))
+
+let client: any
+
+async function getClient() {
+  if (!client) {
+    client = await createClient(
+      60138453025,
+      key,
+      process.env.RPC_URL!,
+      process.env.WS_URL!
+    )
+  }
+  return client
+}
 
 app.post('/store', async (req, res) => {
-  const result = await arkiv.store({
-    data: req.body,
-    expiration: '1d'
-  })
-  res.json(result)
+  const arkiv = await getClient()
+  const receipt = await arkiv.createEntities([{
+    data: new TextEncoder().encode(JSON.stringify(req.body)),
+    expiresIn: 86400, // 24 hours
+    stringAnnotations: [new Annotation("type", "api-data")],
+    numericAnnotations: []
+  }])
+  res.json({ entityKey: receipt[0].entityKey })
 })
 \`\`\`
 
@@ -786,27 +1152,43 @@ app.post('/store', async (req, res) => {
 
 \`\`\`typescript
 import { useState, useEffect } from 'react'
-import { ArkivClient } from '@arkiv/typescript-sdk'
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
 
 export function useArkiv() {
-  const [client, setClient] = useState<ArkivClient | null>(null)
+  const [client, setClient] = useState<any>(null)
 
   useEffect(() => {
-    const arkivClient = new ArkivClient({
-      rpcUrl: process.env.NEXT_PUBLIC_ARKIV_RPC_URL!,
-      privateKey: process.env.ARKIV_PRIVATE_KEY!
-    })
-    setClient(arkivClient)
+    const init = async () => {
+      const key = new Tagged(
+        "privatekey",
+        Buffer.from(process.env.NEXT_PUBLIC_PRIVATE_KEY!, "hex")
+      )
+      const arkivClient = await createClient(
+        60138453025,
+        key,
+        process.env.NEXT_PUBLIC_RPC_URL!,
+        process.env.NEXT_PUBLIC_WS_URL!
+      )
+      setClient(arkivClient)
+    }
+    init()
   }, [])
 
-  const store = async (data: any, expiration?: string) => {
+  const store = async (data: any, expiresIn: number = 86400) => {
     if (!client) throw new Error('Arkiv client not initialized')
-    return client.store({ data, expiration })
+    const receipt = await client.createEntities([{
+      data: new TextEncoder().encode(JSON.stringify(data)),
+      expiresIn,
+      stringAnnotations: [new Annotation("type", "app-data")],
+      numericAnnotations: []
+    }])
+    return receipt[0].entityKey
   }
 
-  const get = async (id: string) => {
+  const get = async (entityKey: string) => {
     if (!client) throw new Error('Arkiv client not initialized')
-    return client.get(id)
+    const data = await client.getStorageValue(entityKey)
+    return JSON.parse(new TextDecoder().decode(data))
   }
 
   return { store, get, client }
@@ -815,23 +1197,158 @@ export function useArkiv() {
 
 ## Testing & Development
 
-### Local Development Setup
-
-Set up a local Arkiv node for development and testing.
-
-**→ Local Setup Guide** (soon)
-
-### Unit Testing
+### Unit Testing with Jest
 
 Write comprehensive tests for your Arkiv applications.
 
-**→ Testing Guide** (soon)
+\`\`\`typescript
+// __tests__/arkiv.test.ts
+import { createClient, Annotation, Tagged } from 'arkiv-sdk'
+
+describe('Arkiv Client', () => {
+  let client: any
+
+  beforeAll(async () => {
+    const key = new Tagged(
+      "privatekey",
+      Buffer.from(process.env.TEST_PRIVATE_KEY!, "hex")
+    )
+
+    client = await createClient(
+      60138453025,
+      key,
+      process.env.RPC_URL!,
+      process.env.WS_URL!
+    )
+  })
+
+  test('should create and retrieve entity', async () => {
+    const testData = "Test data for Jest"
+
+    // Create entity
+    const [receipt] = await client.createEntities([{
+      data: new TextEncoder().encode(testData),
+      expiresIn: 3600,
+      stringAnnotations: [new Annotation("type", "test")],
+      numericAnnotations: []
+    }])
+
+    expect(receipt.entityKey).toBeDefined()
+
+    // Retrieve entity
+    const data = await client.getStorageValue(receipt.entityKey)
+    const retrieved = new TextDecoder().decode(data)
+
+    expect(retrieved).toBe(testData)
+  })
+
+  test('should query entities by annotations', async () => {
+    // Create test entities
+    await client.createEntities([
+      {
+        data: new TextEncoder().encode("Test 1"),
+        expiresIn: 3600,
+        stringAnnotations: [new Annotation("type", "test-query")],
+        numericAnnotations: [new Annotation("priority", 5)]
+      },
+      {
+        data: new TextEncoder().encode("Test 2"),
+        expiresIn: 3600,
+        stringAnnotations: [new Annotation("type", "test-query")],
+        numericAnnotations: [new Annotation("priority", 3)]
+      }
+    ])
+
+    // Query high priority items
+    const results = await client.queryEntities(
+      'type = "test-query" && priority > 4'
+    )
+
+    expect(results.length).toBeGreaterThanOrEqual(1)
+  })
+})
+\`\`\`
 
 ### Deployment Strategies
 
 Best practices for deploying Arkiv applications to production.
 
-**→ Deployment Guide** (soon)
+**1. Environment Configuration**
+\`\`\`bash
+# .env.production
+PRIVATE_KEY=\${VAULT_PRIVATE_KEY}
+RPC_URL=https://kaolin.hoodi.arkiv.network/rpc
+WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws
+NODE_ENV=production
+\`\`\`
+
+**2. Docker Deployment**
+\`\`\`dockerfile
+# Dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
+ENV NODE_ENV=production
+
+CMD ["node", "dist/index.js"]
+\`\`\`
+
+**3. Health Checks**
+\`\`\`typescript
+// health.ts
+import { createClient } from 'arkiv-sdk'
+
+export async function healthCheck() {
+  try {
+    const client = await createClient(
+      parseInt(process.env.CHAIN_ID!),
+      process.env.PRIVATE_KEY!,
+      process.env.RPC_URL!,
+      process.env.WS_URL!
+    )
+
+    // Try a simple query
+    await client.queryEntities('type = "health-check"')
+
+    return { status: 'healthy', timestamp: Date.now() }
+  } catch (error) {
+    return { status: 'unhealthy', error: error.message }
+  }
+}
+\`\`\`
+
+**4. Monitoring & Logging**
+\`\`\`typescript
+import winston from 'winston'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+})
+
+// Log all Arkiv operations
+async function createEntityWithLogging(data: any) {
+  try {
+    logger.info('Creating entity', { data })
+    const receipt = await client.createEntities([data])
+    logger.info('Entity created', { entityKey: receipt[0].entityKey })
+    return receipt
+  } catch (error) {
+    logger.error('Failed to create entity', { error, data })
+    throw error
+  }
+}
+\`\`\`
 `
 }
 
@@ -930,8 +1447,11 @@ export default function DocsPage() {
           <h1 className="font-brutal text-4xl md:text-6xl font-black uppercase text-black leading-tight tracking-wider mb-6">
             [ ARKIV DOCS ]
           </h1>
-          <p className="font-mono text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="font-mono text-lg text-gray-600 max-w-3xl mx-auto mb-4">
             Everything you need to build with Arkiv. From quick start guides to comprehensive API documentation.
+          </p>
+          <p className="font-mono text-sm text-gray-500">
+            Last updated: October 2025 · SDK v0.1.19
           </p>
         </div>
       </section>
@@ -970,42 +1490,90 @@ export default function DocsPage() {
             {/* Main Content */}
             <div className="flex-1">
               <div className="prose prose-lg max-w-none">
-                <h1 className="font-brutal text-3xl font-medium text-black mb-8" style={{ textTransform: 'none' }}>
-                  {currentContent.title}
-                </h1>
-                <div className="docs-content space-y-4 prose prose-slate max-w-none" style={{ textTransform: 'none' }}>
+                {/* Page Header with Icon */}
+                <div className="mb-12">
+                  <div className="inline-flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                      <span className="text-2xl">📚</span>
+                    </div>
+                    <h1 className="font-brutal text-4xl font-medium text-black m-0" style={{ textTransform: 'none' }}>
+                      {currentContent.title}
+                    </h1>
+                  </div>
+                  <p className="text-lg text-gray-600 font-mono mt-2">
+                    {docsNavigation.find(s => s.id === activeSection)?.description}
+                  </p>
+                </div>
+
+                <div className="docs-content space-y-8 prose prose-slate max-w-none" style={{ textTransform: 'none' }}>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw]}
                     components={{
-                      h1: ({node, ...props}) => <h1 className="font-brutal text-2xl font-medium text-black mt-8 mb-4 border-b border-gray-200 pb-2" style={{ textTransform: 'none' }} {...props} />,
-                      h2: ({node, ...props}) => <h2 className="font-brutal text-xl font-medium text-black mt-6 mb-3" style={{ textTransform: 'none' }} {...props} />,
-                      h3: ({node, ...props}) => <h3 className="font-semibold text-lg text-black mt-4 mb-2" style={{ textTransform: 'none' }} {...props} />,
-                      p: ({node, ...props}) => <p className="mb-4 text-gray-700 leading-relaxed" style={{ textTransform: 'none' }} {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc list-inside my-4 space-y-2" style={{ textTransform: 'none' }} {...props} />,
-                      li: ({node, ...props}) => <li className="text-gray-700" style={{ textTransform: 'none' }} {...props} />,
-                      a: ({node, ...props}) => <a className="text-blue-600 hover:text-blue-800 underline font-medium" style={{ textTransform: 'none' }} {...props} />,
+                      h1: ({node, ...props}) => (
+                        <div className="bg-gradient-to-r from-blue-50 to-transparent border-l-4 border-blue-600 pl-6 py-4 my-10 rounded-r-lg">
+                          <h1 className="font-brutal text-3xl font-medium text-black m-0" style={{ textTransform: 'none' }} {...props} />
+                        </div>
+                      ),
+                      h2: ({node, ...props}) => (
+                        <h2 className="font-brutal text-2xl font-medium text-black mt-12 mb-6 pb-3 border-b-2 border-gray-200" style={{ textTransform: 'none' }} {...props} />
+                      ),
+                      h3: ({node, ...props}) => (
+                        <h3 className="font-brutal text-xl font-medium text-black mt-8 mb-4" style={{ textTransform: 'none' }} {...props} />
+                      ),
+                      p: ({node, ...props}) => {
+                        // Check if paragraph starts with bold text (concept highlight)
+                        const text = String(props.children);
+                        const startsWithBold = text.match(/^\*\*(.+?)\*\*/);
+
+                        if (startsWithBold) {
+                          return (
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 my-6 rounded-r">
+                              <p className="mb-0 text-gray-800 leading-relaxed font-mono text-sm" style={{ textTransform: 'none' }} {...props} />
+                            </div>
+                          );
+                        }
+
+                        return <p className="mb-6 text-gray-700 leading-relaxed text-base" style={{ textTransform: 'none' }} {...props} />;
+                      },
+                      ul: ({node, ...props}) => <ul className="list-none my-6 space-y-3 pl-0" style={{ textTransform: 'none' }} {...props} />,
+                      li: ({node, ...props}) => (
+                        <li className="text-gray-700 pl-6 relative before:content-['▸'] before:absolute before:left-0 before:text-blue-600 before:font-bold" style={{ textTransform: 'none' }} {...props} />
+                      ),
+                      a: ({node, ...props}) => (
+                        <a className="text-blue-600 hover:text-blue-800 underline decoration-2 underline-offset-2 font-medium transition-colors" style={{ textTransform: 'none' }} {...props} />
+                      ),
+                      pre: ({node, ...props}) => (
+                        <pre className="bg-white" {...props} />
+                      ),
                       code: ({node, inline, className, children, ...props}: any) => {
                         const match = /language-(\w+)/.exec(className || '')
                         const language = match ? match[1] : 'typescript'
                         return !inline ? (
-                          <div className="my-6">
-                            <CodeBlock code={String(children).replace(/\n$/, '')} language={language} />
+                          <div className="my-8">
+                            <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                              {/* Language Badge */}
+                              <div className="bg-gray-800 px-4 py-2 flex items-center justify-between border-b border-gray-700">
+                                <span className="text-xs font-mono text-gray-300 uppercase tracking-wide">{language}</span>
+                                <span className="text-xs text-gray-400">Example</span>
+                              </div>
+                              <CodeBlock code={String(children).replace(/\n$/, '')} language={language} />
+                            </div>
                           </div>
                         ) : (
-                          <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono" style={{ textTransform: 'none' }} {...props}>
+                          <code className="bg-blue-100 text-blue-900 px-2 py-1 rounded font-mono text-sm font-semibold" style={{ textTransform: 'none' }} {...props}>
                             {children}
                           </code>
                         )
                       },
                       table: ({node, ...props}) => (
-                        <div className="overflow-x-auto my-6">
-                          <table className="w-full border-collapse border border-gray-300" {...props} />
+                        <div className="overflow-x-auto my-8 rounded-lg border border-gray-200 shadow-sm">
+                          <table className="w-full border-collapse" {...props} />
                         </div>
                       ),
-                      thead: ({node, ...props}) => <thead className="bg-gray-50" {...props} />,
-                      th: ({node, ...props}) => <th className="border border-gray-300 px-3 py-2 text-left font-semibold" {...props} />,
-                      td: ({node, ...props}) => <td className="border border-gray-300 px-3 py-2 text-sm" {...props} />
+                      thead: ({node, ...props}) => <thead className="bg-gray-100" {...props} />,
+                      th: ({node, ...props}) => <th className="border-b-2 border-gray-300 px-4 py-3 text-left font-brutal text-sm uppercase" {...props} />,
+                      td: ({node, ...props}) => <td className="border-b border-gray-200 px-4 py-3 text-sm" {...props} />
                     }}
                   >
                     {currentContent.content}

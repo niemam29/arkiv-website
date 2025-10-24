@@ -63,7 +63,7 @@ export default function FAQSection() {
               id: 5,
               documentId: 'faq-5',
               question: 'How do I get started with Arkiv?',
-              answer: 'Start by installing our SDK (arkiv-sdk for TypeScript or arkiv-sdk-python for Python), then follow our Getting Started guide to connect to Arkiv testnet and create your first database.',
+              answer: 'Start by installing our SDK (arkiv-sdk for TypeScript or arkiv-sdk for Python), then follow our Getting Started guide to connect to Arkiv testnet and create your first database.',
               sortOrder: 5
             }
           ])
@@ -106,7 +106,7 @@ export default function FAQSection() {
             id: 5,
             documentId: 'faq-5',
             question: 'How do I get started with Arkiv?',
-            answer: 'Start by installing our SDK (arkiv-sdk for TypeScript or arkiv-sdk-python for Python), then follow our Getting Started guide to connect to Arkiv testnet and create your first database.',
+            answer: 'Start by installing our SDK (arkiv-sdk for TypeScript or arkiv-sdk for Python), then follow our Getting Started guide to connect to Arkiv testnet and create your first database.',
             sortOrder: 5
           }
         ])

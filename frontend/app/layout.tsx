@@ -144,7 +144,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>`
           src="https://umami.golemdb.io/script.js"
         />
 
-        <div className="bg-white flex flex-col relative">
+        <div className="flex flex-col relative">
           {/* Background Video - conditional based on route */}
           <ConditionalVideo />
 

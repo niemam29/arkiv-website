@@ -9,7 +9,7 @@ RUN apk add --no-cache nodejs npm
 RUN mkdir -p /app/js_workspace && \
     cd /app/js_workspace && \
     npm init -y && \
-    npm install ethers@6 web3@4 axios golem-base-sdk dotenv
+    npm install ethers@6 web3@4 axios arkiv-sdk dotenv
 
 # Install Python dependencies
 COPY execution-service/requirements.txt .

@@ -4,12 +4,11 @@ import { useRef, useState, useEffect } from 'react'
 
 interface UseCase {
   id: number
-  documentId: string
   title: string
   tagline: string
   description: string
-  sortOrder: number
-  liveUrl: string
+  sort_order: number
+  live_url: string
   status: string
 }
 
@@ -31,17 +30,16 @@ export default function UseCasesSection() {
   useEffect(() => {
     async function fetchUseCases() {
       try {
-        const response = await fetch('https://cms.arkiv.network/api/use-cases?sort=sortOrder:asc')
+        const response = await fetch('https://cms.arkiv.network/items/use_cases?sort=sort_order')
         const data = await response.json()
 
         const casesList: UseCase[] = data.data?.map((item: any) => ({
           id: item.id,
-          documentId: item.documentId,
           title: item.title,
           tagline: item.tagline || '',
           description: item.description,
-          sortOrder: item.sortOrder || 0,
-          liveUrl: item.liveUrl || '',
+          sort_order: item.sort_order || 0,
+          live_url: item.live_url || '',
           status: item.status || 'development'
         })) || []
 
@@ -50,52 +48,47 @@ export default function UseCasesSection() {
           setUseCases([
             {
               id: 1,
-              documentId: 'copypal',
               title: 'CopyPal',
               tagline: 'Decentralized clipboard',
               description: 'Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.',
-              sortOrder: 1,
-              liveUrl: 'https://copypal.online/',
+              sort_order: 1,
+              live_url: 'https://copypal.online/',
               status: 'live'
             },
             {
               id: 2,
-              documentId: 'imagedb',
               title: 'ImageDB',
               tagline: 'Image processing with blockchain',
               description: 'Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.',
-              sortOrder: 2,
-              liveUrl: 'https://imagedb.online/',
+              sort_order: 2,
+              live_url: 'https://imagedb.online/',
               status: 'live'
             },
             {
               id: 3,
-              documentId: 'filedb',
               title: 'FileDB',
               tagline: 'Universal file storage',
               description: 'Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.',
-              sortOrder: 3,
-              liveUrl: 'https://filedb.online/',
+              sort_order: 3,
+              live_url: 'https://filedb.online/',
               status: 'live'
             },
             {
               id: 4,
-              documentId: 'webdb',
               title: 'WebDB Static Hosting',
               tagline: 'Immutable static hosting',
               description: 'Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.',
-              sortOrder: 4,
-              liveUrl: 'https://webdb.site',
+              sort_order: 4,
+              live_url: 'https://webdb.site',
               status: 'live'
             },
             {
               id: 5,
-              documentId: 'portfolio',
               title: 'Arkiv Portfolio',
               tagline: 'Showcase portfolio',
               description: 'Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.',
-              sortOrder: 5,
-              liveUrl: 'https://usecases.arkiv.network',
+              sort_order: 5,
+              live_url: 'https://usecases.arkiv.network',
               status: 'live'
             }
           ])
@@ -108,52 +101,47 @@ export default function UseCasesSection() {
         setUseCases([
           {
             id: 1,
-            documentId: 'copypal',
             title: 'CopyPal',
             tagline: 'Decentralized clipboard',
             description: 'Copy/paste any content to blockchain storage with one click, powered by decentralized CopyPal application.',
-            sortOrder: 1,
-            liveUrl: 'https://copypal.online/',
+            sort_order: 1,
+            live_url: 'https://copypal.online/',
             status: 'live'
           },
           {
             id: 2,
-            documentId: 'imagedb',
             title: 'ImageDB',
             tagline: 'Image processing with blockchain',
             description: 'Advanced image processing and editing with blockchain storage for permanent image preservation and versioning.',
-            sortOrder: 2,
-            liveUrl: 'https://imagedb.online/',
+            sort_order: 2,
+            live_url: 'https://imagedb.online/',
             status: 'live'
           },
           {
             id: 3,
-            documentId: 'filedb',
             title: 'FileDB',
             tagline: 'Universal file storage',
             description: 'Universal file storage middleware with chunking for Arkiv integration. Seamlessly handles large files.',
-            sortOrder: 3,
-            liveUrl: 'https://filedb.online/',
+            sort_order: 3,
+            live_url: 'https://filedb.online/',
             status: 'live'
           },
           {
             id: 4,
-            documentId: 'webdb',
             title: 'WebDB Static Hosting',
             tagline: 'Immutable static hosting',
             description: 'Immutable static hosting backed by Arkiv. Deploy websites with blockchain-verified content storage guarantees.',
-            sortOrder: 4,
-            liveUrl: 'https://webdb.site',
+            sort_order: 4,
+            live_url: 'https://webdb.site',
             status: 'live'
           },
           {
             id: 5,
-            documentId: 'portfolio',
             title: 'Arkiv Portfolio',
             tagline: 'Showcase portfolio',
             description: 'Showcase portfolio of real applications built with Arkiv - featuring caching and blockchain storage.',
-            sortOrder: 5,
-            liveUrl: 'https://usecases.arkiv.network',
+            sort_order: 5,
+            live_url: 'https://usecases.arkiv.network',
             status: 'live'
           }
         ])
@@ -235,8 +223,8 @@ export default function UseCasesSection() {
           <div ref={scrollContainerRef} className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide">
             {useCases.map((useCase, index) => (
               <a
-                key={useCase.documentId}
-                href={useCase.liveUrl}
+                key={useCase.id}
+                href={useCase.live_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gray-200 w-[312px] h-[400px] px-5 py-6 rounded-2xl shadow-figma-card flex flex-col justify-between relative flex-shrink-0 hover:bg-orange-400 transition-colors duration-200 cursor-pointer group"

@@ -2,4 +2,5 @@ fastapi==0.115.12
 uvicorn[standard]==0.34.2
 pydantic==2.11.9
 golem-base-sdk==0.1.0
+arkiv-sdk==0.2.1
 web3==7.13.0

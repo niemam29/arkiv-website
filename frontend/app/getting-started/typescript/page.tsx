@@ -5,6 +5,9 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Wallet } from "ethers";
 import { CodePlayground } from "@/components/ui/CodePlayground";
 
+// Force this page to be dynamic (not statically pre-rendered)
+export const dynamic = 'force-dynamic';
+
 import {
   TooltipProvider,
   Tooltip,
@@ -33,6 +36,9 @@ export default function GettingStartedPage() {
     privateKey: string;
   } | null>(null);
   const [copied, setCopied] = useState<"address" | "privateKey" | null>(null);
+  const [balance, setBalance] = useState<string | null>(null);
+  const [isCheckingBalance, setIsCheckingBalance] = useState(false);
+  const [faucetClicked, setFaucetClicked] = useState(false);
 
   const helloPlaygroundTs = (
     generatedPk?: string,
@@ -65,12 +71,12 @@ const enc = new TextEncoder();
 const dec = new TextDecoder();
 
 // 6) Write one tiny record on-chain: "Hello, Arkiv!"
-//    - expires_in: "blocks-to-live" (expiration window)
+//    - expiresIn: time-to-live in seconds (expiration window)
 //    - stringAnnotations: small key/value tags you can later query by
 const [hello] = await client.createEntities([{
   data: enc.encode('Hello, Arkiv!'),
-  expires_in: 120,
-  stringAnnotations: [{ key: 'type', value: 'hello' }],
+  expiresIn: 120,
+  stringAnnotations: [new Annotation('type', 'hello')],
   numericAnnotations: []
 }]);
 
@@ -222,6 +228,71 @@ You’ll still use the same building blocks (account, client, and connection), b
     [],
   );
 
+  // Balance checker - poll every 3 seconds when faucet is clicked
+  useEffect(() => {
+    console.log('[Balance Checker] useEffect triggered', {
+      hasAddress: !!generated?.address,
+      address: generated?.address,
+      faucetClicked
+    });
+
+    if (!generated?.address || !faucetClicked) {
+      console.log('[Balance Checker] Early return - missing address or faucet not clicked');
+      setBalance(null);
+      setIsCheckingBalance(false);
+      return;
+    }
+
+    console.log('[Balance Checker] Starting balance checking...');
+    setIsCheckingBalance(true);
+
+    const checkBalance = async () => {
+      try {
+        console.log('[Balance Checker] Fetching balance for:', generated.address);
+        const response = await fetch('https://kaolin.hoodi.arkiv.network/rpc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_getBalance',
+            params: [generated.address, 'latest']
+          })
+        });
+
+        const data = await response.json();
+        console.log('[Balance Checker] RPC response:', data);
+
+        if (data.result) {
+          // Convert from hex wei to ETH
+          const balanceWei = BigInt(data.result);
+          const balanceEth = Number(balanceWei) / 1e18;
+          console.log('[Balance Checker] Balance converted:', {
+            hex: data.result,
+            wei: balanceWei.toString(),
+            eth: balanceEth
+          });
+          setBalance(balanceEth.toFixed(6));
+        }
+      } catch (error) {
+        console.error('[Balance Checker] Error:', error);
+      }
+    };
+
+    // Check immediately
+    console.log('[Balance Checker] Running initial check');
+    checkBalance();
+
+    // Then check every 3 seconds
+    console.log('[Balance Checker] Setting up interval (3s)');
+    const interval = setInterval(checkBalance, 3000);
+
+    return () => {
+      console.log('[Balance Checker] Cleanup - clearing interval');
+      clearInterval(interval);
+    };
+  }, [generated?.address, faucetClicked]);
+
   // Sticky nav highlight
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -273,6 +344,8 @@ You’ll still use the same building blocks (account, client, and connection), b
   function resetGenerated() {
     setGenerated(null);
     setCopied(null);
+    setFaucetClicked(false);
+    setBalance(null);
   }
   async function copy(text: string, field: "address" | "privateKey") {
     try {
@@ -290,7 +363,7 @@ You’ll still use the same building blocks (account, client, and connection), b
             {/* Header */}
             <div className="text-center space-y-4 mb-12">
               <div className="inline-block px-4 py-2 bg-[#FE7445] text-white text-sm font-mono rounded-lg shadow-figma-button-primary">
-                TypeScript SDK v0.1.16
+                SDK v0.1.19
               </div>
               <h1 className="text-4xl md:text-5xl font-brutal font-black uppercase text-black">
                 Arkiv TS SDK — Getting Started
@@ -299,13 +372,80 @@ You’ll still use the same building blocks (account, client, and connection), b
                 Voting Board: Open a proposal, collect votes in real time, tally
                 them, batch more votes, then extend the voting window.
               </p>
+              <p className="text-sm font-mono text-gray-500 mt-2">
+                Last updated: January 2025
+              </p>
               <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 font-mono text-xs text-stone-700">
                 <span>Flow</span>
                 <span>•</span>
                 <span>
-                  Hello Arkiv → Setup → Connect → Open → Cast → (Batch) → Tally
-                  → Watch → Extend
+                  Hello Arkiv · Setup · Connect · Open · Cast · (Batch) · Tally
+                  · Watch · Extend
                 </span>
+              </div>
+            </div>
+
+            {/* Testnet Info Box */}
+            <div className="mb-12 p-6 bg-blue-50 border-2 border-blue-200 rounded-2xl shadow-figma-card">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="px-3 py-1.5 bg-blue-600 text-white font-mono text-sm rounded-lg font-bold">
+                    TESTNET
+                  </div>
+                  <h3 className="font-brutal text-xl font-bold uppercase text-blue-900">
+                    Kaolin Testnet Resources
+                  </h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText('https://kaolin.hoodi.arkiv.network/rpc')
+                      alert('RPC URL has been copied to clipboard')
+                    }}
+                    className="flex items-center justify-between gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer w-full text-left"
+                    title="Click to copy RPC URL"
+                  >
+                    <span className="font-mono text-sm font-bold text-blue-900">
+                      🌐 RPC
+                    </span>
+                    <svg className="w-4 h-4 text-blue-900 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                  <a
+                    href="https://kaolin.hoodi.arkiv.network/faucet/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <span className="font-mono text-sm font-bold text-blue-900">💧 Faucet</span>
+                  </a>
+                  <a
+                    href="https://explorer.kaolin.hoodi.arkiv.network/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <span className="font-mono text-sm font-bold text-blue-900">🔍 Explorer</span>
+                  </a>
+                  <a
+                    href="https://kaolin.hoodi.arkiv.network/bridgette/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <span className="font-mono text-sm font-bold text-blue-900">🌉 Bridge</span>
+                  </a>
+                </div>
+                <a
+                  href="https://kaolin.hoodi.arkiv.network/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-100 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
+                >
+                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  <span className="font-mono text-sm font-bold text-green-900">Network Status</span>
+                </a>
               </div>
             </div>
 
@@ -337,7 +477,7 @@ You’ll still use the same building blocks (account, client, and connection), b
 
             {/* 1) Hello Arkiv */}
             <section id="fund-hello" className="mb-16">
-              <h2 className="text-3xl font-bold mb-8">1) Say “Hello, Arkiv”</h2>
+              <h2 className="text-3xl font-bold mb-8">1) Say "Hello, Arkiv"</h2>
 
               <div className="bg-gray-200 rounded-2xl p-6 border border-stone-300 shadow-figma-card">
                 {/* Friendly intro (inline tooltips) */}
@@ -362,7 +502,7 @@ You’ll still use the same building blocks (account, client, and connection), b
                     </T>
                     . Writing to the chain uses{" "}
                     <T term="gas">
-                      A tiny fee paid to execute your write; we’ll use test
+                      A tiny fee paid to execute your write; we'll use test
                       funds on a test network.
                     </T>
                     .
@@ -373,105 +513,146 @@ You’ll still use the same building blocks (account, client, and connection), b
                 <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-4">
                   <p className="font-mono text-sm text-amber-900">
                     <b>Safety:</b> The account you generate here is for{" "}
-                    <b>demo/sandbox use only</b>. Don’t use it for real value.
+                    <b>demo/sandbox use only</b>. Don't use it for real value.
                   </p>
                 </div>
 
-                {/* Step A — Generate */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-brutal font-bold text-black mb-2">
-                    A) Generate an account
-                  </h3>
-                  <p className="font-mono text-sm text-stone-900 mb-3">
-                    Click once. We’ll create a new{" "}
-                    <T term="account">
-                      Address + private key pair in your browser.
-                    </T>
-                  </p>
-                  <button
-                    onClick={generateWallet}
-                    className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
-                  >
-                    Generate account
-                  </button>
-                </div>
-
-                {/* Keys display */}
-                {generated && (
-                  <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4 mb-6">
-                    <FieldRow
-                      label="Account Address"
-                      value={generated.address}
-                      onCopy={() => copy(generated.address, "address")}
-                      copied={copied === "address"}
-                    />
-                    <FieldRow
-                      label="Private Key"
-                      value={generated.privateKey}
-                      onCopy={() => copy(generated.privateKey, "privateKey")}
-                      copied={copied === "privateKey"}
-                    />
-                    <p className="text-xs font-mono text-stone-700">
-                      Save these somewhere safe. You’ll use them in the next
-                      step.
+                {/* Step A — Generate (only show button if not generated) */}
+                {!generated && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-brutal font-bold text-black mb-2">
+                      Generate an account
+                    </h3>
+                    <p className="font-mono text-sm text-stone-900 mb-3">
+                      Click once. We'll create a new{" "}
+                      <T term="account">
+                        Address + private key pair in your browser.
+                      </T>
                     </p>
+                    <button
+                      onClick={generateWallet}
+                      className="px-4 py-2 rounded-lg bg-black text-white font-mono text-sm hover:opacity-90 transition"
+                    >
+                      Generate account
+                    </button>
                   </div>
                 )}
 
-                {/* Step B — Fund */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-brutal font-bold text-black mb-2">
-                    B) Add faucet funds
-                  </h3>
-                  <p className="font-mono text-sm text-stone-900 mb-3">
-                    Open the{" "}
-                    <T term="faucet">
-                      A website that sends free test ETH on a test network.
-                    </T>{" "}
-                    and paste an{" "}
-                    <T term="address">
-                      Your public account string (starts with 0x…)
-                    </T>
-                    . If you generated one above, copy it. Otherwise, you can
-                    paste an address from your own wallet.
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <a
-                      href={faucetHref}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-4 py-2 rounded-lg font-mono text-sm bg-[#0f766e] text-white hover:opacity-90 transition"
-                    >
-                      Open Faucet
-                    </a>
-                  </div>
-                </div>
+                {/* Keys display - shown after generation */}
+                {generated && (
+                  <>
+                    <div className="rounded-xl border border-stone-300 bg-white p-4 space-y-4 mb-6">
+                      <FieldRow
+                        label="Account Address"
+                        value={generated.address}
+                        onCopy={() => copy(generated.address, "address")}
+                        copied={copied === "address"}
+                      />
+                      <FieldRow
+                        label="Private Key"
+                        value={generated.privateKey}
+                        onCopy={() => copy(generated.privateKey, "privateKey")}
+                        copied={copied === "privateKey"}
+                      />
+                      <p className="text-xs font-mono text-stone-700">
+                        Save these somewhere safe. You'll use them in the next step.
+                      </p>
+                    </div>
 
-                {/* Divider */}
-                <div className="border-t border-stone-300 my-6" />
+                    {/* Step B — Fund account */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-brutal font-bold text-black mb-2">
+                        Now let's add funds to your account
+                      </h3>
+                      <p className="font-mono text-sm text-stone-900 mb-3">
+                        Open the{" "}
+                        <T term="faucet">
+                          A website that sends free test ETH on a test network.
+                        </T>{" "}
+                        and paste your{" "}
+                        <T term="address">
+                          Public account string (starts with 0x…)
+                        </T>{" "}
+                        from above.
+                      </p>
 
-                {/* Step C — Hello */}
-                <div>
-                  <h3 className="text-lg font-brutal font-bold text-black mb-2">
-                    C) Say “Hello, Arkiv”
-                  </h3>
-                  <p className="font-mono text-sm text-stone-900 mb-3">
-                    Run a tiny example in your browser that writes a single
-                    on-chain record — no local setup required.
-                  </p>
-                  <CodePlayground
-                    description={
-                      generated
-                        ? "Prefilled with the account you just created. Click Run."
-                        : "Paste a private key at the top of the script, or generate one above. Then click Run."
-                    }
-                    initialCode={helloPlaygroundTs(generated?.privateKey)}
-                    showLanguageToggle={false}
-                  />
-                  <p className="mt-2 text-xs font-mono text-stone-700">
-                    We’ll prefill it to use the account you just created.
-                  </p>
-                </div>
+                      {/* Show Open Faucet button only if not clicked yet */}
+                      {!faucetClicked && (
+                        <button
+                          onClick={() => {
+                            console.log('Opening faucet, setting faucetClicked to true');
+                            window.open(faucetHref, '_blank');
+                            setFaucetClicked(true);
+                            console.log('faucetClicked state updated');
+                          }}
+                          className="px-4 py-2 rounded-lg font-mono text-sm bg-[#0f766e] text-white hover:opacity-90 transition"
+                        >
+                          Open Faucet
+                        </button>
+                      )}
+
+                      {/* Balance checker - shown after faucet clicked */}
+                      {faucetClicked && isCheckingBalance && (
+                        <>
+                          <div className={`p-3 rounded-lg border ${
+                            balance && parseFloat(balance) > 0
+                              ? 'bg-green-50 border-green-300'
+                              : 'bg-amber-50 border-amber-300'
+                          }`}>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-mono text-xs uppercase tracking-wider text-stone-500">Balance</p>
+                                <p className="font-mono text-lg font-bold">
+                                  {balance || '0.000000'} ETH
+                                </p>
+                              </div>
+                              {balance && parseFloat(balance) > 0 ? (
+                                <div className="text-green-600 font-mono text-sm font-bold">
+                                  ✓ Ready
+                                </div>
+                              ) : (
+                                <div className="text-amber-600 font-mono text-sm font-bold animate-pulse">
+                                  ⟳ Checking...
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Warning when no funds */}
+                          {(!balance || parseFloat(balance) === 0) && (
+                            <p className="font-mono text-sm text-amber-900 mt-3 font-bold">
+                              ⚠️ You need to add funds to your account, we can't proceed to the next step without them.
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {/* Step C — Hello (only show when balance > 0) */}
+                    {balance && parseFloat(balance) > 0 && (
+                      <>
+                        <div className="border-t border-stone-300 my-6" />
+                        <div>
+                          <h3 className="text-lg font-brutal font-bold text-black mb-2">
+                            Now you can say "Hello, Arkiv"
+                          </h3>
+                          <p className="font-mono text-sm text-stone-900 mb-3">
+                            Run this example in your browser that writes a single
+                            on-chain record — no local setup required.
+                          </p>
+                          <CodePlayground
+                            key={generated?.privateKey || 'no-key'}
+                            description="Your account is prefilled and funded. Click the green Run button to execute."
+                            initialCode={helloPlaygroundTs(generated.privateKey)}
+                            showLanguageToggle={false}
+                            hideWalletButton={true}
+                            hideSaveButton={true}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </section>
 
@@ -494,8 +675,7 @@ You’ll still use the same building blocks (account, client, and connection), b
                   Prerequisites
                 </h3>
                 <p className="text-stone-900 font-mono text-sm mb-4">
-                  Tested with arkiv-sdk-js@0.1.16 and Node.js 20+. Bun also works.
-                  works.
+                  SDK v0.1.19 (tested with arkiv-sdk@0.1.19). Requires Node.js 18 (LTS) or newer; verified on Node.js 20. Support for Bun 1.x runtime is available.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <CheckRow
@@ -526,11 +706,11 @@ You’ll still use the same building blocks (account, client, and connection), b
                   language="bash"
                   code={`# Using npm
 npm init -y
-npm i arkiv-sdk-js dotenv tslib ethers
+npm i arkiv-sdk dotenv tslib ethers
 
 # or with Bun
 bun init -y
-bun add arkiv-sdk-js dotenv tslib ethers`}
+bun add arkiv-sdk dotenv tslib ethers`}
                 />
               </div>
 
@@ -569,7 +749,7 @@ bun add arkiv-sdk-js dotenv tslib ethers`}
     "dev": "tsx watch voting-board.ts"
   },
   "dependencies": {
-    "arkiv-base-sdk": "^0.1.16",
+    "arkiv-sdk": "^0.1.19",
     "dotenv": "^16.4.5",
     "tslib": "^2.8.1",
     "ethers": "^6.13.4"
@@ -617,7 +797,7 @@ WS_URL=wss://your.rpc.endpoint/rpc/ws    # e.g. wss://kaolin.hoodi.arkiv.network
                 <CodeBlock
                   language="typescript"
                   code={`import 'dotenv/config';
-import { createClient, Annotation, Tagged, type AccountData, type GolemBaseCreate } from 'arkiv-base-sdk';
+import { createClient, Annotation, Tagged, type AccountData, type ArkivCreate } from 'arkiv-sdk';
 
 // Helper: query RPC for basic network info
 async function getChainId(rpcUrl: string): Promise<number> {
@@ -672,13 +852,13 @@ if (owner) console.log('Your account:', owner);`}
                   code={`const [proposal] = await client.createEntities([
   {
     data: enc.encode('Proposal: Switch stand-up to 9:30?'),
-    expires_in: 200,
+    expiresIn: 200, // 200 seconds
     stringAnnotations: [
       new Annotation('type', 'proposal'),
       new Annotation('status', 'open'),
     ],
     numericAnnotations: [new Annotation('version', 1)],
-  } as GolemBaseCreate,
+  } as ArkivCreate,
 ]);
 console.log('Proposal key:', proposal.entityKey);
 
@@ -709,7 +889,7 @@ const proposalKey = proposal.entityKey;`}
 const [vote1, vote2] = await client.createEntities([
   {
     data: enc.encode('vote: yes'),
-    expires_in: 200,
+    expiresIn: 200, // 200 seconds
     stringAnnotations: [
       new Annotation('type', 'vote'),
       new Annotation('proposalKey', proposalKey),
@@ -720,7 +900,7 @@ const [vote1, vote2] = await client.createEntities([
   },
   {
     data: enc.encode('vote: no'),
-    expires_in: 200,
+    expiresIn: 200, // 200 seconds
     stringAnnotations: [
       new Annotation('type', 'vote'),
       new Annotation('proposalKey', proposalKey),
@@ -729,7 +909,7 @@ const [vote1, vote2] = await client.createEntities([
     ],
     numericAnnotations: [new Annotation('weight', 1)],
   },
-] as GolemBaseCreate[]);
+] as ArkivCreate[]);
 console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
                 />
               </div>
@@ -755,7 +935,7 @@ console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
                   language="typescript"
                   code={`const extras = Array.from({ length: 5 }, (_, i) => ({
   data: enc.encode(\`vote: yes #\${i + 1}\`),
-  expires_in: 200,
+  expiresIn: 200,
   stringAnnotations: [
     new Annotation('type', 'vote'),
     new Annotation('proposalKey', proposalKey),
@@ -763,7 +943,7 @@ console.log('Votes cast:', vote1.entityKey, vote2.entityKey);`}
     new Annotation('choice', 'yes'),
   ],
   numericAnnotations: [new Annotation('weight', 1)],
-})) as GolemBaseCreate[];
+})) as ArkivCreate[];
 
 const receipts = await client.createEntities(extras);
 console.log(\`Batch created: \${receipts.length} votes\`);`}

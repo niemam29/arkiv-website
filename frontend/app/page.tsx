@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 // import { Carousel } from '@/components/ui/Carousel'
 import StructuredData from '@/components/seo/StructuredData'
 import HoverVideo from '@/components/ui/HoverVideo'
+import ScrollPlayVideo from '@/components/ui/ScrollPlayVideo'
 
 // Force dynamic rendering to enable middleware CSP headers
 export const revalidate = 0
@@ -166,15 +167,13 @@ export default function Home() {
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main Content Area */}
-            <div className="w-full lg:w-[984px] h-[500px] lg:h-[624px] relative rounded-2xl overflow-hidden">
-              <HoverVideo
+            <div className="w-full lg:w-[984px] h-[500px] lg:h-[624px] relative rounded-2xl overflow-hidden bg-white">
+              <ScrollPlayVideo
                 src="/movies/how_it_works.mp4"
                 className="w-full h-full object-cover"
                 muted={true}
                 playsInline={true}
-                autoPlay={true}
-                loop={true}
-                poster="/images/how-it-works-3d.png"
+                pingPong={true}
               />
               <div className="absolute bottom-4 md:bottom-8 right-4 md:right-8 left-4 md:left-auto flex flex-col md:flex-row gap-3">
                 <a href="#getting-started" className="px-5 py-2 bg-stone-900 text-white font-mono text-base rounded-lg shadow-figma-button-primary hover:bg-stone-800 transition-colors text-center w-full md:w-auto">
@@ -275,15 +274,15 @@ export default function Home() {
             </div>
 
             {/* Right Side Visual */}
-            <div className="w-full lg:w-[984px] h-[400px] lg:h-[624px] relative rounded-2xl overflow-hidden">
+            <div className="w-full lg:w-[984px] h-[400px] lg:h-[624px] relative rounded-2xl overflow-hidden bg-white flex items-center justify-center">
               <video
                 src="/movies/golem.mp4"
-                className="w-full h-full object-cover rounded-2xl"
+                className="min-w-full min-h-full object-cover scale-105"
                 autoPlay
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
             </div>
           </div>
@@ -300,7 +299,7 @@ export default function Home() {
           <div className="flex flex-col gap-[32px]">
           <h2 id="getting-started" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">
             <span className="md:hidden">[ Start Now ]</span>
-            <span className="hidden md:inline">[ Start building in Arkiv in 10 minutes ]</span>
+            <span className="hidden md:inline">[ Start building on Arkiv in 10 minutes ]</span>
           </h2>
 
           <div className="flex flex-col gap-6 w-full">
@@ -422,14 +421,13 @@ export default function Home() {
 const creates = [
   {
     data: encoder.encode("Test entity"),
-    expires_in: 300, // Expires In: ~10 minutes
-    // (each block ~2 seconds)
+    expiresIn: 300, // 300 seconds = 5 minutes
     stringAnnotations: [
       new Annotation("testTextAnnotation", "demo"),
       new Annotation("id", id)
     ],
     numericAnnotations: [new Annotation("version", 1)]
-  } as GolemBaseCreate
+  } as ArkivCreate
 ]
 
 const createReceipt = await client.createEntities(creates);
@@ -493,7 +491,7 @@ async function printEntities(label: string, entities: any[]) {
       <section className="relative z-10 px-4 md:px-[60px] py-[32px] bg-white">
         <div className="max-w-[1280px] mx-auto">
           <div className="flex flex-col gap-[32px]">
-          <h2 id="about" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ Emerged by Golem Ecosystem ]</h2>
+          <h2 id="about" className="font-brutal text-lg md:text-xl font-medium uppercase text-black leading-6">[ Emerged from Golem Ecosystem ]</h2>
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main Description */}
@@ -502,7 +500,7 @@ async function printEntities(label: string, entities: any[]) {
                 <img src="/images/golem-logo-large.svg" alt="Golem Network logo - creators of Arkiv blockchain database" className="w-full h-full object-contain" loading="lazy" />
               </div>
               <p className="font-mono text-base text-[#1f1f1f] leading-[22px] w-full max-w-[601px]">
-                Built within the Golem Ecosystem, Arkiv is a data availability & management layer (L2+L3) combining the usability of Web2 with the trustlessness of Web3. Built on Ethereum.
+                Built within the Golem ecosystem, Arkiv is a data availability & management layer (L2+L3) combining the usability of Web2 with the trustlessness of Web3. Built on Ethereum.
               </p>
             </div>
 

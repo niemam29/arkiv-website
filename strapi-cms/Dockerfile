@@ -13,14 +13,14 @@ RUN apk add --no-cache \
     build-base \
     --virtual .build-deps
 
-# Copy package files
-COPY package*.json ./
+# Copy package files from strapi-cms directory
+COPY strapi-cms/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy source
-COPY . .
+# Copy source from strapi-cms directory
+COPY strapi-cms/ .
 
 # Build admin panel
 RUN npm run build
@@ -38,9 +38,6 @@ ENV NODE_ENV=production
 # Copy built application
 COPY --from=build /app ./
 
-# Install only production dependencies
-RUN npm install --only=production
-
 # Expose port
 EXPOSE 1337
 
@@ -48,5 +45,5 @@ EXPOSE 1337
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:1337/_health', (r) => {process.exit(r.statusCode === 204 ? 0 : 1)})"
 
-# Start Strapi
-CMD ["npm", "start"]
+# Start Strapi in production mode (serves pre-built admin panel)
+CMD ["npm", "run", "start"]

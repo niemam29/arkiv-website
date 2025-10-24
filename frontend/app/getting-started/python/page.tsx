@@ -73,6 +73,66 @@ export default function GettingStartedPythonPage() {
             <p className="text-xl font-mono text-[#1F1F1F] max-w-3xl mx-auto">
               Build decentralized applications with Python and Arkiv
             </p>
+            <p className="text-sm font-mono text-gray-500 mt-2">
+              Last updated: January 2025
+            </p>
+          </div>
+
+          {/* Testnet Info Box */}
+          <div className="mb-12 p-6 bg-blue-50 border-2 border-blue-200 rounded-2xl shadow-figma-card">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="px-3 py-1.5 bg-blue-600 text-white font-mono text-sm rounded-lg font-bold">
+                  TESTNET
+                </div>
+                <h3 className="font-brutal text-xl font-bold uppercase text-blue-900">
+                  Kaolin Testnet Resources
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <a
+                  href="https://kaolin.hoodi.arkiv.network/rpc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <span className="font-mono text-sm font-bold text-blue-900">🌐 RPC</span>
+                </a>
+                <a
+                  href="https://kaolin.hoodi.arkiv.network/faucet/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <span className="font-mono text-sm font-bold text-blue-900">💧 Faucet</span>
+                </a>
+                <a
+                  href="https://explorer.kaolin.hoodi.arkiv.network/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <span className="font-mono text-sm font-bold text-blue-900">🔍 Explorer</span>
+                </a>
+                <a
+                  href="https://kaolin.hoodi.arkiv.network/bridgette/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <span className="font-mono text-sm font-bold text-blue-900">🌉 Bridge</span>
+                </a>
+              </div>
+              <a
+                href="https://kaolin.hoodi.arkiv.network/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-green-100 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
+              >
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className="font-mono text-sm font-bold text-green-900">Network Status</span>
+              </a>
+            </div>
           </div>
 
           {/* Sticky Navigation */}
@@ -151,7 +211,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 
 # Install dependencies
-pip install arkiv-sdk-python python-dotenv`}
+pip install arkiv-sdk python-dotenv`}
                   language="bash"
                 />
               </div>
@@ -162,7 +222,7 @@ pip install arkiv-sdk-python python-dotenv`}
                 <p className="text-stone-900 font-mono text-sm mb-4">Create a .env file in your project directory</p>
                 <CodeBlock
                   code={`PRIVATE_KEY=0x...
-CHAIN_ID=60138453033
+CHAIN_ID=60138453025
 RPC_URL=https://kaolin.hoodi.arkiv.network/rpc
 WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
                   language="bash"
@@ -178,8 +238,8 @@ WS_URL=wss://kaolin.hoodi.arkiv.network/rpc/ws`}
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Basic Connection</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">Connect to Arkiv using your private key</p>
               <CodeBlock
-                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
-from arkiv_sdk_python.types import AccountData, ArkivCreate, ArkivUpdate
+                code={`from arkiv_sdk import create_client, Tagged, Annotation
+from arkiv_sdk.types import AccountData, ArkivCreate, ArkivUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -187,28 +247,34 @@ from uuid import uuid4
 # Load environment variables
 load_dotenv()
 
-# Configure connection from .env
-raw_key = os.getenv('PRIVATE_KEY', '')
-hex_key = raw_key[2:] if raw_key.startswith('0x') else raw_key
-key: AccountData = Tagged("privatekey", bytes.fromhex(hex_key))
+async def main():
+    # Configure connection from .env
+    raw_key = os.getenv('PRIVATE_KEY', '')
+    hex_key = raw_key[2:] if raw_key.startswith('0x') else raw_key
+    key: AccountData = Tagged("privatekey", bytes.fromhex(hex_key))
 
-chain_id = int(os.getenv('CHAIN_ID', '60138453033'))
-rpc_url = os.getenv('RPC_URL', 'https://kaolin.hoodi.arkiv.network/rpc')
-ws_url = os.getenv('WS_URL', 'wss://kaolin.hoodi.arkiv.network/rpc/ws')
+    chain_id = int(os.getenv('CHAIN_ID', '60138453025'))
+    rpc_url = os.getenv('RPC_URL', 'https://kaolin.hoodi.arkiv.network/rpc')
+    ws_url = os.getenv('WS_URL', 'wss://kaolin.hoodi.arkiv.network/rpc/ws')
 
-# Create a client to interact with the Arkiv API
-client = await create_client(
-    chain_id,
-    key,
-    rpc_url,
-    ws_url,
-)
+    # Create a client to interact with the Arkiv API
+    client = await create_client(
+        chain_id,
+        key,
+        rpc_url,
+        ws_url,
+    )
 
-print("Connected to Arkiv testnet!")
+    print("Connected to Arkiv testnet!")
 
-# Get owner address
-owner_address = await client.get_owner_address()
-print(f"Connected with address: {owner_address}")`}
+    # Get owner address
+    owner_address = await client.get_owner_address()
+    print(f"Connected with address: {owner_address}")
+
+# Run the async main function
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())`}
                 language="python"
               />
             </div>
@@ -228,7 +294,7 @@ entity_id = str(uuid4())
 creates = [
     ArkivCreate(
         data=b"Test entity",
-        expires_in=300,  # Block-To-Live: ~10 minutes (each block ~2 seconds)
+        expires_in=300,  # 300 seconds = 5 minutes
         string_annotations=[
             Annotation("testTextAnnotation", "demo"),
             Annotation("id", entity_id)
@@ -242,7 +308,7 @@ print('Receipt', create_receipt)
 
 # create_entities takes a list of ArkivCreate objects with 4 fields:
 # - data: Payload in bytes
-# - expires_in: Number of blocks the entity will exist
+# - expires_in: Time-to-live in seconds
 # - string_annotations: Text annotations for querying
 # - numeric_annotations: Numeric annotations for querying`}
                   language="python"
@@ -258,7 +324,7 @@ update_receipt = await client.update_entities([
     ArkivUpdate(
         entity_key=create_receipt[0].entity_key,
         data=b"Updated entity",
-        expires_in=1200,  # Extend to ~40 minutes (1200 blocks * 2 seconds = 2400 seconds)
+        expires_in=1200,  # 1200 seconds = 20 minutes
         string_annotations=[Annotation("id", entity_id)],
         numeric_annotations=[Annotation("version", 2)]
     )
@@ -418,7 +484,7 @@ async def print_entities(label: str, entities: list):
     # Create entity with specific Expires In
     entity = ArkivCreate(
         data=b"Temporary data",
-        expires_in=50,  # Expires after 50 blocks (50 blocks * 2 seconds = 100 seconds)
+        expires_in=50,  # 50 seconds
         string_annotations=[Annotation("type", "temporary")],
         numeric_annotations=[]
     )
@@ -463,7 +529,7 @@ async def print_entities(label: str, entities: list):
                     <ul className="space-y-1 text-sm text-blue-900 font-mono">
                       <li>• Update to Python 3.8+</li>
                       <li>• Activate virtual environment before installing packages</li>
-                      <li>• Try: pip install --upgrade arkiv-sdk-python</li>
+                      <li>• Try: pip install --upgrade arkiv-sdk</li>
                     </ul>
                   </div>
 
@@ -487,8 +553,8 @@ async def print_entities(label: str, entities: list):
               <h3 className="text-xl font-brutal font-bold mb-2 text-black">Full Application</h3>
               <p className="text-stone-900 font-mono text-sm mb-4">A complete Python application demonstrating all Arkiv features</p>
               <CodeBlock
-                code={`from arkiv_sdk_python import create_client, Tagged, Annotation
-from arkiv_sdk_python.types import ArkivCreate, ArkivUpdate
+                code={`from arkiv_sdk import create_client, Tagged, Annotation
+from arkiv_sdk.types import ArkivCreate, ArkivUpdate
 from dotenv import load_dotenv
 import os
 from uuid import uuid4
@@ -506,7 +572,7 @@ async def main():
     private_key = bytes.fromhex(private_key_hex)
 
     client = await create_client(
-        60138453033,
+        60138453025,
         Tagged("privatekey", private_key),
         "https://kaolin.hoodi.arkiv.network/rpc",
         "wss://kaolin.hoodi.arkiv.network/rpc/ws"
@@ -560,7 +626,7 @@ async def main():
             "timestamp": int(time.time() * 1000),
             "author": "Developer"
         }).encode(),
-        expires_in=300,  # ~10 minutes (300 blocks * 2 seconds = 600 seconds)
+        expires_in=300,  # 300 seconds = 5 minutes
         string_annotations=[
             Annotation("type", "message"),
             Annotation("event", "arkiv"),
@@ -592,7 +658,7 @@ async def main():
             "updated": True,
             "update_time": int(time.time() * 1000)
         }).encode(),
-        expires_in=600,  # ~20 minutes (600 blocks * 2 seconds = 1200 seconds)
+        expires_in=600,  # 600 seconds = 10 minutes
         string_annotations=[
             Annotation("type", "message"),
             Annotation("id", entity_id),
