@@ -1,0 +1,9 @@
+{
+  "name": "directus-sentry",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@sentry/node": "^10.22.0",
+    "@sentry/profiling-node": "^8.47.0"
+  }
+}

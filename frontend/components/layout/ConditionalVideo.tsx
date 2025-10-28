@@ -1,12 +1,26 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ConditionalVideo() {
   const pathname = usePathname()
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Only render video on homepage
-  if (pathname !== '/') {
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Only render video on homepage and not on mobile
+  if (pathname !== '/' || isMobile) {
     return null
   }
 
