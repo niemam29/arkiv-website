@@ -16,13 +16,13 @@ RUN npm init -y && \
 
 # ---------- Python deps setup ----------
 WORKDIR /app
-COPY requirements.txt /app/requirements.txt
+COPY execution-service/requirements.txt /app/requirements.txt
 
 # We install python deps into a local folder so we can copy them later
 RUN pip install --no-cache-dir --prefix=/install -r /app/requirements.txt
 
 # Copy application source
-COPY main.py /app/main.py
+COPY execution-service/main.py /app/main.py
 
 # ---- Stage 2: runtime image ----
 FROM python:3.12-alpine
